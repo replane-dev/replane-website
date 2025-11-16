@@ -1,0 +1,33 @@
+---
+id: configvalueresponse
+title: "ConfigValueResponse"
+description: ""
+sidebar_label: "ConfigValueResponse"
+hide_title: true
+hide_table_of_contents: true
+schema: true
+sample: {"name":"string","value":{}}
+custom_edit_url: null
+---
+
+import Schema from "@theme/Schema";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"ConfigValueResponse"}
+>
+</Heading>
+
+
+
+
+
+<Schema
+  schema={{"type":"object","properties":{"name":{"type":"string","pattern":"^[A-Za-z0-9_-]{1,100}$","description":"A config name consisting of letters (A-Z, a-z), digits, underscores or hyphens, 1-100 characters long"},"value":{}},"required":["name"],"title":"ConfigValueResponse"}}
+  schemaType={"response"}
+>
+  
+</Schema>
+            

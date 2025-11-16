@@ -8,20 +8,20 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Docusaurus Tailwind Shadcn/ui',
-  tagline: 'Templates Docusaurus with Tailwind CSS and Shadcn/ui',
+  title: 'Replane',
+  tagline: 'Versioned, auditable application configuration. Self-hosted.',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://replane.dev',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'namnguyenthanhwork', // Usually your GitHub org/user name.
-  projectName: 'docusaurus-tailwind-shadcn-template', // Usually your repo name.
+  organizationName: 'replane-dev', // Usually your GitHub org/user name.
+  projectName: 'replane-website', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   markdown: {
@@ -50,11 +50,12 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: 'docs',
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template/tree/main',
+            'https://github.com/replane-dev/replane-website/tree/main',
           docItemComponent: '@theme/ApiItem' // Derived from docusaurus-theme-openapi
         },
         blog: false,
@@ -71,17 +72,22 @@ const config = {
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: 'Docusaurus Tailwind',
+        title: 'Replane',
         logo: {
-          alt: 'Docusaurus Tailwind Shadcn/ui Logo',
+          alt: 'Replane Logo',
           src: 'img/logo.svg'
         },
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Tutorial'
+            label: 'Docs'
+          },
+          {
+            label: 'API',
+            position: 'left',
+            to: '/docs/api'
           },
           {
             to: '/blog',
@@ -89,17 +95,7 @@ const config = {
             position: 'left'
           },
           {
-            to: '/about-me',
-            label: 'About Me',
-            position: 'left'
-          },
-          {
-            label: 'Petstore API',
-            position: 'left',
-            to: '/docs/category/petstore-versioned-api'
-          },
-          {
-            'href': 'https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template',
+            'href': 'https://github.com/replane-dev/replane',
             'position': 'right',
             'className': 'header-github-link',
             'aria-label': 'GitHub repository'
@@ -116,11 +112,32 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Documentation',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro'
+                label: 'Getting Started',
+                to: '/docs/getting-started/quickstart'
+              },
+              {
+                label: 'Concepts',
+                to: '/docs/concepts/overview'
+              },
+              {
+                label: 'Self-Hosting',
+                to: '/docs/self-hosting/docker'
+              },
+              {
+                label: 'API Reference',
+                to: '/docs/api'
+              }
+            ]
+          },
+          {
+            title: 'SDKs',
+            items: [
+              {
+                label: 'JavaScript/TypeScript',
+                href: 'https://github.com/replane-dev/replane-javascript'
               }
             ]
           },
@@ -128,34 +145,21 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus'
+                label: 'GitHub',
+                href: 'https://github.com/replane-dev/replane'
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus'
+                label: 'Issues',
+                href: 'https://github.com/replane-dev/replane/issues'
               },
-              {
-                label: 'X',
-                href: 'https://x.com/docusaurus'
-              }
-            ]
-          },
-          {
-            title: 'More',
-            items: [
               {
                 label: 'Blog',
                 to: '/blog'
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus'
               }
             ]
           }
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Docusaurus Tailwind Shadcn. Templates by <a href="https://github.com/namnguyenthanhwork" style="font-weight: bold;" target="_blank">Thành Nam Nguyễn</a>`
+        copyright: `Copyright © ${new Date().getFullYear()} Replane. Released under the MIT License.`
       },
       prism: {
         additionalLanguages: [
@@ -292,39 +296,18 @@ const config = {
         id: 'openapi',
         docsPluginId: 'classic',
         config: {
-          // multiVersion
-          petstore_versioned: {
-            specPath: 'api-swagger/petstore.yaml',
-            outputDir: 'docs/petstore_versioned', // No trailing slash
+          replane: {
+            specPath: 'api-swagger/replane.yaml',
+            outputDir: 'docs/api',
             sidebarOptions: {
               groupPathsBy: 'tag',
               categoryLinkSource: 'tag'
             },
-            version: '2.0.0', // Current version
-            label: 'v2.0.0', // Current version label
-            baseUrl: '/docs/petstore_versioned/swagger-petstore-yaml', // Leading slash is important
             downloadUrl:
-              'https://raw.githubusercontent.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template/main/api-swagger/petstore.yaml',
-            versions: {
-              '1.0.0': {
-                specPath: 'api-swagger/petstore-1.0.0.yaml',
-                outputDir: 'docs/petstore_versioned/1.0.0', // No trailing slash
-                label: 'v1.0.0',
-                baseUrl: '/docs/petstore_versioned/1.0.0/swagger-petstore-yaml', // Leading slash is important
-                downloadUrl:
-                  'https://raw.githubusercontent.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template/main/api-swagger/petstore-1.0.0.yaml'
-              }
-            }
+              'https://raw.githubusercontent.com/replane-dev/replane-website/main/api-swagger/replane.yaml',
+            hideSendButton: false,
+            showSchemas: true
           }
-          // singleVersion
-          // petstore: {
-          //   specPath: 'api-swagger/petstore.yaml',
-          //   outputDir: 'docs/petstore',
-          //   sidebarOptions: { groupPathsBy: 'tag', categoryLinkSource: 'tag' },
-          //   downloadUrl: '/petstore.yaml',
-          //   hideSendButton: false,
-          //   showSchemas: true
-          // }
         }
       }
     ],
@@ -363,7 +346,7 @@ const config = {
         onUntruncatedBlogPosts: 'ignore',
         // Remove this to remove the "edit this page" links.
         editUrl:
-          'https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template/tree/main/',
+          'https://github.com/replane-dev/replane-website/tree/main/',
         remarkPlugins: [
           [
             require('@docusaurus/remark-plugin-npm2yarn'),

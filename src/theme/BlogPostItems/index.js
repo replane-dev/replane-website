@@ -1,7 +1,5 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
-import Image from '@theme/IdealImage'
-import useBaseUrl from '@docusaurus/useBaseUrl'
 
 import BlogPostItem from '@theme/BlogPostItem'
 import TagsListInline from '@theme/TagsListInline'
@@ -12,64 +10,82 @@ import { Card, CardContent } from '@components/ui/card'
 
 export default function BlogPostItems({ items, component: BlogPostItemComponent = BlogPostItem }) {
   return (
-    <div className='grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3'>
+    <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
       {items.map((blog) => (
-        <div key={blog.content.metadata.permalink} className='flex'>
-          <Card className='flex w-full flex-col gap-0 py-0'>
-            <Link to={blog.content.metadata.permalink}>
-              <Image
-                className='block h-auto w-full rounded-t-lg object-cover'
-                img={useBaseUrl(blog.content.metadata.frontMatter.image)}
+        <article
+          key={blog.content.metadata.permalink}
+          className='group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'
+        >
+          {blog.content.metadata.frontMatter.image && (
+            <Link to={blog.content.metadata.permalink} className='block overflow-hidden'>
+              <img
+                className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
+                src={blog.content.metadata.frontMatter.image}
                 alt={blog.content.metadata.title}
                 loading='lazy'
               />
             </Link>
+          )}
 
-            <CardContent className='p-6'>
-              {blog.content.metadata.tags.length > 0 && (
-                <div className='blog-tags flex flex-wrap gap-2'>
-                  <TagsListInline tags={blog.content.metadata.tags} />
-                </div>
-              )}
-
-              <Link to={blog.content.metadata.permalink} className='mt-4'>
-                <p className='text-foreground mb-1 p-0 text-xl font-semibold'>
-                  {blog.content.metadata.title}
-                </p>
-              </Link>
-
-              <p className='mt-2 mb-4 line-clamp-2 dark:text-gray-400'>
-                {blog.content.metadata.description}
-              </p>
-              <div className='*:data-[slot=avatar]:ring-background flex items-center -space-x-2 *:data-[slot=avatar]:size-12 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale'>
-                {blog.content.metadata.authors.map((author, index) => (
+          <div className='flex flex-1 flex-col p-6'>
+            {blog.content.metadata.tags.length > 0 && (
+              <div className='mb-3 flex flex-wrap gap-2'>
+                {blog.content.metadata.tags.slice(0, 2).map((tag) => (
                   <Link
-                    href={author.page.permalink}
-                    title={author.name}
-                    key={index}
-                    className='transition-opacity hover:opacity-80'
+                    key={tag.label}
+                    to={tag.permalink}
+                    className='rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-200 hover:no-underline dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800'
                   >
-                    <Avatar>
-                      <Image
-                        alt={author.name}
-                        img={useBaseUrl(author.imageURL)}
-                        className='aspect-square h-full w-full'
-                      />
-                    </Avatar>
+                    {tag.label}
                   </Link>
                 ))}
-
-                <div className='ml-4 text-sm dark:text-gray-400'>
-                  <span>
-                    <TimeStamp timestamp={blog.content.metadata.date} />
-                  </span>
-                  <span className='mx-2'>•</span>
-                  <span>{Math.ceil(blog.content.metadata.readingTime)} min read</span>
-                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+
+            <h2 className='mb-2 flex-grow'>
+              <Link
+                to={blog.content.metadata.permalink}
+                className='text-xl font-bold text-gray-900 transition-colors hover:text-blue-600 hover:no-underline dark:text-white dark:hover:text-blue-400'
+              >
+                {blog.content.metadata.title}
+              </Link>
+            </h2>
+
+            {blog.content.metadata.description && (
+              <p className='mb-4 line-clamp-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300'>
+                {blog.content.metadata.description}
+              </p>
+            )}
+
+            <div className='mt-auto flex items-center gap-3 border-t border-gray-100 pt-4 dark:border-gray-700'>
+              <div className='flex -space-x-2'>
+                {blog.content.metadata.authors.slice(0, 3).map((author, index) => (
+                  <div key={index} className='relative' title={author.name}>
+                    {author.imageURL ? (
+                      <img
+                        alt={author.name}
+                        src={author.imageURL}
+                        className='h-8 w-8 rounded-full border-2 border-white object-cover dark:border-gray-800'
+                        loading='lazy'
+                      />
+                    ) : (
+                      <div className='flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-blue-500 to-purple-600 text-xs font-semibold text-white dark:border-gray-800'>
+                        {author.name?.charAt(0).toUpperCase() || 'A'}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className='flex flex-col text-xs text-gray-500 dark:text-gray-400'>
+                <time dateTime={blog.content.metadata.date}>
+                  <TimeStamp timestamp={blog.content.metadata.date} />
+                </time>
+                <span>{Math.ceil(blog.content.metadata.readingTime)} min read</span>
+              </div>
+            </div>
+          </div>
+        </article>
       ))}
     </div>
   )

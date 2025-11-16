@@ -1,45 +1,73 @@
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Version History & Rollback',
+    icon: '🕐',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and used to get your
-        website up and running quickly.
+        Every config change creates an append-only snapshot. Roll back to any previous version
+        instantly when things go wrong. Full audit trail included.
       </>
     )
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Realtime Updates',
+    icon: '⚡',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go ahead and move your
-        docs into the <code>docs</code> directory.
+        Changes propagate to your applications in realtime via Server-Sent Events (SSE). No polling,
+        no delays. Your apps stay in sync automatically.
       </>
     )
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'JSON Schema Validation',
+    icon: '✓',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can be extended while
-        reusing the same header and footer.
+        Attach JSON schemas to prevent invalid configs. Block out-of-range values and enforce structure
+        before changes are saved. Keep your configs safe.
+      </>
+    )
+  },
+  {
+    title: 'Role-Based Access',
+    icon: '🔐',
+    description: (
+      <>
+        Granular permissions with owner, editor, and viewer roles. Control who can view, modify, or
+        manage configs. API keys for programmatic access.
+      </>
+    )
+  },
+  {
+    title: 'Self-Hosted',
+    icon: '🏠',
+    description: (
+      <>
+        Run on your infrastructure with full data ownership. Simple Docker deployment with PostgreSQL.
+        No external dependencies or vendor lock-in.
+      </>
+    )
+  },
+  {
+    title: 'Developer-Friendly',
+    icon: '🛠️',
+    description: (
+      <>
+        Simple REST API and lightweight SDKs for JavaScript/TypeScript and Python. Works in Node.js,
+        browsers, and edge runtimes. Zero dependencies.
       </>
     )
   }
 ]
 
-function Feature({ Svg, title, description }) {
+function Feature({ icon, title, description }) {
   return (
-    <div>
-      <div className='text--center'>
-        <Svg className='mx-auto h-52 w-52' role='img' />
-      </div>
-      <div className='text--center padding-horiz--md'>
-        <p className='mb-2 text-xl font-bold'>{title}</p>
-        <p className='mx-auto max-w-sm'>{description}</p>
+    <div className='rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800'>
+      <div className='mb-3 text-4xl'>{icon}</div>
+      <div>
+        <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>{title}</h3>
+        <p className='text-gray-600 dark:text-gray-300'>{description}</p>
       </div>
     </div>
   )
@@ -47,9 +75,18 @@ function Feature({ Svg, title, description }) {
 
 export default function HomepageFeatures() {
   return (
-    <section className='py-10'>
+    <section className='py-16 px-4'>
       <div className='mx-auto max-w-7xl'>
-        <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
+        <div className='mb-12 text-center'>
+          <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white'>
+            Everything you need for production config management
+          </h2>
+          <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300'>
+            Built for teams and developers who need reliable, auditable configuration management
+            without the complexity of feature flag platforms.
+          </p>
+        </div>
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}

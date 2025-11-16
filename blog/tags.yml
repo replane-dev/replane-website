@@ -1,19 +1,29 @@
-hola:
-  label: 'Hola'
-  permalink: '/hola'
-  description: 'Articles on the topic hola'
+announcement:
+  label: Announcement
+  permalink: /announcement
+  description: Major announcements and releases
 
-hello:
-  label: 'Hello'
-  permalink: '/hello'
-  description: 'Articles on the topic hello'
+release:
+  label: Release
+  permalink: /release
+  description: New version releases
 
-docusaurus:
-  label: 'Docusaurus'
-  permalink: '/docusaurus'
-  description: 'Articles on the topic docusaurus'
+config-management:
+  label: Config Management
+  permalink: /config-management
+  description: Configuration management best practices
 
-facebook:
-  label: 'Facebook'
-  permalink: '/facebook'
-  description: 'Articles on the topic facebook'
+feature-flags:
+  label: Feature Flags
+  permalink: /feature-flags
+  description: Feature flag strategies and patterns
+
+use-cases:
+  label: Use Cases
+  permalink: /use-cases
+  description: Real-world use cases
+
+guides:
+  label: Guides
+  permalink: /guides
+  description: How-to guides and tutorials

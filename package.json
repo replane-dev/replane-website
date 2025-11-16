@@ -1,15 +1,15 @@
 {
-  "name": "docusaurus-tailwind-shadcn-template",
-  "description": "Integrating Tailwind CSS and Shadcn/ui with Docusaurus website template",
-  "author": "Thành Nam Nguyễn",
+  "name": "replane-website",
+  "description": "Replane - Versioned, auditable application configuration. Self-hosted.",
+  "author": "Replane",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template.git"
+    "url": "git+https://github.com/replane-dev/replane-website.git"
   },
   "bugs": {
-    "url": "https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template/issues"
+    "url": "https://github.com/replane-dev/replane/issues"
   },
-  "homepage": "https://github.com/namnguyenthanhwork/docusaurus-tailwind-shadcn-template#readme",
+  "homepage": "https://replane.dev",
   "version": "1.0.0",
   "private": true,
   "scripts": {

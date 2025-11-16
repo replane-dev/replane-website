@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: Replane API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1/
+components:
+  schemas:
+    ConfigValueResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{1,100}$
+          description: A config name consisting of letters (A-Z, a-z), digits, underscores
+            or hyphens, 1-100 characters long
+        value: {}
+      required:
+        - name
+  parameters: {}
+paths:
+  /configs/{name}/value:
+    get:
+      summary: Get config value
+      description: Retrieves the current value of a configuration by name
+      operationId: getConfigValue
+      tags:
+        - Configs
+      parameters:
+        - schema:
+            type: string
+            pattern: ^[A-Za-z0-9_-]{1,100}$
+            description: A config name consisting of letters (A-Z, a-z), digits, underscores
+              or hyphens, 1-100 characters long
+          required: true
+          description: A config name consisting of letters (A-Z, a-z), digits, underscores
+            or hyphens, 1-100 characters long
+          name: name
+          in: path
+      responses:
+        '200':
+          description: Config value (if found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigValueResponse'
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+        '404':
+          description: Config not found
+webhooks: {}

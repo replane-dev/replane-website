@@ -1,0 +1,218 @@
+---
+sidebar_position: 2
+---
+
+# Environment Variables
+
+Complete reference for configuring Replane.
+
+## Required Variables
+
+### DATABASE_URL
+
+PostgreSQL connection string.
+
+```bash
+DATABASE_URL=postgresql://user:password@host:5432/database
+```
+
+**Example**:
+
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
+```
+
+### BASE_URL
+
+The public URL where Replane is accessible.
+
+```bash
+BASE_URL=https://replane.yourdomain.com
+```
+
+**Important**: Must match the OAuth callback URL configuration.
+
+### SECRET_KEY_BASE
+
+A long random string used to sign session cookies.
+
+```bash
+SECRET_KEY_BASE=your-very-long-random-string-here
+```
+
+**Generate**:
+
+```bash
+openssl rand -hex 64
+```
+
+## Authentication (Choose One)
+
+### GitHub OAuth
+
+```bash
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+```
+
+**Setup**: Create an OAuth app at [GitHub Developer Settings](https://github.com/settings/developers)
+
+**Callback URL**: `${BASE_URL}/api/auth/callback/github`
+
+### Okta OAuth
+
+```bash
+OKTA_CLIENT_ID=your-okta-client-id
+OKTA_CLIENT_SECRET=your-okta-client-secret
+OKTA_ISSUER=https://your-domain.okta.com
+```
+
+**Setup**: Create an app integration in your Okta admin console
+
+**Callback URL**: `${BASE_URL}/api/auth/callback/okta`
+
+## Optional Variables
+
+### ORGANIZATION_NAME
+
+Display name shown in the UI (e.g., sidebar, project switcher).
+
+```bash
+ORGANIZATION_NAME=Acme Corp
+```
+
+If not set, no organization label is displayed.
+
+### ALLOW_SELF_APPROVALS
+
+Whether users can approve their own config proposals.
+
+```bash
+ALLOW_SELF_APPROVALS=false
+```
+
+**Default**: `false`
+
+**Values**:
+- `true` - Allow self-approvals
+- `false` - Require approval from another user
+
+### NODE_ENV
+
+Node.js environment.
+
+```bash
+NODE_ENV=production
+```
+
+**Values**:
+- `production` (default in Docker)
+- `development`
+
+### PORT
+
+Port the app listens on (inside container).
+
+```bash
+PORT=3000
+```
+
+**Default**: `3000`
+
+## Example Configurations
+
+### Local Development
+
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
+BASE_URL=http://localhost:3000
+SECRET_KEY_BASE=dev-secret-key-not-for-production
+GITHUB_CLIENT_ID=your-dev-client-id
+GITHUB_CLIENT_SECRET=your-dev-client-secret
+NODE_ENV=development
+```
+
+### Production (GitHub)
+
+```bash
+DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
+BASE_URL=https://replane.company.com
+SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
+GITHUB_CLIENT_ID=prod-github-client-id
+GITHUB_CLIENT_SECRET=prod-github-client-secret
+ORGANIZATION_NAME=Company Name
+ALLOW_SELF_APPROVALS=false
+NODE_ENV=production
+```
+
+### Production (Okta)
+
+```bash
+DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
+BASE_URL=https://config.company.com
+SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
+OKTA_CLIENT_ID=okta-client-id
+OKTA_CLIENT_SECRET=okta-client-secret
+OKTA_ISSUER=https://company.okta.com
+ORGANIZATION_NAME=Company Name
+ALLOW_SELF_APPROVALS=false
+NODE_ENV=production
+```
+
+## Security Notes
+
+### Protecting Secrets
+
+**Never commit secrets to version control.**
+
+Use:
+- `.env` files (add to `.gitignore`)
+- Docker secrets
+- Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, etc.)
+
+### Rotating Secrets
+
+To rotate `SECRET_KEY_BASE`:
+
+1. Generate a new key
+2. Update environment variable
+3. Restart app
+4. All users will be signed out (they'll need to re-authenticate)
+
+### Database Credentials
+
+Use strong passwords for production databases. Rotate regularly.
+
+## Validating Configuration
+
+Start the app and check logs:
+
+```bash
+docker-compose logs app
+```
+
+Successful startup shows:
+
+```
+✓ Database connected
+✓ Migrations applied
+✓ Server listening on :3000
+```
+
+Test health endpoint:
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+Expected:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+## Next Steps
+
+- [**Docker Deployment**](./docker) - Deploy with Docker Compose

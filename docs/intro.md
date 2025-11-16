@@ -2,46 +2,42 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Welcome to Replane
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Replane is a self-hosted application for managing JSON configuration with **version history**, **instant rollback**, **realtime updates**, and **full audit trails**.
 
-## Getting Started
+## What is Replane?
 
-Get started by **creating a new site**.
+Replane helps you manage application configuration that changes frequently without requiring code deployments. It's perfect for:
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+- **Feature flags** - Toggle features on/off without deploying
+- **Operational tuning** - Adjust cache TTLs, batch sizes, rate limits in realtime
+- **Gradual rollouts** - Control percentages or cohorts for new features
+- **Incident mitigation** - Quickly revert to a known-good configuration
+- **Cross-service settings** - Share configuration across multiple applications
 
-### What you'll need
+## Key Features
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- **Version History** - Every change creates an append-only snapshot with full audit trail
+- **Instant Rollback** - Revert to any previous version with one click
+- **Realtime Updates** - Changes propagate via Server-Sent Events (SSE) with zero polling
+- **JSON Schema Validation** - Prevent invalid configurations before they're saved
+- **Role-Based Access** - Owner, editor, and viewer roles with API key support
+- **Self-Hosted** - Run on your infrastructure with full data ownership
 
-## Generate a new site
+## Status
 
-Generate a new Docusaurus site using the **classic template**.
+Replane is **early but usable**. Expect changes to schemas and endpoints before v1.0.
 
-The classic template will automatically be added to your project after you run the command:
+## Quick Links
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+- [**Quickstart Guide**](./getting-started/quickstart) - Get Replane running in 5 minutes
+- [**Core Concepts**](./concepts/overview) - Understand how Replane works
+- [**Self-Hosting Guide**](./self-hosting/docker) - Deploy with Docker
+- [**JavaScript SDK**](./sdk/javascript) - Use Replane in Node.js or browsers
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+## Community
 
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- **GitHub**: [replane-dev/replane](https://github.com/replane-dev/replane)
+- **Issues**: [Report bugs or request features](https://github.com/replane-dev/replane/issues)
+- **License**: MIT

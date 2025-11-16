@@ -1,0 +1,71 @@
+---
+id: get-config-value
+title: "Get config value"
+description: "Retrieves the current value of a configuration by name"
+sidebar_label: "Get config value"
+hide_title: true
+hide_table_of_contents: true
+api: eJzVVEtv1DAQ/ivWiEMrOU2W9oJvC4KqN7QCDqwC8iaziUvWdu3Jim2U/47GyfbNhQOIUyJ7xv5engFqjFUwnoyzoGCFFAzuMQpqUVR9CGhJ7HXXo3BboUXl7NY0fdDcIDYHYfUOQYLzOK1d1aCgQXqXCr9wJ0gg3URQa5hWI5QSvA56h4SBNwaIVYs7DWoAOngEBZGCsQ1wIREGRvdtvcy+6uy2yN58z8phIRdFMb4C+YTEckaZsPF/NJGMbZhBh3xYFCfL7KsUOrs9laI2jaEoRW9rDLFyAaNwQbQH36KNUiyyRVGIqtVBV6m5c7aBUULAm94ErEFR6PHfwJCQHFAwG2H4aq+phbFkhNE7GzGysK+Lgj+PUU6OzBafmK3Yut7WpyChcpbQErdo7ztTJX/z68h9LxjmNtdYERsWOA1kplsneP+TrUkLUMP4yOL1xKSUQIY6vJMuRXw16wzjyF0XLyn9VteCj8NIkGrOn9d8cGFj6hrtVHHxW7+so8kp4Pt2SK2bH94kbQsK8kmvmA+MfMz382OMGPbHZ9eHDhS0RF7leecq3bUukjoviiLX3uT7RZ6CZOzWJRdn7iv0nbYolh+vQAIfN8FbnBVnBYP3LtJO2/sEwCXS0cEjkkfUhvvE/fkcmlNG+JNy32mThEwkh1mWNcyygAQ1d014SglMnkuGYaMjfg7dOPLyTY/hAGpdcmkwesMarAeoTeT/GtRWd/HpBHhI6GQ1B+lU/K258KIU86K2hzvaCkDCDzwcZ8hYjhJa1DWGRHLaWlYVenrQ9GwmcEzugnj5/hOM4y+LJSea
+sidebar_class_name: "get api-method"
+info_path: docs/api/replane-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get config value"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/configs/{name}/value"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieves the current value of a configuration by name
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"schema":{"type":"string","pattern":"^[A-Za-z0-9_-]{1,100}$","description":"A config name consisting of letters (A-Z, a-z), digits, underscores or hyphens, 1-100 characters long"},"required":true,"description":"A config name consisting of letters (A-Z, a-z), digits, underscores or hyphens, 1-100 characters long","name":"name","in":"path"}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Config value (if found)","content":{"application/json":{"schema":{"type":"object","properties":{"name":{"type":"string","pattern":"^[A-Za-z0-9_-]{1,100}$","description":"A config name consisting of letters (A-Z, a-z), digits, underscores or hyphens, 1-100 characters long"},"value":{}},"required":["name"],"title":"ConfigValueResponse"}}}},"400":{"description":"Bad request"},"403":{"description":"Forbidden"},"404":{"description":"Config not found"}}}
+>
+  
+</StatusCodes>
+
+
+      
