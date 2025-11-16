@@ -1,0 +1,75 @@
+name: Deploy to GitHub Pages
+
+# Custom domain configuration:
+# 1. Add a CNAME file with your domain (replane.dev) to the /static directory
+# 2. Configure DNS records at your domain registrar:
+#    For apex domain (replane.dev):
+#    - A records pointing to GitHub Pages IPs:
+#      185.199.108.153
+#      185.199.109.153
+#      185.199.110.153
+#      185.199.111.153
+#    - AAAA records pointing to GitHub Pages IPv6 addresses:
+#      2606:50c0:8000::153
+#      2606:50c0:8001::153
+#      2606:50c0:8002::153
+#      2606:50c0:8003::153
+#    For www subdomain (www.replane.dev):
+#    - CNAME record pointing to: replane-dev.github.io
+# 3. Enable "Enforce HTTPS" in repository Settings > Pages after DNS propagates
+
+on:
+  push:
+    branches:
+      - main
+    # Review gh actions docs if you want to further define triggers, paths, etc
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build website
+        run: pnpm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
