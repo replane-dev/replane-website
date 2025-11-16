@@ -21,7 +21,7 @@ export default function FinalCTA() {
           </Link>
           <Link
             href='https://github.com/replane-dev/replane'
-            className='inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:bg-opacity-10 hover:no-underline hover:text-white'
+            className='inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:text-blue-600 hover:no-underline'
           >
             View on GitHub
           </Link>

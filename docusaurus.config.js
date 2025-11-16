@@ -329,7 +329,7 @@ const config = {
         path: 'blog',
         editLocalizedFiles: false,
         blogTitle: 'Blog',
-        blogDescription: 'Blog description is here ...',
+        blogDescription: 'Technical insights, tutorials, and updates on self-hosted configuration management with Replane',
         blogSidebarCount: 'ALL',
         blogSidebarTitle: 'List blog',
         routeBasePath: 'blog',

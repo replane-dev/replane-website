@@ -7,6 +7,7 @@ import Benefits from '@/components/Homepage/Benefits'
 import HomepageFeatures from '@/components/Homepage/Features'
 import UseCases from '@/components/Homepage/UseCases'
 import Testimonials from '@/components/Homepage/Testimonials'
+import Authentication from '@/components/Homepage/Integrations'
 import FinalCTA from '@/components/Homepage/FinalCTA'
 import LatestNews from '@/components/LatestNews'
 
@@ -24,6 +25,7 @@ export default function Home({ homePageBlogMetadata, recentPosts }) {
         <Benefits />
         <HomepageFeatures />
         <UseCases />
+        <Authentication />
         <Testimonials />
         <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
         <FinalCTA />

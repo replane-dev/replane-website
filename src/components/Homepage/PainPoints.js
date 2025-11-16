@@ -25,28 +25,28 @@ const problems = [
 
 export default function PainPoints() {
   return (
-    <section className='bg-gray-50 py-16 px-4 dark:bg-gray-900'>
+    <section className='bg-gradient-to-b from-gray-50 to-white py-20 px-4 dark:from-gray-900 dark:to-gray-800'>
       <div className='mx-auto max-w-7xl'>
-        <div className='mb-12 text-center'>
+        <div className='mb-16 text-center'>
           <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white'>
             Tired of This?
           </h2>
           <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300'>
-            If you're managing application config, you've probably faced these problems
+            Common pain points when managing application configuration
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'>
           {problems.map((problem, idx) => (
             <div
               key={idx}
-              className='rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'
+              className='group rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-red-300 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:border-red-800'
             >
-              <div className='mb-3 text-4xl'>{problem.icon}</div>
-              <h3 className='mb-2 text-lg font-bold text-gray-900 dark:text-white'>
+              <div className='mb-4 text-5xl'>{problem.icon}</div>
+              <h3 className='mb-3 text-xl font-bold text-gray-900 dark:text-white'>
                 {problem.title}
               </h3>
-              <p className='text-sm text-gray-600 dark:text-gray-300'>{problem.description}</p>
+              <p className='leading-relaxed text-gray-600 dark:text-gray-300'>{problem.description}</p>
             </div>
           ))}
         </div>
