@@ -3,7 +3,7 @@ info:
   title: Replane API
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api/v1/
+  - url: http://localhost:3000/api/v1
 components:
   schemas:
     ConfigValueResponse:
@@ -21,11 +21,7 @@ components:
 paths:
   /configs/{name}/value:
     get:
-      summary: Get config value
-      description: Retrieves the current value of a configuration by name
       operationId: getConfigValue
-      tags:
-        - Configs
       parameters:
         - schema:
             type: string
@@ -50,4 +46,15 @@ paths:
           description: Forbidden
         '404':
           description: Config not found
+  /events:
+    get:
+      operationId: getProjectEvents
+      responses:
+        '200':
+          description: Server-sent events stream for project updates
+          content:
+            text/event-stream:
+              schema:
+                type: object
+                properties: {}
 webhooks: {}
