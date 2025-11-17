@@ -24,7 +24,7 @@ export default function Home({ homePageBlogMetadata, recentPosts }) {
         <PainPoints />
         <Benefits />
         <HomepageFeatures />
-        <UseCases />
+        {/* <UseCases /> */}
         <Authentication />
         <Testimonials />
         <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
