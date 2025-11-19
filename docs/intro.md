@@ -32,10 +32,10 @@ Replane is **early but usable**. Expect changes to schemas and endpoints before 
 
 ## Quick Links
 
-- [**Quickstart Guide**](./getting-started/quickstart) - Get Replane running in 5 minutes
-- [**Core Concepts**](./concepts/overview) - Understand how Replane works
-- [**Self-Hosting Guide**](./self-hosting/docker) - Deploy with Docker
-- [**JavaScript SDK**](./sdk/javascript) - Use Replane in Node.js or browsers
+- [**Quickstart Guide**](/docs/getting-started/quickstart) - Get Replane running in 5 minutes
+- [**Core Concepts**](/docs/concepts/overview) - Understand how Replane works
+- [**Self-Hosting Guide**](/docs/self-hosting/docker) - Deploy with Docker
+- [**JavaScript SDK**](/docs/sdk/javascript) - Use Replane in Node.js or browsers
 
 ## Community
 

@@ -24,7 +24,7 @@ Create API keys in the Replane UI under Settings → API Keys.
 
 ## Endpoints
 
-- [**Get Config Value**](./get-config-value) - Retrieve a configuration value by name
+- [**Get Config Value**](/docs/api/get-config-value) - Retrieve a configuration value by name
 
 ## Response Format
 
@@ -66,9 +66,9 @@ Currently, there are no rate limits. This may change in future versions.
 
 For easier integration, use our official SDK:
 
-- [**JavaScript/TypeScript SDK**](../sdk/javascript)
+- [**JavaScript/TypeScript SDK**](/docs/sdk/javascript)
 
 ## Next Steps
 
-- [**Get Config Value**](./get-config-value) - View the endpoint documentation
-- [**JavaScript SDK**](../sdk/javascript) - Use the SDK for easier integration
+- [**Get Config Value**](/docs/api/get-config-value) - View the endpoint documentation
+- [**JavaScript SDK**](/docs/sdk/javascript) - Use the SDK for easier integration
