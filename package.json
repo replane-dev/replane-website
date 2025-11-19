@@ -23,7 +23,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "gen-api-docs": "./scripts/gen-api-docs.sh all",
-    "clean-api-docs": "docusaurus clean-api-docs",
+    "clean-api-docs": "docusaurus clean-api-docs all",
     "gen-api-docs:version": "docusaurus gen-api-docs:version",
     "clean-api-docs:version": "docusaurus clean-api-docs:version"
   },
