@@ -18,6 +18,9 @@ const config = {
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
+  // Remove trailing slashes from URLs
+  trailingSlash: false,
+
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'replane-dev', // Usually your GitHub org/user name.
@@ -54,8 +57,7 @@ const config = {
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/replane-dev/replane-website/tree/main',
+          editUrl: 'https://github.com/replane-dev/replane-website/tree/main',
           docItemComponent: '@theme/ApiItem' // Derived from docusaurus-theme-openapi
         },
         blog: false,
@@ -82,7 +84,8 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Docs'
+            label: 'Docs',
+            to: '/docs'
           },
           {
             label: 'API',
@@ -329,7 +332,8 @@ const config = {
         path: 'blog',
         editLocalizedFiles: false,
         blogTitle: 'Blog',
-        blogDescription: 'Technical insights, tutorials, and updates on self-hosted configuration management with Replane',
+        blogDescription:
+          'Technical insights, tutorials, and updates on self-hosted configuration management with Replane',
         blogSidebarCount: 'ALL',
         blogSidebarTitle: 'List blog',
         routeBasePath: 'blog',
@@ -345,8 +349,7 @@ const config = {
         showReadingTime: true,
         onUntruncatedBlogPosts: 'ignore',
         // Remove this to remove the "edit this page" links.
-        editUrl:
-          'https://github.com/replane-dev/replane-website/tree/main/',
+        editUrl: 'https://github.com/replane-dev/replane-website/tree/main/',
         remarkPlugins: [
           [
             require('@docusaurus/remark-plugin-npm2yarn'),
