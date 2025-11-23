@@ -44,6 +44,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'guides/feature-flags',
+        'guides/override-rules',
         'guides/operational-tuning',
         'guides/gradual-rollouts'
       ]

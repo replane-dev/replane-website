@@ -62,20 +62,24 @@ const client = createReplaneClient({
 });
 ```
 
-### client.getConfigValue(name, overrides?)
+### client.getConfigValue(name, options?)
 
-Fetches a config value by name. Returns a promise that resolves to the parsed JSON value.
+Fetches a config value by name. If the config has override rules and you provide context, the server evaluates those rules and returns the matching value.
 
 #### Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `name` | `string` | Yes | Config name to fetch |
-| `overrides` | `object` | No | Override client options for this request |
+| `options` | `object` | No | Options for this request |
+| `options.context` | `object` | No | Context object for evaluating override rules |
+| `options.timeoutMs` | `number` | No | Override timeout for this request |
+| `options.retries` | `number` | No | Override retry count for this request |
+| `options.retryDelayMs` | `number` | No | Override retry delay for this request |
 
 #### Returns
 
-`Promise<T>` - Parsed JSON config value
+`Promise<T>` - Parsed JSON config value (base value or override value if rules match)
 
 #### Errors
 
@@ -86,11 +90,24 @@ Throws `ReplaneError` on:
 
 #### Examples
 
-**Basic usage**:
+**Basic usage (no overrides)**:
 
 ```typescript
 const flags = await client.getConfigValue('feature-flags');
 console.log(flags); // { "new-onboarding": true, ... }
+```
+
+**With context (evaluates override rules)**:
+
+```typescript
+const maxItems = await client.getConfigValue('max-items', {
+  context: {
+    userEmail: 'user@example.com',
+    tier: 'premium',
+    country: 'US'
+  }
+});
+// Returns override value if conditions match, otherwise base value
 ```
 
 **With type safety**:
@@ -115,7 +132,20 @@ const flags = await client
   .catch(() => ({ 'new-feature': false }));
 ```
 
-**With overrides**:
+**With context (override rules)**:
+
+```typescript
+// Config has override rules - pass context to evaluate them
+const config = await client.getConfigValue('user-limits', {
+  context: {
+    userEmail: user.email,
+    tier: user.tier,
+    accountAge: user.accountAgeDays
+  }
+});
+```
+
+**With custom options**:
 
 ```typescript
 const config = await client.getConfigValue('slow-config', {

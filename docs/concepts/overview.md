@@ -44,6 +44,27 @@ A **config** is a named JSON value that your application can fetch. Examples:
 - Can contain letters, digits, underscores, and hyphens
 - Are unique within a project
 
+### Override Rules
+
+Configs can have **override rules** that return different values based on context:
+
+```javascript
+// Same config returns different values for different users
+const limit = await client.getConfigValue('api-limit', {
+  context: { tier: 'premium' }
+});
+// Returns higher limit for premium users
+```
+
+Overrides enable:
+- User-specific configurations
+- Tier-based limits
+- Regional settings
+- A/B testing variants
+- Feature flags with targeting
+
+Learn more in the [**Override Rules Guide**](../guides/override-rules).
+
 ## Versions & Snapshots
 
 Every time you update a config, Replane creates a new **snapshot** with:
@@ -96,15 +117,25 @@ When a schema is attached, Replane validates all changes before saving. Invalid 
 
 ## Roles & Permissions
 
-Replane has three roles:
+Replane uses a unified three-tier role system across projects and configs:
 
-| Role | Permissions |
-|------|------------|
-| **Owner** | Full access: manage members, API keys, and configs |
-| **Editor** | View and edit configs, view audit log |
-| **Viewer** | View configs and audit log only (read-only) |
+### Project Roles
 
-Owners can invite team members and assign roles.
+| Role           | Permissions                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| **Admin**      | Full project control: manage members, delete project, manage all configs and API keys       |
+| **Maintainer** | Manage configs and API keys, edit project details (cannot manage members or delete project) |
+
+### Config Roles
+
+Config-level roles provide granular access control for individual configs:
+
+| Role           | Permissions                                                                        |
+| -------------- | ---------------------------------------------------------------------------------- |
+| **Maintainer** | Full config access: edit value, schema, description, and manage config maintainers |
+| **Editor**     | Edit config value and description (cannot modify schema or maintainers)            |
+
+**Note:** Project admins and maintainers automatically have config maintainer permissions for all configs in their project.
 
 ## API Keys
 

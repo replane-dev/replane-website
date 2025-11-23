@@ -39,51 +39,60 @@ if (flags['new-onboarding']) {
 }
 ```
 
-## Percentage-Based Rollouts
+## Targeted Rollouts with Override Rules
 
-Roll out features gradually by storing percentages:
+Use [**override rules**](./override-rules) to target specific users or groups without managing separate values:
 
-```json title="rollout-config"
-{
-  "billing-v2-percentage": 25,
-  "advanced-search-percentage": 50
-}
-```
-
-Implementation:
+**Config:** `new-feature-enabled`  
+**Base value:** `false`  
+**Override:** VIP Users  
+- Condition: Property `userEmail` in `["vip1@example.com", "vip2@example.com"]`
+- Value: `true`
 
 ```javascript
-const rollouts = await client.getConfigValue('rollout-config');
-const userHash = hashUserId(user.id); // Deterministic hash
+// Regular user - gets base value (false)
+const enabled1 = await client.getConfigValue('new-feature-enabled', {
+  context: { userEmail: 'user@example.com' }
+});
 
-function isFeatureEnabled(featureName, percentage) {
-  return (userHash % 100) < percentage;
-}
-
-if (isFeatureEnabled('billing-v2', rollouts['billing-v2-percentage'])) {
-  // User sees billing v2
-}
+// VIP user - gets override value (true)
+const enabled2 = await client.getConfigValue('new-feature-enabled', {
+  context: { userEmail: 'vip1@example.com' }
+});
 ```
 
-## User Cohorts
+See the [**Override Rules Guide**](./override-rules) for advanced targeting scenarios.
 
-Target specific user groups:
+## Tier-Based Features
 
-```json title="cohort-flags"
+Target users by subscription tier:
+
+**Config:** `feature-flags`  
+**Base value:** 
+```json
 {
-  "beta-users": ["user-123", "user-456", "user-789"],
-  "internal-users": ["admin@company.com"],
-  "premium-feature-enabled": true
+  "advanced-search": false,
+  "export-data": false
 }
 ```
 
-Check membership:
+**Override:** Premium Users
+- Condition: Property `tier` equals `"premium"`
+- Value:
+```json
+{
+  "advanced-search": true,
+  "export-data": true
+}
+```
 
 ```javascript
-const cohorts = await client.getConfigValue('cohort-flags');
+const flags = await client.getConfigValue('feature-flags', {
+  context: { tier: user.subscription.tier }
+});
 
-if (cohorts['beta-users'].includes(user.id)) {
-  // Show beta features
+if (flags['advanced-search']) {
+  // Show advanced search (premium users only)
 }
 ```
 

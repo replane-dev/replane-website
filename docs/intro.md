@@ -19,11 +19,12 @@ Replane helps you manage application configuration that changes frequently witho
 
 ## Key Features
 
+- **Override Rules** - Return different values based on context (user, tier, country, etc.)
 - **Version History** - Every change creates an append-only snapshot with full audit trail
 - **Instant Rollback** - Revert to any previous version with one click
 - **Realtime Updates** - Changes propagate via Server-Sent Events (SSE) with zero polling
 - **JSON Schema Validation** - Prevent invalid configurations before they're saved
-- **Role-Based Access** - Owner, editor, and viewer roles with API key support
+- **Role-Based Access** - Maintainer, editor, and viewer roles with API key support
 - **Self-Hosted** - Run on your infrastructure with full data ownership
 
 ## Status

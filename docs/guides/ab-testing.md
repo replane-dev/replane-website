@@ -188,8 +188,36 @@ After determining a winner:
 3. Remove A/B test config
 4. Archive results for future reference
 
+## Using Override Rules for A/B Tests
+
+For more advanced targeting, use [**override rules**](./override-rules) to assign variants based on user properties:
+
+**Config:** `experiment-button-color`  
+**Base value:** `"blue"`
+
+**Override:** Premium Users
+- Condition: Property `tier` equals `"premium"`
+- Value: `"gold"`
+
+**Override:** Beta Users  
+- Condition: Property `betaOptIn` equals `true`
+- Value: `"green"`
+
+```javascript
+// Returns variant based on user properties
+const buttonColor = await client.getConfigValue('experiment-button-color', {
+  context: {
+    tier: user.tier,
+    betaOptIn: user.preferences.beta
+  }
+});
+```
+
+This gives you fine-grained control over experiment targeting without custom hashing logic.
+
 ## Next Steps
 
-- [**Feature Flags**](/docs/guides/feature-flags) - Learn about feature flag basics
-- [**Gradual Rollouts**](/docs/guides/gradual-rollouts) - Roll out features safely
-- [**Operational Tuning**](/docs/guides/operational-tuning) - Adjust app behavior in realtime
+- [**Override Rules**](./override-rules) - Advanced targeting with context-based rules
+- [**Feature Flags**](./feature-flags) - Learn about feature flag basics
+- [**Gradual Rollouts**](./gradual-rollouts) - Roll out features safely
+- [**Operational Tuning**](./operational-tuning) - Adjust app behavior in realtime
