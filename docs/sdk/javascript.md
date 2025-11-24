@@ -22,12 +22,19 @@ const client = createReplaneClient({
   baseUrl: 'https://replane.yourdomain.com',
 });
 
-// Fetch a config value
-const flags = await client.getConfigValue<Record<string, boolean>>('feature-flags');
+// Watch a config (receives realtime updates via SSE)
+const flags = await client.watchConfig<Record<string, boolean>>('feature-flags');
 
-if (flags['new-feature']) {
+// Get the current value
+if (flags.getValue()['new-feature']) {
   console.log('Feature enabled!');
 }
+
+// With context for override evaluation
+const enabled = flags.getValue({
+  userId: 'user-123',
+  plan: 'premium',
+});
 ```
 
 ## API Reference
@@ -42,14 +49,16 @@ Creates a new Replane client instance.
 |--------|------|----------|---------|-------------|
 | `apiKey` | `string` | Yes | - | API key for authentication. Each key is tied to a specific project. |
 | `baseUrl` | `string` | Yes | - | Base URL of your Replane instance (no trailing slash) |
+| `context` | `object` | No | `{}` | Default context for all config evaluations (can be overridden per-request) |
 | `fetchFn` | `function` | No | `globalThis.fetch` | Custom fetch function (for testing or unsupported environments) |
 | `timeoutMs` | `number` | No | `2000` | Request timeout in milliseconds |
 | `retries` | `number` | No | `2` | Number of retry attempts on transient failures |
-| `retryDelayMs` | `number` | No | `100` | Base delay between retries in milliseconds |
+| `retryDelayMs` | `number` | No | `200` | Base delay between retries in milliseconds |
+| `logger` | `object` | No | `console` | Custom logger with debug, info, warn, error methods |
 
 #### Returns
 
-Client object with methods: `{ getConfigValue, watchConfigValue, close }`
+Client object with methods: `{ watchConfig, close }`
 
 #### Example
 
@@ -57,57 +66,56 @@ Client object with methods: `{ getConfigValue, watchConfigValue, close }`
 const client = createReplaneClient({
   apiKey: 'rpk_abc123...',
   baseUrl: 'https://config.company.com',
+  context: {
+    environment: 'production',
+    region: 'us-east',
+  },
   timeoutMs: 5000,
   retries: 3,
 });
 ```
 
-### client.getConfigValue(name, options?)
+### client.watchConfig(name, options?)
 
-Fetches a config value by name. If the config has override rules and you provide context, the server evaluates those rules and returns the matching value.
+Creates a watcher that receives realtime updates for a config value via Server-Sent Events (SSE). The watcher evaluates override rules client-side based on context you provide.
 
 #### Parameters
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | `string` | Yes | Config name to fetch |
-| `options` | `object` | No | Options for this request |
-| `options.context` | `object` | No | Context object for evaluating override rules |
-| `options.timeoutMs` | `number` | No | Override timeout for this request |
-| `options.retries` | `number` | No | Override retry count for this request |
-| `options.retryDelayMs` | `number` | No | Override retry delay for this request |
+| `name` | `string` | Yes | Config name to watch |
+| `options` | `object` | No | Options for this watcher |
+| `options.context` | `object` | No | Context merged with client-level context for override evaluation |
 
 #### Returns
 
-`Promise<T>` - Parsed JSON config value (base value or override value if rules match)
+`Promise<ConfigWatcher<T>>` - Watcher object with methods:
+- `getValue(context?)` - Returns current value with override evaluation based on context
+- `close()` - Stops watching and closes the SSE connection
 
 #### Errors
 
-Throws `ReplaneError` on:
-- Non-2xx responses (including 404 for missing configs)
-- Network errors
-- Invalid JSON
+Throws if the initial fetch fails. Subsequent SSE update errors are logged but don't throw.
 
 #### Examples
 
-**Basic usage (no overrides)**:
+**Basic usage**:
 
 ```typescript
-const flags = await client.getConfigValue('feature-flags');
-console.log(flags); // { "new-onboarding": true, ... }
+const flags = await client.watchConfig<Record<string, boolean>>('feature-flags');
+
+// Get current value
+console.log(flags.getValue()); // { "new-onboarding": true, ... }
 ```
 
-**With context (evaluates override rules)**:
+**With context for override evaluation**:
 
 ```typescript
-const maxItems = await client.getConfigValue('max-items', {
-  context: {
-    userEmail: 'user@example.com',
-    tier: 'premium',
-    country: 'US'
-  }
-});
-// Returns override value if conditions match, otherwise base value
+const watcher = await client.watchConfig<boolean>('premium-features');
+
+// Evaluate for different users
+const freeUser = watcher.getValue({ plan: 'free' }); // false
+const premiumUser = watcher.getValue({ plan: 'premium' }); // true
 ```
 
 **With type safety**:
@@ -118,93 +126,39 @@ interface FeatureFlags {
   'dark-mode': boolean;
 }
 
-const flags = await client.getConfigValue<FeatureFlags>('feature-flags');
-if (flags['new-onboarding']) {
+const flags = await client.watchConfig<FeatureFlags>('feature-flags');
+if (flags.getValue()['new-onboarding']) {
   // TypeScript knows this is a boolean
 }
 ```
 
-**With fallback**:
+**Client-level context**:
 
 ```typescript
-const flags = await client
-  .getConfigValue('feature-flags')
-  .catch(() => ({ 'new-feature': false }));
-```
-
-**With context (override rules)**:
-
-```typescript
-// Config has override rules - pass context to evaluate them
-const config = await client.getConfigValue('user-limits', {
+const client = createReplaneClient({
+  apiKey: process.env.REPLANE_API_KEY!,
+  baseUrl: 'https://config.company.com',
   context: {
-    userEmail: user.email,
-    tier: user.tier,
-    accountAge: user.accountAgeDays
-  }
+    environment: 'production',
+    region: 'us-east',
+  },
 });
-```
 
-**With custom options**:
-
-```typescript
-const config = await client.getConfigValue('slow-config', {
-  timeoutMs: 10000,
-  retries: 5,
-});
-```
-
-### client.watchConfigValue(name, overrides?)
-
-Creates a watcher that receives realtime updates for a config value via Server-Sent Events (SSE).
-
-#### Parameters
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `name` | `string` | Yes | Config name to watch |
-| `overrides` | `object` | No | Override client options for this request |
-
-#### Returns
-
-`Promise<Watcher<T>>` - Watcher object with methods: `{ get, close }`
-
-- `get()` - Returns the most recent value
-- `close()` - Stops watching and closes the SSE connection
-
-#### Errors
-
-Throws if the initial fetch fails. Subsequent updates are pushed automatically.
-
-#### Examples
-
-**Basic usage**:
-
-```typescript
-const flags = await client.watchConfigValue('feature-flags');
-
-// Read current value
-if (flags.get()['new-feature']) {
-  console.log('Feature enabled');
-}
-
-// Value updates automatically when changed in Replane UI
-setInterval(() => {
-  console.log('Current flags:', flags.get());
-}, 1000);
-
-// Clean up when done
-flags.close();
+const watcher = await client.watchConfig('feature');
+// Uses client-level context
+watcher.getValue();
+// Merges with client-level context
+watcher.getValue({ userId: '123' });
 ```
 
 **In Express middleware**:
 
 ```typescript
 // Initialize once
-const rateConfig = await client.watchConfigValue('rate-limits');
+const rateConfig = await client.watchConfig<Record<string, number>>('rate-limits');
 
 app.use((req, res, next) => {
-  const limits = rateConfig.get();
+  const limits = rateConfig.getValue();
   const rpm = limits['api-requests-per-minute'];
 
   // Apply rate limiting
@@ -229,13 +183,29 @@ interface RateLimits {
   'max-concurrent-connections': number;
 }
 
-const limits = await client.watchConfigValue<RateLimits>('rate-limits');
-const rpm = limits.get()['api-requests-per-minute']; // TypeScript knows this is a number
+const limits = await client.watchConfig<RateLimits>('rate-limits');
+const rpm = limits.getValue()['api-requests-per-minute']; // TypeScript knows this is a number
+```
+
+**A/B testing with context**:
+
+```typescript
+const experiment = await client.watchConfig<string>('homepage-variant');
+
+app.get('/', (req, res) => {
+  // Evaluate based on user ID for consistent experience
+  const variant = experiment.getValue({
+    userId: req.user.id,
+    country: req.geo.country,
+  });
+  
+  res.render(variant === 'b' ? 'homepage-v2' : 'homepage-v1');
+});
 ```
 
 ### client.close()
 
-Gracefully shuts down the client and closes all active watchers. Subsequent calls to `getConfigValue` or `watchConfigValue` will throw.
+Gracefully shuts down the client and closes all active watchers. Subsequent calls to `watchConfig` will throw.
 
 #### Example
 
@@ -260,9 +230,9 @@ Client with same API as `createReplaneClient`
 
 #### Notes
 
-- `getConfigValue` resolves to values from `initialData`
+- `watchConfig` resolves to watchers with values from `initialData`
 - Throws `ReplaneError` if config name is missing
-- `watchConfigValue` works but uses polling (no SSE)
+- Watchers work but don't receive SSE updates (values remain static from `initialData`)
 
 #### Example
 
@@ -274,8 +244,8 @@ const client = createInMemoryReplaneClient({
   'rate-limits': { 'api-requests-per-minute': 100 },
 });
 
-const flags = await client.getConfigValue('feature-flags');
-console.log(flags); // { "new-feature": true }
+const flags = await client.watchConfig('feature-flags');
+console.log(flags.getValue()); // { "new-feature": true }
 ```
 
 ## Error Handling
@@ -286,11 +256,11 @@ The SDK throws `ReplaneError` for HTTP failures:
 
 ```typescript
 try {
-  const config = await client.getConfigValue('non-existent');
+  const watcher = await client.watchConfig('non-existent');
 } catch (error) {
   if (error instanceof ReplaneError) {
-    console.error('HTTP error:', error.message);
-    console.error('Status code:', error.statusCode);
+    console.error('Replane error:', error.message);
+    console.error('Error code:', error.code);
   } else {
     console.error('Other error:', error);
   }
@@ -325,14 +295,14 @@ The SDK is written in TypeScript and exports full type definitions.
 
 ```typescript
 import { createReplaneClient, ReplaneError } from 'replane-sdk';
-import type { ReplaneClient, Watcher } from 'replane-sdk';
+import type { ReplaneClient, ConfigWatcher } from 'replane-sdk';
 
 const client: ReplaneClient = createReplaneClient({
   apiKey: 'rpk_...',
   baseUrl: 'https://config.company.com',
 });
 
-const watcher: Watcher<Record<string, boolean>> = await client.watchConfigValue('flags');
+const watcher: ConfigWatcher<Record<string, boolean>> = await client.watchConfig('flags');
 ```
 
 ## Best Practices
@@ -353,20 +323,17 @@ const client = createReplaneClient({
 });
 ```
 
-### Use Watchers for Frequently Accessed Configs
+### Use Watchers for All Configs
+
+All config access uses watchers with realtime updates:
 
 ```typescript
-// ❌ Fetches on every request
-app.get('/api/data', async (req, res) => {
-  const flags = await client.getConfigValue('feature-flags');
-  // ...
-});
-
-// ✅ Cached in memory, updated in realtime
-const flags = await client.watchConfigValue('feature-flags');
+// Initialize watchers once at startup
+const flags = await client.watchConfig('feature-flags');
 
 app.get('/api/data', (req, res) => {
-  const currentFlags = flags.get();
+  // Always up-to-date via SSE, no network request needed
+  const currentFlags = flags.getValue();
   // ...
 });
 ```
@@ -374,20 +341,26 @@ app.get('/api/data', (req, res) => {
 ### Provide Fallbacks
 
 ```typescript
-const config = await client
-  .getConfigValue('my-config')
-  .catch(() => ({
-    // Safe defaults
-    'feature-enabled': false,
-    'rate-limit': 100,
-  }));
+let config: ConfigWatcher<MyConfig>;
+try {
+  config = await client.watchConfig('my-config');
+} catch (error) {
+  // Use in-memory client with safe defaults
+  const fallbackClient = createInMemoryReplaneClient({
+    'my-config': {
+      'feature-enabled': false,
+      'rate-limit': 100,
+    },
+  });
+  config = await fallbackClient.watchConfig('my-config');
+}
 ```
 
 ### Clean Up Resources
 
 ```typescript
 // Close individual watchers
-const watcher = await client.watchConfigValue('config');
+const watcher = await client.watchConfig('config');
 // ... use watcher
 watcher.close();
 
@@ -400,9 +373,9 @@ client.close(); // Closes all watchers
 ### Feature Flags
 
 ```typescript
-const flags = await client.getConfigValue('feature-flags');
+const flags = await client.watchConfig<Record<string, boolean>>('feature-flags');
 
-if (flags['new-checkout']) {
+if (flags.getValue()['new-checkout']) {
   return renderNewCheckout();
 } else {
   return renderOldCheckout();
@@ -412,12 +385,11 @@ if (flags['new-checkout']) {
 ### Rate Limiting
 
 ```typescript
-const limits = await client.watchConfigValue('rate-limits');
+const limits = await client.watchConfig<Record<string, number>>('rate-limits');
 
-setInterval(() => {
-  const rpm = limits.get()['api-requests-per-minute'];
-  rateLimiter.setLimit(rpm);
-}, 1000);
+// Value is always up-to-date via SSE
+const rpm = limits.getValue()['api-requests-per-minute'];
+rateLimiter.setLimit(rpm);
 ```
 
 ### Multiple Projects
@@ -435,8 +407,8 @@ const projectBClient = createReplaneClient({
   baseUrl: 'https://config.company.com',
 });
 
-const flagsA = await projectAClient.getConfigValue('flags');
-const flagsB = await projectBClient.getConfigValue('flags');
+const flagsA = await projectAClient.watchConfig('flags');
+const flagsB = await projectBClient.watchConfig('flags');
 ```
 
 ## Next Steps
