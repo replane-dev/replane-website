@@ -70,14 +70,14 @@ When you fetch with context `{userEmail: "vip@example.com"}`, you get `{"maxItem
 
 ### Comparison Operators
 
-| Operator                       | Description           | Example                                   |
-| ------------------------------ | --------------------- | ----------------------------------------- |
-| **Equals**                     | Exact match           | Property `tier` equals `"premium"`        |
-| **Not In**                     | Value is not in array | Property `country` not in `["CN","RU"]`   |
-| **Less Than (<)**              | Numeric comparison    | Property `accountAge` less than `30`      |
-| **Less Than or Equal (<=)**    | Numeric comparison    | Property `count` <= `100`                 |
-| **Greater Than (>)**           | Numeric comparison    | Property `creditScore` greater than `700` |
-| **Greater Than or Equal (>=)** | Numeric comparison    | Property `age` >= `18`                    |
+| Operator                  | Description           | Example                                   |
+| ------------------------- | --------------------- | ----------------------------------------- |
+| **Equals**                | Exact match           | Property `tier` equals `"premium"`        |
+| **Not In**                | Value is not in array | Property `country` not in `["CN","RU"]`   |
+| **Less Than**             | Numeric comparison    | Property `accountAge` less than `30`      |
+| **Less Than or Equal**    | Numeric comparison    | Property `count` less than or equal `100` |
+| **Greater Than**          | Numeric comparison    | Property `creditScore` greater than `700` |
+| **Greater Than or Equal** | Numeric comparison    | Property `age` greater than or equal `18` |
 
 ### Composite Operators
 
