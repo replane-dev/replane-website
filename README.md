@@ -1,6 +1,6 @@
 # Replane Documentation Website
 
-Official documentation website for [Replane](https://github.com/replane-dev/replane) - versioned, auditable application configuration.
+Official documentation website for [Replane](https://github.com/replane-dev/replane) - dynamic configuration manager for your apps and services.
 
 **Live Site:** [https://replane.dev](https://replane.dev)
 

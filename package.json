@@ -1,6 +1,6 @@
 {
   "name": "replane-website",
-  "description": "Replane - Versioned, auditable application configuration. Self-hosted.",
+  "description": "Replane - Dynamic configuration manager for your apps and services. Self-hosted.",
   "author": "Replane",
   "repository": {
     "type": "git",
