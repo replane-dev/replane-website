@@ -73,30 +73,6 @@ OKTA_ISSUER=https://your-domain.okta.com
 
 ## Optional Variables
 
-### ORGANIZATION_NAME
-
-Display name shown in the UI (e.g., sidebar, project switcher).
-
-```bash
-ORGANIZATION_NAME=Acme Corp
-```
-
-If not set, no organization label is displayed.
-
-### ALLOW_SELF_APPROVALS
-
-Whether users can approve their own config proposals.
-
-```bash
-ALLOW_SELF_APPROVALS=false
-```
-
-**Default**: `false`
-
-**Values**:
-- `true` - Allow self-approvals
-- `false` - Require approval from another user
-
 ### NODE_ENV
 
 Node.js environment.
@@ -106,6 +82,7 @@ NODE_ENV=production
 ```
 
 **Values**:
+
 - `production` (default in Docker)
 - `development`
 
@@ -140,7 +117,7 @@ BASE_URL=https://replane.company.com
 SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
 GITHUB_CLIENT_ID=prod-github-client-id
 GITHUB_CLIENT_SECRET=prod-github-client-secret
-ORGANIZATION_NAME=Company Name
+WORKSPACE_NAME=Company Name
 ALLOW_SELF_APPROVALS=false
 NODE_ENV=production
 ```
@@ -154,7 +131,7 @@ SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
 OKTA_CLIENT_ID=okta-client-id
 OKTA_CLIENT_SECRET=okta-client-secret
 OKTA_ISSUER=https://company.okta.com
-ORGANIZATION_NAME=Company Name
+WORKSPACE_NAME=Company Name
 ALLOW_SELF_APPROVALS=false
 NODE_ENV=production
 ```
@@ -166,6 +143,7 @@ NODE_ENV=production
 **Never commit secrets to version control.**
 
 Use:
+
 - `.env` files (add to `.gitignore`)
 - Docker secrets
 - Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, etc.)

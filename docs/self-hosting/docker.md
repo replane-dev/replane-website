@@ -27,7 +27,7 @@ services:
     volumes:
       - replane-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -48,16 +48,12 @@ services:
       # Authentication (choose one)
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-
-      # Optional
-      ORGANIZATION_NAME: ${ORGANIZATION_NAME}
-      ALLOW_SELF_APPROVALS: ${ALLOW_SELF_APPROVALS:-false}
     ports:
-      - "3000:3000"
+      - '3000:3000'
     networks:
       - replane-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -85,10 +81,6 @@ SECRET_KEY_BASE=generate-a-long-random-string-here
 # GitHub OAuth
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
-
-# Optional
-ORGANIZATION_NAME=Your Company Name
-ALLOW_SELF_APPROVALS=false
 ```
 
 ### Generating SECRET_KEY_BASE
@@ -266,6 +258,7 @@ docker-compose logs --tail=100 app
 ### Metrics
 
 Monitor:
+
 - CPU and memory usage
 - Database connections
 - Response times
@@ -301,6 +294,7 @@ docker-compose logs app
 ```
 
 Common issues:
+
 - Missing environment variables
 - Database connection errors
 - Invalid OAuth configuration
@@ -322,6 +316,7 @@ docker-compose exec app sh -c 'psql $DATABASE_URL -c "SELECT 1"'
 ### OAuth callback errors
 
 Verify:
+
 - Callback URL matches OAuth provider settings exactly
 - BASE_URL environment variable is correct
 - OAuth credentials are valid
