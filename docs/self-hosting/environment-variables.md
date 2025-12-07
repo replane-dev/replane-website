@@ -22,6 +22,19 @@ DATABASE_URL=postgresql://user:password@host:5432/database
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
 ```
 
+### DATABASE_SSL_CA
+
+_(Optional)_ Custom SSL/TLS certificate authority (CA) for PostgreSQL connections.
+
+```bash
+DATABASE_SSL_CA="-----BEGIN CERTIFICATE-----
+MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF
+...
+-----END CERTIFICATE-----"
+```
+
+Use this when connecting to PostgreSQL instances that require custom SSL certificates (e.g., self-signed certificates, private CAs, or cloud providers with custom certificates).
+
 ### BASE_URL
 
 The public URL where Replane is accessible.
