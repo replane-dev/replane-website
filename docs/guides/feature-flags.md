@@ -22,15 +22,15 @@ Create a config named `feature-flags` with simple boolean values:
 In your application:
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: process.env.REPLANE_URL,
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL
+})
 
 // Check a flag
-const flags = await client.getConfigValue('feature-flags');
+const flags = await client.getConfigValue('feature-flags')
 
 if (flags['new-onboarding']) {
   // Show new onboarding flow
@@ -45,7 +45,8 @@ Use [**override rules**](./override-rules) to target specific users or groups wi
 
 **Config:** `new-feature-enabled`  
 **Base value:** `false`  
-**Override:** VIP Users  
+**Override:** VIP Users
+
 - Condition: Property `userEmail` in `["vip1@example.com", "vip2@example.com"]`
 - Value: `true`
 
@@ -53,12 +54,12 @@ Use [**override rules**](./override-rules) to target specific users or groups wi
 // Regular user - gets base value (false)
 const enabled1 = await client.getConfigValue('new-feature-enabled', {
   context: { userEmail: 'user@example.com' }
-});
+})
 
 // VIP user - gets override value (true)
 const enabled2 = await client.getConfigValue('new-feature-enabled', {
   context: { userEmail: 'vip1@example.com' }
-});
+})
 ```
 
 See the [**Override Rules Guide**](./override-rules) for advanced targeting scenarios.
@@ -68,7 +69,8 @@ See the [**Override Rules Guide**](./override-rules) for advanced targeting scen
 Target users by subscription tier:
 
 **Config:** `feature-flags`  
-**Base value:** 
+**Base value:**
+
 ```json
 {
   "advanced-search": false,
@@ -77,8 +79,10 @@ Target users by subscription tier:
 ```
 
 **Override:** Premium Users
+
 - Condition: Property `tier` equals `"premium"`
 - Value:
+
 ```json
 {
   "advanced-search": true,
@@ -89,7 +93,7 @@ Target users by subscription tier:
 ```javascript
 const flags = await client.getConfigValue('feature-flags', {
   context: { tier: user.subscription.tier }
-});
+})
 
 if (flags['advanced-search']) {
   // Show advanced search (premium users only)
@@ -101,11 +105,11 @@ if (flags['advanced-search']) {
 Use watchers to get instant updates when flags change:
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags');
+const flags = await client.watchConfigValue('feature-flags')
 
 // Later in your code
 function isEnabled(flagName) {
-  return flags.get()[flagName] || false;
+  return flags.get()[flagName] || false
 }
 
 // The value updates automatically when someone changes it in the UI
@@ -132,6 +136,7 @@ Prevent invalid flag configurations with a schema:
 <!-- Screenshot: Schema validation will be added here -->
 
 This ensures:
+
 - Only boolean values are allowed
 - Required flags are always present
 - No typos in flag names
@@ -163,16 +168,15 @@ Create separate configs for different domains:
 Always provide fallbacks:
 
 ```javascript
-const flags = await client
-  .getConfigValue('feature-flags')
-  .catch(() => ({
-    'new-feature': false,  // Safe default
-  }));
+const flags = await client.getConfigValue('feature-flags').catch(() => ({
+  'new-feature': false // Safe default
+}))
 ```
 
 ### Document Your Flags
 
 Keep a README or wiki documenting:
+
 - What each flag does
 - Who owns it
 - When it was added

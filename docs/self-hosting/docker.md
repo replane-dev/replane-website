@@ -49,11 +49,11 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
     ports:
-      - '3000:3000'
+      - '8080:8080'
     networks:
       - replane-network
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -99,7 +99,7 @@ docker-compose up -d
 docker-compose logs -f app
 
 # Check health
-curl http://localhost:3000/api/health
+curl http://localhost:8080/api/health
 ```
 
 Expected response:
@@ -137,7 +137,7 @@ Create `Caddyfile`:
 
 ```caddyfile
 replane.yourdomain.com {
-    reverse_proxy app:3000
+    reverse_proxy app:8080
 }
 ```
 
@@ -151,8 +151,8 @@ Remove port mapping from app service (Caddy handles it):
 
 ```yaml
 app:
-  # Remove: ports: - "3000:3000"
-  # Caddy will proxy to app:3000
+  # Remove: ports: - "8080:8080"
+  # Caddy will proxy to app:8080
 ```
 
 Restart:
@@ -183,7 +183,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/key.pem;
 
     location / {
-        proxy_pass http://app:3000;
+        proxy_pass http://app:8080;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';

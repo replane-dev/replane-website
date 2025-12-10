@@ -22,22 +22,23 @@ Store rate limit configurations:
 Use in your API:
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: process.env.REPLANE_URL,
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL
+})
 
-const limits = await client.watchConfigValue('rate-limits');
+const limits = await client.watchConfigValue('rate-limits')
 
 // In your rate limiter
 function getRateLimit() {
-  return limits.get()['api-requests-per-minute'];
+  return limits.get()['api-requests-per-minute']
 }
 ```
 
 When you need to increase limits during a traffic spike:
+
 1. Update the config in the Replane UI
 2. Changes propagate instantly to all app instances
 3. No restart required
@@ -57,11 +58,11 @@ Tune cache behavior dynamically:
 Implementation:
 
 ```javascript
-const cacheConfig = await client.watchConfigValue('cache-config');
+const cacheConfig = await client.watchConfigValue('cache-config')
 
 async function getCachedUserProfile(userId) {
-  const ttl = cacheConfig.get()['user-profile-ttl-seconds'];
-  return cache.get(`user:${userId}`, { ttl });
+  const ttl = cacheConfig.get()['user-profile-ttl-seconds']
+  return cache.get(`user:${userId}`, { ttl })
 }
 ```
 
@@ -80,11 +81,11 @@ Control background job batch sizes:
 Use in your worker:
 
 ```javascript
-const jobConfig = await client.watchConfigValue('job-config');
+const jobConfig = await client.watchConfigValue('job-config')
 
 async function processEmails() {
-  const batchSize = jobConfig.get()['email-batch-size'];
-  const emails = await getEmailQueue(batchSize);
+  const batchSize = jobConfig.get()['email-batch-size']
+  const emails = await getEmailQueue(batchSize)
   // Process batch...
 }
 ```
@@ -161,7 +162,7 @@ Begin with safe, conservative values:
 
 ```json
 {
-  "api-requests-per-minute": 50,  // Start low
+  "api-requests-per-minute": 50, // Start low
   "max-concurrent-connections": 20
 }
 ```
@@ -171,6 +172,7 @@ Increase gradually based on monitoring.
 ### Monitor Impact
 
 After changing a config:
+
 - Watch error rates
 - Monitor latency
 - Check resource usage
@@ -195,15 +197,15 @@ For frequently accessed configs, use `watchConfigValue`:
 ```javascript
 // ❌ Fetches on every request
 async function rateLimit(req) {
-  const limits = await client.getConfigValue('rate-limits');
+  const limits = await client.getConfigValue('rate-limits')
   // ...
 }
 
 // ✅ Cached in memory, updated in realtime
-const limits = await client.watchConfigValue('rate-limits');
+const limits = await client.watchConfigValue('rate-limits')
 
 function rateLimit(req) {
-  const rpm = limits.get()['api-requests-per-minute'];
+  const rpm = limits.get()['api-requests-per-minute']
   // ...
 }
 ```
@@ -211,6 +213,7 @@ function rateLimit(req) {
 ### Rollback Plan
 
 If a config change causes issues:
+
 1. Go to Replane UI
 2. Click "Version History"
 3. Select the previous version

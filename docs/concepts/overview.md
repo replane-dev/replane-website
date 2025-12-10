@@ -12,7 +12,7 @@ A **project** is a container for related configurations. Each project has its ow
 
 - Set of configs
 - Team members with roles
-- API keys
+- SDK keys
 - Audit log
 
 Projects provide isolation between different applications or environments.
@@ -52,11 +52,12 @@ Configs can have **override rules** that return different values based on contex
 // Same config returns different values for different users
 const limit = await client.getConfigValue('api-limit', {
   context: { tier: 'premium' }
-});
+})
 // Returns higher limit for premium users
 ```
 
 Overrides enable:
+
 - User-specific configurations
 - Tier-based limits
 - Regional settings
@@ -87,10 +88,10 @@ Snapshots are **append-only** — previous versions are never deleted. This enab
 When you use the SDK's `watchConfigValue` method, your application receives updates via **Server-Sent Events (SSE)**:
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags');
+const flags = await client.watchConfigValue('feature-flags')
 
 // Later, when someone changes the config in the UI:
-flags.get(); // Returns the new value automatically
+flags.get() // Returns the new value automatically
 ```
 
 No polling required. Changes propagate instantly.
@@ -123,8 +124,8 @@ Replane uses a unified three-tier role system across projects and configs:
 
 | Role           | Permissions                                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------- |
-| **Admin**      | Full project control: manage members, delete project, manage all configs and API keys       |
-| **Maintainer** | Manage configs and API keys, edit project details (cannot manage members or delete project) |
+| **Admin**      | Full project control: manage members, delete project, manage all configs and SDK keys       |
+| **Maintainer** | Manage configs and SDK keys, edit project details (cannot manage members or delete project) |
 
 ### Config Roles
 
@@ -137,22 +138,22 @@ Config-level roles provide granular access control for individual configs:
 
 **Note:** Project admins and maintainers automatically have config maintainer permissions for all configs in their project.
 
-## API Keys
+## SDK Keys
 
-**API keys** provide programmatic access to configs. Each key:
+**SDK keys** provide programmatic access to configs. Each key:
 
 - Belongs to a specific project
 - Can only access configs in that project
 - Is shown once when created (store it securely)
 - Can be revoked at any time
 
-Use API keys in your SDKs:
+Use SDK keys in your SDKs:
 
 ```javascript
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: 'https://your-replane-host.com',
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://your-replane-host.com'
+})
 ```
 
 ## Audit Log
@@ -162,7 +163,7 @@ The **audit log** tracks all activity:
 - Config changes (who, when, what)
 - Rollbacks
 - Member invitations
-- API key creation/revocation
+- SDK key creation/revocation
 
 <!-- Screenshot: Audit log will be added here -->
 

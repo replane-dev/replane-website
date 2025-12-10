@@ -44,7 +44,7 @@ pnpm install
 npm start
 ```
 
-The site will open at `http://localhost:3000`.
+The site will open at `http://localhost:8080`.
 
 ### Building
 

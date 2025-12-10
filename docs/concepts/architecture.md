@@ -42,15 +42,17 @@ Replane's architecture is straightforward: a Next.js web app backed by PostgreSQ
 ### Projects
 
 Each project is isolated and contains:
+
 - Configs
 - Snapshots (version history)
 - Team members
-- API keys
+- SDK keys
 - Audit log entries
 
 ### Configs
 
 A config has:
+
 - Name (unique per project)
 - Current value (JSON)
 - Optional JSON schema
@@ -59,6 +61,7 @@ A config has:
 ### Snapshots
 
 Each snapshot stores:
+
 - Config value at that point in time
 - Who created it
 - When it was created
@@ -66,9 +69,10 @@ Each snapshot stores:
 
 Snapshots are **append-only**. Rollbacks create new snapshots pointing to old values.
 
-### API Keys
+### SDK Keys
 
-Each API key:
+Each SDK key:
+
 - Belongs to one project
 - Has a hashed token
 - Can be revoked (soft delete)
@@ -81,7 +85,7 @@ Each API key:
 4. Session cookie is set
 5. User is redirected to dashboard
 
-API keys use Bearer token authentication:
+SDK keys use Bearer token authentication:
 
 ```http
 Authorization: Bearer your-api-key-here
@@ -102,7 +106,7 @@ SSE is unidirectional (server → client) and works over HTTP/1.1. It's simpler 
 
 - **HTTPS required** in production (use a reverse proxy like Nginx or Caddy)
 - **Session cookies** are httpOnly and secure
-- **API keys** are hashed with bcrypt before storage
+- **SDK keys** are hashed with bcrypt before storage
 - **SQL injection** prevented by parameterized queries
 - **CSRF protection** via Next.js middleware
 
@@ -115,6 +119,7 @@ Replane is designed for **tens of thousands of configs** and **hundreds of users
 - No heavy background jobs or queues
 
 For larger deployments:
+
 - Use read replicas for API requests
 - Load balance multiple app instances
 - Keep SSE connections on dedicated instances

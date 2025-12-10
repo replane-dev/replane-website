@@ -249,7 +249,7 @@ Combine AND/OR/NOT for complex scenarios:
 import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
+  sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 

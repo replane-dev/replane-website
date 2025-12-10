@@ -1,6 +1,6 @@
 ---
 slug: use-cases-feature-flags
-title: "Use Case: Managing Feature Flags with Replane"
+title: 'Use Case: Managing Feature Flags with Replane'
 authors: replane
 tags: [feature-flags, use-cases, guides]
 description: Learn how Replane makes feature flags simple and powerful with safe releases, gradual rollouts, and instant rollback capabilities.
@@ -35,19 +35,19 @@ Create a config named `feature-flags`:
 In your application:
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: process.env.REPLANE_URL,
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL
+})
 
-const flags = await client.getConfigValue('feature-flags');
+const flags = await client.getConfigValue('feature-flags')
 
 if (flags['new-onboarding']) {
-  return renderNewOnboarding();
+  return renderNewOnboarding()
 } else {
-  return renderOldOnboarding();
+  return renderOldOnboarding()
 }
 ```
 
@@ -144,18 +144,18 @@ Target specific user groups:
 Check membership:
 
 ```javascript
-const cohorts = await client.getConfigValue('cohorts');
+const cohorts = await client.getConfigValue('cohorts')
 
 function hasAccess(user, featureName) {
-  const betaList = cohorts['beta-users'] || [];
-  if (betaList.includes(user.id)) return true;
+  const betaList = cohorts['beta-users'] || []
+  if (betaList.includes(user.id)) return true
 
-  const internalList = cohorts['internal-team'] || [];
-  if (internalList.includes(user.email)) return true;
+  const internalList = cohorts['internal-team'] || []
+  if (internalList.includes(user.email)) return true
 
-  if (user.isPremium && cohorts['premium-customers']) return true;
+  if (user.isPremium && cohorts['premium-customers']) return true
 
-  return false;
+  return false
 }
 ```
 
@@ -179,6 +179,7 @@ Prevent invalid flag configurations:
 <!-- Screenshot: Schema validation error will be added here -->
 
 This ensures:
+
 - Only boolean values allowed
 - Required flags are always present
 - No typos in flag names
@@ -189,11 +190,11 @@ Use watchers for instant updates:
 
 ```javascript
 // Initialize once
-const flags = await client.watchConfigValue('feature-flags');
+const flags = await client.watchConfigValue('feature-flags')
 
 // Use anywhere in your app
 function isEnabled(flagName) {
-  return flags.get()[flagName] || false;
+  return flags.get()[flagName] || false
 }
 
 // Value updates automatically when changed in Replane UI
@@ -210,7 +211,7 @@ analytics.track('feature_accessed', {
   feature: 'new-checkout',
   enabled: isEnabled('new-checkout'),
   userId: user.id
-});
+})
 ```
 
 Compare conversion rates between variants to make data-driven decisions.
@@ -242,6 +243,7 @@ Changes propagate to all app instances in seconds.
 ### Group Related Flags
 
 Create separate configs for different domains:
+
 - `feature-flags` - UI features
 - `api-flags` - API behavior
 - `experiments` - A/B tests
@@ -249,16 +251,15 @@ Create separate configs for different domains:
 ### Default to Safe Values
 
 ```javascript
-const flags = await client
-  .getConfigValue('feature-flags')
-  .catch(() => ({
-    'new-feature': false  // Safe default
-  }));
+const flags = await client.getConfigValue('feature-flags').catch(() => ({
+  'new-feature': false // Safe default
+}))
 ```
 
 ### Document Flags
 
 Maintain a README listing:
+
 - What each flag does
 - Owner
 - Removal plan
@@ -266,6 +267,7 @@ Maintain a README listing:
 ### Clean Up Old Flags
 
 After full rollout, remove the flag:
+
 1. Set to final value (usually `true`)
 2. Deploy code without the flag check
 3. Delete from config (or keep for audit history)
@@ -273,6 +275,7 @@ After full rollout, remove the flag:
 ## When NOT to Use Feature Flags
 
 Avoid flags for:
+
 - **Permanent configuration** (use environment variables)
 - **Secrets** (use a secret manager)
 - **Code that always changes together** (deploy normally)
@@ -287,4 +290,4 @@ Use flags for temporary switches that control behavior independently from code d
 
 ---
 
-*Want to try feature flags with Replane? Check out the [Quickstart Guide](/docs/getting-started/quickstart).*
+_Want to try feature flags with Replane? Check out the [Quickstart Guide](/docs/getting-started/quickstart)._

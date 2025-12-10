@@ -36,10 +36,10 @@ Every config change creates an append-only snapshot. When something goes wrong, 
 Changes propagate to your applications instantly via Server-Sent Events. No polling, no delays. Your apps stay synchronized automatically.
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags');
+const flags = await client.watchConfigValue('feature-flags')
 
 // Later, when someone changes the config:
-flags.get(); // Returns the new value automatically
+flags.get() // Returns the new value automatically
 ```
 
 ### JSON Schema Validation
@@ -62,7 +62,7 @@ Attach JSON schemas to prevent invalid configurations. Block out-of-range values
 
 ### Role-Based Access Control
 
-Granular permissions with owner, editor, and viewer roles. Control who can modify configs and who can only view them. Create API keys for programmatic access.
+Granular permissions with owner, editor, and viewer roles. Control who can modify configs and who can only view them. Create SDK keys for programmatic access.
 
 ### Self-Hosted
 
@@ -89,12 +89,12 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
-      BASE_URL: http://localhost:3000
+      BASE_URL: http://localhost:8080
       SECRET_KEY_BASE: your-secret-key
       GITHUB_CLIENT_ID: your-github-client-id
       GITHUB_CLIENT_SECRET: your-github-client-secret
     ports:
-      - "3000:3000"
+      - '8080:8080'
 
 volumes:
   replane-db:
@@ -149,14 +149,14 @@ npm install replane-sdk
 ```
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: 'https://config.company.com',
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://config.company.com'
+})
 
-const flags = await client.getConfigValue('feature-flags');
+const flags = await client.getConfigValue('feature-flags')
 ```
 
 ## Status & Roadmap
@@ -164,6 +164,7 @@ const flags = await client.getConfigValue('feature-flags');
 Replane is **early but usable**. We're running it in production for our own projects. Expect changes to schemas and endpoints before v1.0.
 
 Upcoming features:
+
 - Config templates
 - Webhook notifications
 - More authentication providers (Google, Azure AD)
@@ -179,4 +180,4 @@ We'd love to hear your feedback! Open an issue or discussion on GitHub.
 
 ---
 
-*Ready to give it a try? Start with the [Quickstart Guide](/docs/getting-started/quickstart).*
+_Ready to give it a try? Start with the [Quickstart Guide](/docs/getting-started/quickstart)._

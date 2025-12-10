@@ -26,43 +26,43 @@ Store variant percentages in config:
 ## Implementation
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: process.env.REPLANE_URL,
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL
+})
 
-const tests = await client.getConfigValue('ab-tests');
+const tests = await client.getConfigValue('ab-tests')
 
 // Deterministic assignment based on user ID
 function getVariant(userId, testName) {
-  const variants = tests[testName];
-  const variantNames = Object.keys(variants);
-  const percentages = Object.values(variants);
+  const variants = tests[testName]
+  const variantNames = Object.keys(variants)
+  const percentages = Object.values(variants)
 
   // Hash user ID to get consistent assignment
-  let hash = 0;
+  let hash = 0
   for (let i = 0; i < userId.length; i++) {
-    hash = ((hash << 5) - hash) + userId.charCodeAt(i);
-    hash = hash & hash;
+    hash = (hash << 5) - hash + userId.charCodeAt(i)
+    hash = hash & hash
   }
 
-  const bucket = Math.abs(hash) % 100;
-  let cumulative = 0;
+  const bucket = Math.abs(hash) % 100
+  let cumulative = 0
 
   for (let i = 0; i < variantNames.length; i++) {
-    cumulative += percentages[i];
+    cumulative += percentages[i]
     if (bucket < cumulative) {
-      return variantNames[i];
+      return variantNames[i]
     }
   }
 
-  return variantNames[variantNames.length - 1];
+  return variantNames[variantNames.length - 1]
 }
 
 // Usage
-const buttonColor = getVariant(user.id, 'button-color');
+const buttonColor = getVariant(user.id, 'button-color')
 ```
 
 ## Adjusting Splits
@@ -70,6 +70,7 @@ const buttonColor = getVariant(user.id, 'button-color');
 Product team can adjust variant percentages in realtime:
 
 **Initial 50/50 split:**
+
 ```json
 {
   "button-color": {
@@ -80,6 +81,7 @@ Product team can adjust variant percentages in realtime:
 ```
 
 **Green performing better, shift to 25/75:**
+
 ```json
 {
   "button-color": {
@@ -90,6 +92,7 @@ Product team can adjust variant percentages in realtime:
 ```
 
 **Winner determined, go 100% green:**
+
 ```json
 {
   "button-color": {
@@ -124,16 +127,16 @@ Combine with user attributes for targeted tests:
 function shouldShowVariant(user, testName) {
   // Premium users get special treatment
   if (user.isPremium) {
-    return 'premium-variant';
+    return 'premium-variant'
   }
 
   // Beta users always get new features
   if (user.isBeta) {
-    return 'beta-variant';
+    return 'beta-variant'
   }
 
   // Everyone else gets random assignment
-  return getVariant(user.id, testName);
+  return getVariant(user.id, testName)
 }
 ```
 
@@ -142,21 +145,21 @@ function shouldShowVariant(user, testName) {
 Log variant assignments for analytics:
 
 ```javascript
-const variant = getVariant(user.id, 'button-color');
+const variant = getVariant(user.id, 'button-color')
 
 // Track assignment
 analytics.track('experiment_viewed', {
   experiment: 'button-color',
   variant: variant,
   userId: user.id
-});
+})
 
 // Track conversion
 analytics.track('button_clicked', {
   experiment: 'button-color',
   variant: variant,
   userId: user.id
-});
+})
 ```
 
 ## Best Practices
@@ -174,6 +177,7 @@ Always use the same hash function for the same user to ensure consistent experie
 ### Document Tests
 
 Maintain a registry of active tests:
+
 - What's being tested
 - Success metrics
 - Start date
@@ -183,6 +187,7 @@ Maintain a registry of active tests:
 ### Clean Up
 
 After determining a winner:
+
 1. Update config to 100% winning variant
 2. Deploy code with winner hardcoded
 3. Remove A/B test config
@@ -196,10 +201,12 @@ For more advanced targeting, use [**override rules**](./override-rules) to assig
 **Base value:** `"blue"`
 
 **Override:** Premium Users
+
 - Condition: Property `tier` equals `"premium"`
 - Value: `"gold"`
 
-**Override:** Beta Users  
+**Override:** Beta Users
+
 - Condition: Property `betaOptIn` equals `true`
 - Value: `"green"`
 
@@ -210,7 +217,7 @@ const buttonColor = await client.getConfigValue('experiment-button-color', {
     tier: user.tier,
     betaOptIn: user.preferences.beta
   }
-});
+})
 ```
 
 This gives you fine-grained control over experiment targeting without custom hashing logic.

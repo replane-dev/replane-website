@@ -37,11 +37,11 @@ docker run -d \
   --name replane \
   --link replane-db:db \
   -e DATABASE_URL=postgresql://postgres:postgres@db:5432/replane \
-  -e BASE_URL=http://localhost:3000 \
+  -e BASE_URL=http://localhost:8080 \
   -e SECRET_KEY_BASE=your-secret-key-here \
   -e GITHUB_CLIENT_ID=your-github-client-id \
   -e GITHUB_CLIENT_SECRET=your-github-client-secret \
-  -p 3000:3000 \
+  -p 8080:8080 \
   ghcr.io/replane-dev/replane:latest
 ```
 
@@ -82,7 +82,7 @@ Edit `.env` with your settings:
 
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
-BASE_URL=http://localhost:3000
+BASE_URL=http://localhost:8080
 SECRET_KEY_BASE=generate-a-random-string-here
 
 # GitHub OAuth
@@ -102,7 +102,7 @@ pnpm db:migrate
 pnpm dev
 ```
 
-Replane will be available at `http://localhost:3000`.
+Replane will be available at `http://localhost:8080`.
 
 ### Build for Production
 

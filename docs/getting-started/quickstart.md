@@ -19,8 +19,8 @@ Get Replane running locally in under 5 minutes.
 2. Click "New OAuth App"
 3. Fill in:
    - **Application name**: Replane Local
-   - **Homepage URL**: `http://localhost:3000`
-   - **Authorization callback URL**: `http://localhost:3000/api/auth/callback/github`
+   - **Homepage URL**: `http://localhost:8080`
+   - **Authorization callback URL**: `http://localhost:8080/api/auth/callback/github`
 4. Click "Register application"
 5. Note your **Client ID** and generate a **Client Secret**
 
@@ -30,8 +30,8 @@ Get Replane running locally in under 5 minutes.
 2. Go to Applications → Create App Integration
 3. Select "OIDC - OpenID Connect" and "Web Application"
 4. Configure:
-   - **Sign-in redirect URIs**: `http://localhost:3000/api/auth/callback/okta`
-   - **Sign-out redirect URIs**: `http://localhost:3000`
+   - **Sign-in redirect URIs**: `http://localhost:8080/api/auth/callback/okta`
+   - **Sign-out redirect URIs**: `http://localhost:8080`
 5. Save and note your **Client ID**, **Client Secret**, and **Issuer URL**
 
 ## 2. Create docker-compose.yml
@@ -49,7 +49,7 @@ services:
     volumes:
       - replane-db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
 
   app:
     image: ghcr.io/replane-dev/replane:latest
@@ -57,7 +57,7 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
-      BASE_URL: http://localhost:3000
+      BASE_URL: http://localhost:8080
       SECRET_KEY_BASE: your-secret-key-change-me-in-production
 
       # GitHub OAuth (use one provider)
@@ -69,7 +69,7 @@ services:
       # OKTA_CLIENT_SECRET: your-okta-client-secret
       # OKTA_ISSUER: https://your-domain.okta.com
     ports:
-      - "3000:3000"
+      - '8080:8080'
 
 volumes:
   replane-db:
@@ -82,15 +82,16 @@ docker-compose up -d
 ```
 
 The first startup will:
+
 - Create the database schema automatically
-- Start the web server on port 3000
+- Start the web server on port 8080
 
 ## 4. Access Replane
 
 Open your browser and navigate to:
 
 ```
-http://localhost:3000
+http://localhost:8080
 ```
 
 Click "Sign in with GitHub" (or Okta) to authenticate.
@@ -99,7 +100,7 @@ Click "Sign in with GitHub" (or Okta) to authenticate.
 
 <!-- Screenshot: Creating a config will be added here -->
 
-1. Click "New Config"
+1. Click "New config"
 2. Enter a name (e.g., `feature-flags`)
 3. Add a JSON value:
    ```json
@@ -110,12 +111,12 @@ Click "Sign in with GitHub" (or Okta) to authenticate.
    ```
 4. Click "Save"
 
-## 6. Generate an API Key
+## 6. Generate an SDK Key
 
-<!-- Screenshot: API key generation will be added here -->
+<!-- Screenshot: SDK key generation will be added here -->
 
-1. Go to Settings → API Keys
-2. Click "Create API Key"
+1. Go to Settings → SDK Keys
+2. Click "Create SDK Key"
 3. Name it (e.g., `dev-key`)
 4. Copy the key immediately (it's shown only once)
 
@@ -130,16 +131,16 @@ npm install replane-sdk
 Create a test file `test.js`:
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: 'your-api-key-here',
-  baseUrl: 'http://localhost:3000',
-});
+  sdkKey: 'your-sdk-key-here',
+  baseUrl: 'http://localhost:8080'
+})
 
 // Fetch a config value
-const flags = await client.getConfigValue('feature-flags');
-console.log(flags); // { "new-onboarding": true, "dark-mode": false }
+const flags = await client.getConfigValue('feature-flags')
+console.log(flags) // { "new-onboarding": true, "dark-mode": false }
 ```
 
 Run it:
@@ -159,11 +160,11 @@ node test.js
 
 ### Port already in use
 
-If port 3000 or 5432 is already in use, change the port mapping in `docker-compose.yml`:
+If port 8080 is already in use, change the port mapping in `docker-compose.yml`:
 
 ```yaml
 ports:
-  - "3001:3000"  # Use port 3001 instead
+  - '8081:8080' # Use port 8081 instead
 ```
 
 ### Database connection error
@@ -183,5 +184,6 @@ docker-compose logs app
 ### OAuth callback mismatch
 
 Verify your OAuth callback URL matches exactly:
-- GitHub: `http://localhost:3000/api/auth/callback/github`
-- Okta: `http://localhost:3000/api/auth/callback/okta`
+
+- GitHub: `http://localhost:8080/api/auth/callback/github`
+- Okta: `http://localhost:8080/api/auth/callback/okta`

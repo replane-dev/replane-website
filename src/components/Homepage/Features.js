@@ -28,8 +28,8 @@ const FeatureList = [
     icon: '✓',
     description: (
       <>
-        Attach JSON schemas to prevent invalid configs. Block out-of-range values and enforce structure
-        before changes are saved. Keep your configs safe.
+        Attach JSON schemas to prevent invalid configs. Block out-of-range values and enforce
+        structure before changes are saved. Keep your configs safe.
       </>
     ),
     link: '/docs/concepts/overview#json-schema-validation'
@@ -40,7 +40,7 @@ const FeatureList = [
     description: (
       <>
         Granular permissions with owner, editor, and viewer roles. Control who can view, modify, or
-        manage configs. API keys for programmatic access.
+        manage configs. SDK keys for programmatic access.
       </>
     ),
     link: '/docs/concepts/overview#roles--permissions'
@@ -50,8 +50,8 @@ const FeatureList = [
     icon: '🏠',
     description: (
       <>
-        Run on your infrastructure with full data ownership. Simple Docker deployment with PostgreSQL.
-        No external dependencies or vendor lock-in.
+        Run on your infrastructure with full data ownership. Simple Docker deployment with
+        PostgreSQL. No external dependencies or vendor lock-in.
       </>
     ),
     link: '/docs/self-hosting/docker'
@@ -61,8 +61,8 @@ const FeatureList = [
     icon: '🛠️',
     description: (
       <>
-        Simple REST API and lightweight SDKs for JavaScript/TypeScript. Works in Node.js,
-        browsers, and edge runtimes. Zero dependencies.
+        Simple REST API and lightweight SDKs for JavaScript/TypeScript. Works in Node.js, browsers,
+        and edge runtimes. Zero dependencies.
       </>
     ),
     link: '/docs/sdk/javascript'
@@ -90,12 +90,7 @@ function Feature({ icon, title, description, link }) {
             stroke='currentColor'
             viewBox='0 0 24 24'
           >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M9 5l7 7-7 7'
-            />
+            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
           </svg>
         </Link>
       </div>
@@ -105,7 +100,7 @@ function Feature({ icon, title, description, link }) {
 
 export default function HomepageFeatures() {
   return (
-    <section className='bg-gray-50 py-20 px-4 dark:bg-gray-900'>
+    <section className='bg-gray-50 px-4 py-20 dark:bg-gray-900'>
       <div className='mx-auto max-w-7xl'>
         <div className='mb-16 text-center'>
           <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white'>

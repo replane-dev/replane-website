@@ -25,39 +25,39 @@ Create a config for rollout percentages:
 ### Implementation
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk';
+import { createReplaneClient } from 'replane-sdk'
 
 const client = createReplaneClient({
-  apiKey: process.env.REPLANE_API_KEY,
-  baseUrl: process.env.REPLANE_URL,
-});
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL
+})
 
-const rollouts = await client.watchConfigValue('rollouts');
+const rollouts = await client.watchConfigValue('rollouts')
 
 function isFeatureEnabled(userId, featureName) {
-  const percentage = rollouts.get()[featureName] || 0;
+  const percentage = rollouts.get()[featureName] || 0
 
   // Deterministic hash: same user always gets same result
-  const hash = hashUserId(userId) % 100;
+  const hash = hashUserId(userId) % 100
 
-  return hash < percentage;
+  return hash < percentage
 }
 
 // In your route handler
 if (isFeatureEnabled(user.id, 'new-checkout-flow')) {
-  return renderNewCheckout();
+  return renderNewCheckout()
 } else {
-  return renderOldCheckout();
+  return renderOldCheckout()
 }
 
 function hashUserId(userId) {
   // Simple hash function (use a better one in production)
-  let hash = 0;
+  let hash = 0
   for (let i = 0; i < userId.length; i++) {
-    hash = ((hash << 5) - hash) + userId.charCodeAt(i);
-    hash = hash & hash;
+    hash = (hash << 5) - hash + userId.charCodeAt(i)
+    hash = hash & hash
   }
-  return Math.abs(hash);
+  return Math.abs(hash)
 }
 ```
 
@@ -121,25 +121,25 @@ Target specific user groups first.
 ### Implementation
 
 ```javascript
-const cohorts = await client.watchConfigValue('cohorts');
+const cohorts = await client.watchConfigValue('cohorts')
 
 function hasAccess(user, feature) {
-  const config = cohorts.get();
+  const config = cohorts.get()
 
   // Check if enabled for all users
-  if (config[`${feature}-all`]) return true;
+  if (config[`${feature}-all`]) return true
 
   // Check cohorts in order
-  const cohortKeys = ['internal', 'beta', 'premium'];
+  const cohortKeys = ['internal', 'beta', 'premium']
 
   for (const cohort of cohortKeys) {
-    const members = config[`${feature}-${cohort}`] || [];
+    const members = config[`${feature}-${cohort}`] || []
     if (members.includes(user.email) || members.includes(user.id)) {
-      return true;
+      return true
     }
   }
 
-  return false;
+  return false
 }
 ```
 
@@ -205,27 +205,27 @@ Run experiments by splitting traffic.
 Implementation:
 
 ```javascript
-const experiments = await client.watchConfigValue('experiments');
+const experiments = await client.watchConfigValue('experiments')
 
 function getVariant(userId, experimentName) {
-  const experiment = experiments.get()[experimentName];
-  if (!experiment) return experiment.variants[0];
+  const experiment = experiments.get()[experimentName]
+  if (!experiment) return experiment.variants[0]
 
-  const hash = hashUserId(userId) % 100;
-  let cumulative = 0;
+  const hash = hashUserId(userId) % 100
+  let cumulative = 0
 
   for (let i = 0; i < experiment.variants.length; i++) {
-    cumulative += experiment.weights[i];
+    cumulative += experiment.weights[i]
     if (hash < cumulative) {
-      return experiment.variants[i];
+      return experiment.variants[i]
     }
   }
 
-  return experiment.variants[0];
+  return experiment.variants[0]
 }
 
 // Usage
-const buttonColor = getVariant(user.id, 'checkout-button-color');
+const buttonColor = getVariant(user.id, 'checkout-button-color')
 ```
 
 ## Emergency Rollback
@@ -249,14 +249,13 @@ Track metrics for both variants:
 ```javascript
 // In your analytics
 analytics.track('checkout_completed', {
-  variant: isFeatureEnabled(user.id, 'new-checkout-flow')
-    ? 'new'
-    : 'old',
+  variant: isFeatureEnabled(user.id, 'new-checkout-flow') ? 'new' : 'old',
   userId: user.id
-});
+})
 ```
 
 Compare:
+
 - Conversion rates
 - Error rates
 - Performance metrics

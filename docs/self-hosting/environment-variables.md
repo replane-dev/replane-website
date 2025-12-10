@@ -104,10 +104,10 @@ NODE_ENV=production
 Port the app listens on (inside container).
 
 ```bash
-PORT=3000
+PORT=8080
 ```
 
-**Default**: `3000`
+**Default**: `8080`
 
 ## Example Configurations
 
@@ -115,7 +115,7 @@ PORT=3000
 
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
-BASE_URL=http://localhost:3000
+BASE_URL=http://localhost:8080
 SECRET_KEY_BASE=dev-secret-key-not-for-production
 GITHUB_CLIENT_ID=your-dev-client-id
 GITHUB_CLIENT_SECRET=your-dev-client-secret
@@ -187,13 +187,13 @@ Successful startup shows:
 ```
 ✓ Database connected
 ✓ Migrations applied
-✓ Server listening on :3000
+✓ Server listening on :8080
 ```
 
 Test health endpoint:
 
 ```bash
-curl http://localhost:3000/api/health
+curl http://localhost:8080/api/health
 ```
 
 Expected:

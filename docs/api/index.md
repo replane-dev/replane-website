@@ -14,13 +14,13 @@ https://your-replane-host.com/api/v1
 
 ## Authentication
 
-All API requests require authentication using an API key:
+All API requests require authentication using an SDK key:
 
 ```http
 Authorization: Bearer your-api-key-here
 ```
 
-Create API keys in the Replane UI under Settings → API Keys.
+Create SDK keys in the Replane UI → SDK Keys.
 
 ## Endpoints
 
@@ -54,7 +54,7 @@ All responses are in JSON format.
 
 - `200` - Success
 - `400` - Bad Request (invalid config name)
-- `403` - Forbidden (invalid API key or insufficient permissions)
+- `403` - Forbidden (invalid SDK key or insufficient permissions)
 - `404` - Not Found (config doesn't exist)
 - `500` - Internal Server Error
 
