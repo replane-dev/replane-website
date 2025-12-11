@@ -111,7 +111,7 @@ If something looks wrong, rollback immediately.
 Ensure your app uses watchers so rollbacks propagate instantly:
 
 ```javascript
-const config = await client.watchConfigValue('rate-limits');
+const config = client.get('rate-limits');
 
 // Value updates automatically when you rollback
 const currentLimit = config.get()['api-requests-per-minute'];

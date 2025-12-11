@@ -28,12 +28,12 @@ Store variant percentages in config:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
-const tests = await client.getConfigValue('ab-tests')
+const tests = client.get('ab-tests')
 
 // Deterministic assignment based on user ID
 function getVariant(userId, testName) {
@@ -212,7 +212,7 @@ For more advanced targeting, use [**override rules**](./override-rules) to assig
 
 ```javascript
 // Returns variant based on user properties
-const buttonColor = await client.getConfigValue('experiment-button-color', {
+const buttonColor = client.get('experiment-button-color', {
   context: {
     tier: user.tier,
     betaOptIn: user.preferences.beta

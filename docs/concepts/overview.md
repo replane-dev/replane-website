@@ -50,7 +50,7 @@ Configs can have **override rules** that return different values based on contex
 
 ```javascript
 // Same config returns different values for different users
-const limit = await client.getConfigValue('api-limit', {
+const limit = client.get('api-limit', {
   context: { tier: 'premium' }
 })
 // Returns higher limit for premium users
@@ -85,10 +85,10 @@ Snapshots are **append-only** — previous versions are never deleted. This enab
 
 ## Realtime Updates (SSE)
 
-When you use the SDK's `watchConfigValue` method, your application receives updates via **Server-Sent Events (SSE)**:
+When you use the SDK's `get` method, your application receives updates via **Server-Sent Events (SSE)**:
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags')
+const flags = client.get('feature-flags')
 
 // Later, when someone changes the config in the UI:
 flags.get() // Returns the new value automatically
@@ -150,7 +150,7 @@ Config-level roles provide granular access control for individual configs:
 Use SDK keys in your SDKs:
 
 ```javascript
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://your-replane-host.com'
 })

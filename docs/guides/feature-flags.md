@@ -24,13 +24,13 @@ In your application:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
 // Check a flag
-const flags = await client.getConfigValue('feature-flags')
+const flags = client.get('feature-flags')
 
 if (flags['new-onboarding']) {
   // Show new onboarding flow
@@ -52,12 +52,12 @@ Use [**override rules**](./override-rules) to target specific users or groups wi
 
 ```javascript
 // Regular user - gets base value (false)
-const enabled1 = await client.getConfigValue('new-feature-enabled', {
+const enabled1 = client.get('new-feature-enabled', {
   context: { userEmail: 'user@example.com' }
 })
 
 // VIP user - gets override value (true)
-const enabled2 = await client.getConfigValue('new-feature-enabled', {
+const enabled2 = client.get('new-feature-enabled', {
   context: { userEmail: 'vip1@example.com' }
 })
 ```
@@ -91,7 +91,7 @@ Target users by subscription tier:
 ```
 
 ```javascript
-const flags = await client.getConfigValue('feature-flags', {
+const flags = client.get('feature-flags', {
   context: { tier: user.subscription.tier }
 })
 
@@ -102,14 +102,19 @@ if (flags['advanced-search']) {
 
 ## Realtime Flag Updates
 
-Use watchers to get instant updates when flags change:
+The client automatically receives realtime updates via Server-Sent Events (SSE). Subscribe to changes:
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags')
+// Subscribe to flag changes
+const unsubscribe = client.subscribe('feature-flags', (config) => {
+  console.log('Flags updated:', config.value)
+  // React to the change, e.g., update UI
+})
 
-// Later in your code
+// Get current value anytime
 function isEnabled(flagName) {
-  return flags.get()[flagName] || false
+  const flags = client.get('feature-flags')
+  return flags[flagName] || false
 }
 
 // The value updates automatically when someone changes it in the UI
@@ -165,12 +170,18 @@ Create separate configs for different domains:
 
 ### Default to Safe Values
 
-Always provide fallbacks:
+Always provide fallbacks during client initialization:
 
 ```javascript
-const flags = await client.getConfigValue('feature-flags').catch(() => ({
-  'new-feature': false // Safe default
-}))
+const client = await createReplaneClient({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: process.env.REPLANE_URL,
+  fallbacks: {
+    'feature-flags': {
+      'new-feature': false // Safe default
+    }
+  }
+})
 ```
 
 ### Document Your Flags

@@ -27,15 +27,14 @@ Create a config for rollout percentages:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
-const rollouts = await client.watchConfigValue('rollouts')
-
 function isFeatureEnabled(userId, featureName) {
-  const percentage = rollouts.get()[featureName] || 0
+  const rollouts = client.get('rollouts')
+  const percentage = rollouts[featureName] || 0
 
   // Deterministic hash: same user always gets same result
   const hash = hashUserId(userId) % 100
@@ -121,19 +120,17 @@ Target specific user groups first.
 ### Implementation
 
 ```javascript
-const cohorts = await client.watchConfigValue('cohorts')
-
 function hasAccess(user, feature) {
-  const config = cohorts.get()
+  const cohorts = client.get('cohorts')
 
   // Check if enabled for all users
-  if (config[`${feature}-all`]) return true
+  if (cohorts[`${feature}-all`]) return true
 
   // Check cohorts in order
   const cohortKeys = ['internal', 'beta', 'premium']
 
   for (const cohort of cohortKeys) {
-    const members = config[`${feature}-${cohort}`] || []
+    const members = cohorts[`${feature}-${cohort}`] || []
     if (members.includes(user.email) || members.includes(user.id)) {
       return true
     }
@@ -205,10 +202,9 @@ Run experiments by splitting traffic.
 Implementation:
 
 ```javascript
-const experiments = await client.watchConfigValue('experiments')
-
 function getVariant(userId, experimentName) {
-  const experiment = experiments.get()[experimentName]
+  const experiments = client.get('experiments')
+  const experiment = experiments[experimentName]
   if (!experiment) return experiment.variants[0]
 
   const hash = hashUserId(userId) % 100

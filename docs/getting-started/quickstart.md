@@ -133,14 +133,17 @@ Create a test file `test.js`:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: 'your-sdk-key-here',
   baseUrl: 'http://localhost:8080'
 })
 
-// Fetch a config value
-const flags = await client.getConfigValue('feature-flags')
+// Get a config value
+const flags = client.get('feature-flags')
 console.log(flags) // { "new-onboarding": true, "dark-mode": false }
+
+// Clean up when done
+client.close()
 ```
 
 Run it:

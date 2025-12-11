@@ -37,12 +37,12 @@ In your application:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
-const flags = await client.getConfigValue('feature-flags')
+const flags = client.get('feature-flags')
 
 if (flags['new-onboarding']) {
   return renderNewOnboarding()
@@ -117,7 +117,7 @@ function hashUserId(userId) {
 }
 
 function isFeatureEnabled(userId, featureName) {
-  const rollouts = await client.getConfigValue('rollouts');
+  const rollouts = client.get('rollouts');
   const percentage = rollouts[featureName] || 0;
   const hash = hashUserId(userId) % 100;
   return hash < percentage;
@@ -144,7 +144,7 @@ Target specific user groups:
 Check membership:
 
 ```javascript
-const cohorts = await client.getConfigValue('cohorts')
+const cohorts = client.get('cohorts')
 
 function hasAccess(user, featureName) {
   const betaList = cohorts['beta-users'] || []
@@ -189,12 +189,10 @@ This ensures:
 Use watchers for instant updates:
 
 ```javascript
-// Initialize once
-const flags = await client.watchConfigValue('feature-flags')
-
 // Use anywhere in your app
 function isEnabled(flagName) {
-  return flags.get()[flagName] || false
+  const flags = client.get('feature-flags')
+  return flags[flagName] || false
 }
 
 // Value updates automatically when changed in Replane UI
@@ -251,7 +249,7 @@ Create separate configs for different domains:
 ### Default to Safe Values
 
 ```javascript
-const flags = await client.getConfigValue('feature-flags').catch(() => ({
+const flags = client.get('feature-flags').catch(() => ({
   'new-feature': false // Safe default
 }))
 ```

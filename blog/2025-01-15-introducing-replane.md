@@ -36,10 +36,16 @@ Every config change creates an append-only snapshot. When something goes wrong, 
 Changes propagate to your applications instantly via Server-Sent Events. No polling, no delays. Your apps stay synchronized automatically.
 
 ```javascript
-const flags = await client.watchConfigValue('feature-flags')
+// Get current value
+const flags = client.get('feature-flags')
 
-// Later, when someone changes the config:
-flags.get() // Returns the new value automatically
+// Later, when someone changes the config, client.get() returns the new value automatically
+const updatedFlags = client.get('feature-flags') // Returns the new value
+
+// Or subscribe to changes
+client.subscribe('feature-flags', (config) => {
+  console.log('Flags updated:', config.value)
+})
 ```
 
 ### JSON Schema Validation
@@ -151,12 +157,12 @@ npm install @replanejs/sdk
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://config.company.com'
 })
 
-const flags = await client.getConfigValue('feature-flags')
+const flags = client.get('feature-flags')
 ```
 
 ## Status & Roadmap

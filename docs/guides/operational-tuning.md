@@ -24,16 +24,15 @@ Use in your API:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
-const limits = await client.watchConfigValue('rate-limits')
-
 // In your rate limiter
 function getRateLimit() {
-  return limits.get()['api-requests-per-minute']
+  const limits = client.get('rate-limits')
+  return limits['api-requests-per-minute']
 }
 ```
 
@@ -58,10 +57,9 @@ Tune cache behavior dynamically:
 Implementation:
 
 ```javascript
-const cacheConfig = await client.watchConfigValue('cache-config')
-
 async function getCachedUserProfile(userId) {
-  const ttl = cacheConfig.get()['user-profile-ttl-seconds']
+  const cacheConfig = client.get('cache-config')
+  const ttl = cacheConfig['user-profile-ttl-seconds']
   return cache.get(`user:${userId}`, { ttl })
 }
 ```
@@ -81,10 +79,9 @@ Control background job batch sizes:
 Use in your worker:
 
 ```javascript
-const jobConfig = await client.watchConfigValue('job-config')
-
 async function processEmails() {
-  const batchSize = jobConfig.get()['email-batch-size']
+  const jobConfig = client.get('job-config')
+  const batchSize = jobConfig['email-batch-size']
   const emails = await getEmailQueue(batchSize)
   // Process batch...
 }
@@ -190,24 +187,20 @@ Be explicit about units in config names:
 "cache-ttl-seconds": 300
 ```
 
-### Use Watchers for Hot Paths
+### Efficient Access Pattern
 
-For frequently accessed configs, use `watchConfigValue`:
+The client maintains an in-memory cache that's updated in realtime via SSE:
 
 ```javascript
-// ❌ Fetches on every request
-async function rateLimit(req) {
-  const limits = await client.getConfigValue('rate-limits')
-  // ...
-}
-
-// ✅ Cached in memory, updated in realtime
-const limits = await client.watchConfigValue('rate-limits')
-
+// ✅ Client maintains cache, no network request per call
 function rateLimit(req) {
-  const rpm = limits.get()['api-requests-per-minute']
+  const limits = client.get('rate-limits')
+  const rpm = limits['api-requests-per-minute']
   // ...
 }
+
+// The client receives realtime updates in the background
+// No need to fetch on every request
 ```
 
 ### Rollback Plan

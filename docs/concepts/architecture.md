@@ -93,7 +93,7 @@ Authorization: Bearer your-api-key-here
 
 ## Realtime Updates (SSE)
 
-When a client calls `watchConfigValue`:
+When a client calls `get`:
 
 1. SDK opens an SSE connection to `/api/v1/configs/{name}/watch`
 2. Server streams the current value immediately

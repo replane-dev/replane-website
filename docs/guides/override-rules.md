@@ -12,7 +12,7 @@ Instead of managing separate configs for different scenarios, you can define **c
 
 ```javascript
 // Single config with overrides handles all scenarios
-const maxItems = await client.getConfigValue('max-items', {
+const maxItems = client.get('max-items', {
   context: {
     userEmail: 'vip@example.com',
     tier: 'premium',
@@ -248,13 +248,13 @@ Combine AND/OR/NOT for complex scenarios:
 ```javascript
 import { createReplaneClient } from '@replanejs/sdk'
 
-const client = createReplaneClient({
+const client = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: process.env.REPLANE_URL
 })
 
 // Provide context to evaluate overrides
-const config = await client.getConfigValue('max-items', {
+const config = client.get('max-items', {
   context: {
     userEmail: user.email,
     tier: user.subscription.tier,
@@ -390,7 +390,7 @@ This makes it easier to define rules in the UI without worrying about exact type
 
 ```javascript
 // Beta user sees new UI
-await client.getConfigValue('new-ui-enabled', {
+client.get('new-ui-enabled', {
   context: { betaOptIn: user.preferences.betaOptIn }
 })
 ```
@@ -407,7 +407,7 @@ await client.getConfigValue('new-ui-enabled', {
 - Value: `90`
 
 ```javascript
-await client.getConfigValue('data-retention-days', {
+client.get('data-retention-days', {
   context: { country: user.country }
 })
 ```
@@ -426,7 +426,7 @@ await client.getConfigValue('data-retention-days', {
 - Value: `1000`
 
 ```javascript
-await client.getConfigValue('api-rate-limit', {
+client.get('api-rate-limit', {
   context: {
     tier: user.subscription.tier,
     accountAge: user.accountAgeDays
@@ -504,10 +504,10 @@ The system auto-parses JSON and casts types to match your context.
 
 ```javascript
 // ❌ No context - always returns base value
-await client.getConfigValue('config-name')
+client.get('config-name')
 
 // ✅ With context - evaluates overrides
-await client.getConfigValue('config-name', {
+client.get('config-name', {
   context: { userEmail: 'user@example.com' }
 })
 ```
