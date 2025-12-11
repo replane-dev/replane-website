@@ -25,7 +25,7 @@ Create a config for rollout percentages:
 ### Implementation
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk'
+import { createReplaneClient } from '@replanejs/sdk'
 
 const client = createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,

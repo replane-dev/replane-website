@@ -145,11 +145,11 @@ Increase over time as you gain confidence.
 We provide a lightweight SDK for JavaScript/TypeScript:
 
 ```bash
-npm install replane-sdk
+npm install @replanejs/sdk
 ```
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk'
+import { createReplaneClient } from '@replanejs/sdk'
 
 const client = createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,

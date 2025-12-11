@@ -9,13 +9,13 @@ Official SDK for accessing Replane configs from JavaScript and TypeScript applic
 ## Installation
 
 ```bash npm2yarn
-npm install replane-sdk
+npm install @replanejs/sdk
 ```
 
 ## Quick Start
 
 ```typescript
-import { createReplaneClient } from 'replane-sdk'
+import { createReplaneClient } from '@replanejs/sdk'
 
 const client = createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY!,
@@ -238,7 +238,7 @@ Client with same API as `createReplaneClient`
 #### Example
 
 ```typescript
-import { createInMemoryReplaneClient } from 'replane-sdk'
+import { createInMemoryReplaneClient } from '@replanejs/sdk'
 
 const client = createInMemoryReplaneClient({
   'feature-flags': { 'new-feature': true },
@@ -295,8 +295,8 @@ Non-transient errors (4xx) are not retried.
 The SDK is written in TypeScript and exports full type definitions.
 
 ```typescript
-import { createReplaneClient, ReplaneError } from 'replane-sdk'
-import type { ReplaneClient, ConfigWatcher } from 'replane-sdk'
+import { createReplaneClient, ReplaneError } from '@replanejs/sdk'
+import type { ReplaneClient, ConfigWatcher } from '@replanejs/sdk'
 
 const client: ReplaneClient = createReplaneClient({
   sdkKey: 'rpk_...',

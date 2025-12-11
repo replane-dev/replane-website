@@ -125,13 +125,13 @@ Click "Sign in with GitHub" (or Okta) to authenticate.
 Install the JavaScript SDK:
 
 ```bash npm2yarn
-npm install replane-sdk
+npm install @replanejs/sdk
 ```
 
 Create a test file `test.js`:
 
 ```javascript
-import { createReplaneClient } from 'replane-sdk'
+import { createReplaneClient } from '@replanejs/sdk'
 
 const client = createReplaneClient({
   sdkKey: 'your-sdk-key-here',

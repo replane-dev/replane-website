@@ -59,7 +59,7 @@ export default function HeroBanner() {
 
             {/* <div className='mt-8 text-sm text-gray-500 dark:text-gray-400'>
               <code className='rounded bg-gray-100 px-2 py-1 dark:bg-gray-800'>
-                npm install replane-sdk
+                npm install @replanejs/sdk
               </code>
             </div> */}
           </div>
