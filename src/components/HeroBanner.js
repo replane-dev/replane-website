@@ -29,11 +29,11 @@ export default function HeroBanner() {
 
             <h1 className='mt-6 mb-6 text-[32px] leading-tight font-bold text-gray-900 sm:mt-8 sm:mb-8 sm:text-4xl md:text-5xl lg:text-6xl dark:text-white'>
               <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400'>
-                Dynamic Configuration Manager
+                Dynamic Configuration
               </span>
               <br className='hidden sm:block' />
               <span className='sm:hidden'> </span>
-              for your apps and services
+              for apps and services
             </h1>
 
             <p className='mx-auto mb-8 max-w-3xl text-base leading-relaxed text-gray-600 sm:mb-10 sm:text-xl dark:text-gray-300'>
