@@ -45,12 +45,12 @@ BASE_URL=https://replane.yourdomain.com
 
 **Important**: Must match the OAuth callback URL configuration.
 
-### SECRET_KEY_BASE
+### SECRET_KEY
 
 A long random string used to sign session cookies.
 
 ```bash
-SECRET_KEY_BASE=your-very-long-random-string-here
+SECRET_KEY=your-very-long-random-string-here
 ```
 
 **Generate**:
@@ -116,7 +116,7 @@ PORT=8080
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
 BASE_URL=http://localhost:8080
-SECRET_KEY_BASE=dev-secret-key-not-for-production
+SECRET_KEY=dev-secret-key-not-for-production
 GITHUB_CLIENT_ID=your-dev-client-id
 GITHUB_CLIENT_SECRET=your-dev-client-secret
 NODE_ENV=development
@@ -127,7 +127,7 @@ NODE_ENV=development
 ```bash
 DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
 BASE_URL=https://replane.company.com
-SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
+SECRET_KEY=very-long-random-string-generated-with-openssl
 GITHUB_CLIENT_ID=prod-github-client-id
 GITHUB_CLIENT_SECRET=prod-github-client-secret
 WORKSPACE_NAME=Company Name
@@ -140,7 +140,7 @@ NODE_ENV=production
 ```bash
 DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
 BASE_URL=https://config.company.com
-SECRET_KEY_BASE=very-long-random-string-generated-with-openssl
+SECRET_KEY=very-long-random-string-generated-with-openssl
 OKTA_CLIENT_ID=okta-client-id
 OKTA_CLIENT_SECRET=okta-client-secret
 OKTA_ISSUER=https://company.okta.com
@@ -163,7 +163,7 @@ Use:
 
 ### Rotating Secrets
 
-To rotate `SECRET_KEY_BASE`:
+To rotate `SECRET_KEY`:
 
 1. Generate a new key
 2. Update environment variable

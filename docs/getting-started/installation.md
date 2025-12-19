@@ -38,7 +38,7 @@ docker run -d \
   --link replane-db:db \
   -e DATABASE_URL=postgresql://postgres:postgres@db:5432/replane \
   -e BASE_URL=http://localhost:8080 \
-  -e SECRET_KEY_BASE=your-secret-key-here \
+  -e SECRET_KEY=your-secret-key-here \
   -e GITHUB_CLIENT_ID=your-github-client-id \
   -e GITHUB_CLIENT_SECRET=your-github-client-secret \
   -p 8080:8080 \
@@ -83,7 +83,7 @@ Edit `.env` with your settings:
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
 BASE_URL=http://localhost:8080
-SECRET_KEY_BASE=generate-a-random-string-here
+SECRET_KEY=generate-a-random-string-here
 
 # GitHub OAuth
 GITHUB_CLIENT_ID=your-client-id

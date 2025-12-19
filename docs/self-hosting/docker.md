@@ -43,7 +43,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@db:5432/replane
       BASE_URL: ${BASE_URL}
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      SECRET_KEY: ${SECRET_KEY}
 
       # Authentication (choose one)
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
@@ -76,14 +76,14 @@ DB_PASSWORD=your-secure-password-here
 
 # Application
 BASE_URL=https://replane.yourdomain.com
-SECRET_KEY_BASE=generate-a-long-random-string-here
+SECRET_KEY=generate-a-long-random-string-here
 
 # GitHub OAuth
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
 ```
 
-### Generating SECRET_KEY_BASE
+### Generating SECRET_KEY
 
 ```bash
 openssl rand -hex 64

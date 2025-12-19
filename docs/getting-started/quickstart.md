@@ -58,7 +58,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
       BASE_URL: http://localhost:8080
-      SECRET_KEY_BASE: your-secret-key-change-me-in-production
+      SECRET_KEY: your-secret-key-change-me-in-production
 
       # GitHub OAuth (use one provider)
       GITHUB_CLIENT_ID: your-github-client-id
