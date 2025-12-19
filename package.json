@@ -28,6 +28,7 @@
     "clean-api-docs:version": "docusaurus clean-api-docs:version"
   },
   "dependencies": {
+    "@sentry/react": "^9.1.0",
     "@docusaurus/core": "^3.9.2",
     "@docusaurus/faster": "^3.9.2",
     "@docusaurus/plugin-ideal-image": "^3.9.2",

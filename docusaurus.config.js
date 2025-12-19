@@ -8,6 +8,8 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  clientModules: [require.resolve('./src/clientModules/sentry.js')],
+
   title: 'Replane',
   tagline: 'Dynamic configuration for apps and services. Self-hosted.',
   favicon: '/img/favicon.ico',
