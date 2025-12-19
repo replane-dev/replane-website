@@ -10,7 +10,7 @@
 const config = {
   title: 'Replane',
   tagline: 'Dynamic configuration for apps and services. Self-hosted.',
-  favicon: 'img/favicon.ico',
+  favicon: '/img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://replane.dev',

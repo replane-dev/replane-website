@@ -1,290 +1,303 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
+title: Gradual Rollouts
+description: Release features to a percentage of users
 ---
 
-# Gradual Rollouts
+# Gradual rollouts
 
-Roll out features safely by gradually increasing exposure.
+Gradual rollouts let you release features to a subset of users and increase exposure over time. Use them to:
 
-## Percentage-Based Rollouts
+- Reduce risk when launching new features
+- Test performance under increasing load
+- Gather feedback before full release
+- Roll back instantly if issues arise
 
-Start with a small percentage and increase over time.
+## How percentage rollouts work
 
-### Setup
+Replane uses deterministic bucketing:
 
-Create a config for rollout percentages:
+1. Hash the bucketing key (e.g., `userId`) with the config name
+2. Convert hash to a number 0-99
+3. Compare against the percentage threshold
 
-```json title="rollouts"
-{
-  "new-checkout-flow": 0,
-  "redesigned-dashboard": 0,
-  "ai-suggestions": 0
-}
+```
+User A: hash("feature-x" + "user-a") % 100 = 23
+User B: hash("feature-x" + "user-b") % 100 = 67
+User C: hash("feature-x" + "user-c") % 100 = 45
+
+At 30% rollout:
+- User A (23): ✓ Enabled
+- User B (67): ✗ Disabled
+- User C (45): ✗ Disabled
+
+At 50% rollout:
+- User A (23): ✓ Enabled
+- User B (67): ✗ Disabled
+- User C (45): ✓ Enabled (now included)
 ```
 
-### Implementation
+Key properties:
+- **Deterministic**: Same user always gets same result
+- **Consistent**: Users enabled at 10% stay enabled at 20%
+- **Client-side**: No server round-trip needed
 
-```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+## Create a percentage rollout
 
-const client = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: process.env.REPLANE_URL
-})
+1. Create a feature flag config with `false` as base value
+2. Add an override:
+   - **Condition**: `10%` of `userId`
+   - **Value**: `true`
+3. Save
 
-function isFeatureEnabled(userId, featureName) {
-  const rollouts = client.get('rollouts')
-  const percentage = rollouts[featureName] || 0
+## Read with context
 
-  // Deterministic hash: same user always gets same result
-  const hash = hashUserId(userId) % 100
+```typescript
+const enabled = replane.get('feature-new-checkout', {
+  context: { userId: user.id }
+});
 
-  return hash < percentage
-}
-
-// In your route handler
-if (isFeatureEnabled(user.id, 'new-checkout-flow')) {
-  return renderNewCheckout()
+if (enabled) {
+  showNewCheckout();
 } else {
-  return renderOldCheckout()
-}
-
-function hashUserId(userId) {
-  // Simple hash function (use a better one in production)
-  let hash = 0
-  for (let i = 0; i < userId.length; i++) {
-    hash = (hash << 5) - hash + userId.charCodeAt(i)
-    hash = hash & hash
-  }
-  return Math.abs(hash)
+  showOldCheckout();
 }
 ```
 
-### Rollout Schedule
+## Increase the rollout
 
-**Day 1**: Set to 1% (testing with real users)
+Edit the override and change the percentage:
 
-```json
-{
-  "new-checkout-flow": 1
-}
+```
+10% → 25% → 50% → 75% → 100%
 ```
 
-**Day 2**: If no issues, increase to 5%
+Users previously included stay included as you increase.
 
-```json
-{
-  "new-checkout-flow": 5
-}
+## Rollout strategies
+
+### Linear increase
+
+Simple incremental rollout:
+
+```
+Day 1: 5%
+Day 2: 10%
+Day 3: 25%
+Day 4: 50%
+Day 5: 75%
+Day 6: 100%
 ```
 
-**Day 3**: Increase to 25%
+### Staged rollout
 
-```json
-{
-  "new-checkout-flow": 25
-}
+Pause at key milestones to validate:
+
+```
+Stage 1: 1% - Verify basic functionality
+Stage 2: 10% - Monitor error rates
+Stage 3: 50% - Check performance under load
+Stage 4: 100% - Full release
 ```
 
-**Day 4**: Increase to 50%
+### Ring-based rollout
 
-```json
-{
-  "new-checkout-flow": 50
-}
+Target different groups in sequence:
+
+```
+Config: feature-new-editor
+Base value: false
+
+Override 1: Internal team
+  Condition: email endsWith "@company.com"
+  Value: true
+
+Override 2: Beta users
+  Condition: userGroup equals "beta"
+  Value: true
+
+Override 3: 10% rollout
+  Condition: 10% of userId
+  Value: true
 ```
 
-**Day 5**: Full rollout
+Internal team tests first, then beta users, then gradual public rollout.
 
-```json
-{
-  "new-checkout-flow": 100
-}
+## Bucketing keys
+
+### User ID (most common)
+
+Each user gets consistent experience:
+
+```typescript
+replane.get('feature', { context: { userId: user.id } });
 ```
 
-## User Cohort Rollouts
+### Session ID
 
-Target specific user groups first.
+Per-session randomization (user might see different values across sessions):
 
-### Setup
-
-```json title="cohorts"
-{
-  "new-feature-internal": ["team@company.com"],
-  "new-feature-beta": [],
-  "new-feature-premium": [],
-  "new-feature-all": false
-}
+```typescript
+replane.get('feature', { context: { sessionId: session.id } });
 ```
 
-### Implementation
+### Organization ID
 
-```javascript
-function hasAccess(user, feature) {
-  const cohorts = client.get('cohorts')
+All users in same org get same experience:
 
-  // Check if enabled for all users
-  if (cohorts[`${feature}-all`]) return true
-
-  // Check cohorts in order
-  const cohortKeys = ['internal', 'beta', 'premium']
-
-  for (const cohort of cohortKeys) {
-    const members = cohorts[`${feature}-${cohort}`] || []
-    if (members.includes(user.email) || members.includes(user.id)) {
-      return true
-    }
-  }
-
-  return false
-}
+```typescript
+replane.get('feature', { context: { orgId: user.organizationId } });
 ```
 
-### Rollout Plan
+### Device ID
 
-**Phase 1**: Internal team only
+Consistent across anonymous users on same device:
 
-```json
-{
-  "new-feature-internal": ["team@company.com"],
-  "new-feature-beta": [],
-  "new-feature-premium": [],
-  "new-feature-all": false
-}
+```typescript
+replane.get('feature', { context: { deviceId: getDeviceId() } });
 ```
 
-**Phase 2**: Beta users
+## Combining conditions
 
-```json
-{
-  "new-feature-internal": ["team@company.com"],
-  "new-feature-beta": ["user-1@example.com", "user-2@example.com"],
-  "new-feature-premium": [],
-  "new-feature-all": false
-}
+Target specific segments with percentage:
+
+```
+Override: 20% of premium users
+Conditions:
+  - plan equals "premium"
+  - 20% of userId
+Value: true
 ```
 
-**Phase 3**: Premium customers
-
-```json
-{
-  "new-feature-internal": ["team@company.com"],
-  "new-feature-beta": ["user-1@example.com", "user-2@example.com"],
-  "new-feature-premium": ["premium-user@example.com"],
-  "new-feature-all": false
-}
+```typescript
+// Only premium users are considered for the rollout
+replane.get('feature', {
+  context: { userId: user.id, plan: user.plan }
+});
 ```
 
-**Phase 4**: Everyone
+## Monitoring rollouts
 
-```json
-{
-  "new-feature-internal": [],
-  "new-feature-beta": [],
-  "new-feature-premium": [],
-  "new-feature-all": true
-}
-```
+### Track metrics by variant
 
-## A/B Testing
+```typescript
+const variant = replane.get('checkout-flow', {
+  context: { userId: user.id }
+});
 
-Run experiments by splitting traffic.
-
-```json title="experiments"
-{
-  "checkout-button-color": {
-    "variants": ["blue", "green", "red"],
-    "weights": [33, 33, 34]
-  }
-}
-```
-
-Implementation:
-
-```javascript
-function getVariant(userId, experimentName) {
-  const experiments = client.get('experiments')
-  const experiment = experiments[experimentName]
-  if (!experiment) return experiment.variants[0]
-
-  const hash = hashUserId(userId) % 100
-  let cumulative = 0
-
-  for (let i = 0; i < experiment.variants.length; i++) {
-    cumulative += experiment.weights[i]
-    if (hash < cumulative) {
-      return experiment.variants[i]
-    }
-  }
-
-  return experiment.variants[0]
-}
-
-// Usage
-const buttonColor = getVariant(user.id, 'checkout-button-color')
-```
-
-## Emergency Rollback
-
-If issues arise, instantly revert:
-
-1. Open Replane UI
-2. Find the config
-3. Click "Version History"
-4. Select the previous version (e.g., 0% or previous cohort list)
-5. Click "Rollback"
-
-Changes propagate in seconds.
-
-<!-- Screenshot: Rollback action will be added here -->
-
-## Monitoring Rollouts
-
-Track metrics for both variants:
-
-```javascript
-// In your analytics
-analytics.track('checkout_completed', {
-  variant: isFeatureEnabled(user.id, 'new-checkout-flow') ? 'new' : 'old',
+analytics.track('checkout_started', {
+  variant,
   userId: user.id
-})
+});
 ```
 
-Compare:
+### Compare performance
 
-- Conversion rates
+Monitor key metrics for each group:
 - Error rates
-- Performance metrics
-- User feedback
+- Latency
+- Conversion rates
+- User engagement
 
-## Best Practices
+### Set up alerts
 
-### Start Small
+Alert on metric differences between control and treatment groups.
 
-Always begin with a tiny percentage (1-5%) or internal team only.
+## Rollback
 
-### Monitor Closely
+If issues arise, reduce the percentage or set base value:
 
-Watch error rates and metrics during rollout. Set up alerts.
+**Option 1**: Reduce percentage
+```
+50% → 10% → 0%
+```
 
-### Have a Rollback Plan
+**Option 2**: Disable override
+- Delete or disable the percentage override
+- All users get base value (`false`)
 
-Document rollback steps before starting. Make sure everyone knows how to revert.
+**Option 3**: Use version history
+- Click on version history
+- Restore a previous version
 
-### Deterministic Hashing
+Changes propagate instantly via SSE.
 
-Use the same hash function everywhere so users see consistent behavior.
+## A/B testing
 
-### Communicate Changes
+For true A/B tests with multiple variants:
 
-Let your team know when you're rolling out features. Post in Slack/Teams.
+```
+Config: experiment-checkout
+Base value: "control"
 
-### Clean Up
+Override: Treatment A
+  Condition: userId in bucket 0-33%
+  Value: "treatment-a"
 
-After full rollout (100% or all users), remove the rollout code in your next deploy.
+Override: Treatment B
+  Condition: userId in bucket 34-66%
+  Value: "treatment-b"
+```
 
-## Next Steps
+```typescript
+const variant = replane.get('experiment-checkout', {
+  context: { userId: user.id }
+});
 
-- [**Feature Flags**](./feature-flags) - Simple on/off toggles
-- [**Operational Tuning**](./operational-tuning) - Tune behavior without deploys
-- [**JavaScript SDK**](../sdk/javascript) - SDK reference
+switch (variant) {
+  case 'treatment-a':
+    showCheckoutVariantA();
+    break;
+  case 'treatment-b':
+    showCheckoutVariantB();
+    break;
+  default:
+    showControlCheckout();
+}
+```
+
+## Best practices
+
+### Start small
+
+Begin with 1-5% to catch issues early:
+
+```
+1% → 5% → 10% → 25% → 50% → 100%
+```
+
+### Monitor between stages
+
+Wait and observe metrics before increasing:
+- At least 1 hour for quick validation
+- 24-48 hours for meaningful data
+
+### Document your rollout
+
+Note the plan and current stage:
+
+```
+Config description:
+Rollout plan: 5% (Mon) → 25% (Wed) → 50% (Fri) → 100% (Mon)
+Current: 25% since 2024-01-15
+```
+
+### Have a rollback plan
+
+Before starting:
+- Know how to roll back
+- Define rollback triggers (error rate > 1%, latency > 500ms)
+- Test rollback in staging
+
+### Clean up after full rollout
+
+Once at 100% for a week with no issues:
+1. Remove the override
+2. Change base value to `true`
+3. Consider removing the feature flag from code
+
+## Next steps
+
+- [Feature Flags](/docs/guides/feature-flags) — Toggle features
+- [Override Rules](/docs/guides/override-rules) — Advanced targeting
+- [JavaScript SDK](/docs/sdk/javascript) — Full API reference

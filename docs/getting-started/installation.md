@@ -1,122 +1,149 @@
 ---
 sidebar_position: 2
+title: Installation
+description: Different ways to install and deploy Replane
 ---
 
-# Installation Methods
+# Installation
 
-Replane can be deployed using Docker (recommended) or from source.
+Replane can be deployed using Docker (recommended) or run from source for development.
 
 ## Docker (Recommended)
 
-The simplest way to run Replane is using the official Docker image.
+The easiest way to deploy Replane is with Docker Compose.
 
-### Prerequisites
-
-- Docker 20.10+
-- Docker Compose v2.0+ (optional but recommended)
-- PostgreSQL 14+ (can run in Docker)
-
-### Quick Start
-
-See the [Quickstart Guide](./quickstart) for a step-by-step walkthrough.
-
-### Using docker run
+### Quick start
 
 ```bash
-# Start PostgreSQL
-docker run -d \
-  --name replane-db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=replane \
-  -v replane-db:/var/lib/postgresql/data \
-  postgres:17
+# Download the example docker-compose.yml
+curl -O https://raw.githubusercontent.com/replane-dev/replane/main/docker-compose.yml
 
 # Start Replane
-docker run -d \
-  --name replane \
-  --link replane-db:db \
-  -e DATABASE_URL=postgresql://postgres:postgres@db:5432/replane \
-  -e BASE_URL=http://localhost:8080 \
-  -e SECRET_KEY=your-secret-key-here \
-  -e GITHUB_CLIENT_ID=your-github-client-id \
-  -e GITHUB_CLIENT_SECRET=your-github-client-secret \
-  -p 8080:8080 \
-  ghcr.io/replane-dev/replane:latest
+docker compose up -d
 ```
 
-## From Source
+### Manual setup
 
-For development or customization, you can run Replane from source.
+Create a `docker-compose.yml`:
 
-### Prerequisites
+```yaml title="docker-compose.yml"
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: replane
+    volumes:
+      - replane-data:/var/lib/postgresql/data
 
-- Node.js 22+
-- pnpm 9+
-- PostgreSQL 14+
+  replane:
+    image: replane/replane:latest
+    depends_on:
+      - postgres
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/replane
+      BASE_URL: http://localhost:8080
+      SECRET_KEY: your-secret-key-here
+      PASSWORD_AUTH_ENABLED: true
 
-### Steps
+volumes:
+  replane-data:
+```
 
-1. **Clone the repository**:
+Start the services:
 
 ```bash
+docker compose up -d
+```
+
+## Docker (Standalone)
+
+Run Replane with an external PostgreSQL database:
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -e DATABASE_URL="postgresql://user:pass@host:5432/replane" \
+  -e BASE_URL="https://replane.example.com" \
+  -e SECRET_KEY="your-secret-key" \
+  -e PASSWORD_AUTH_ENABLED="true" \
+  replane/replane/replane:latest
+```
+
+## Replane Cloud
+
+For a managed solution, use [Replane Cloud](https://app.replane.dev):
+
+1. Sign up at [app.replane.dev](https://app.replane.dev)
+2. Create a workspace and project
+3. Generate an SDK key
+4. Connect your application
+
+No infrastructure management required.
+
+## From source (Development)
+
+For local development or contributing:
+
+```bash
+# Clone the repository
 git clone https://github.com/replane-dev/replane.git
 cd replane
-```
 
-2. **Install dependencies**:
-
-```bash
+# Install dependencies
 pnpm install
-```
 
-3. **Set up environment variables**:
+# Start PostgreSQL (if not running)
+docker compose up -d postgres
 
-Copy `.env.example` to `.env`:
-
-```bash
+# Copy .env.example to .env
 cp .env.example .env
-```
 
-Edit `.env` with your settings:
+# Run migrations
+pnpm migrate
 
-```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
-BASE_URL=http://localhost:8080
-SECRET_KEY=generate-a-random-string-here
-
-# GitHub OAuth
-GITHUB_CLIENT_ID=your-client-id
-GITHUB_CLIENT_SECRET=your-client-secret
-```
-
-4. **Run database migrations**:
-
-```bash
-pnpm db:migrate
-```
-
-5. **Start the development server**:
-
-```bash
+# Start the development server
 pnpm dev
 ```
 
-Replane will be available at `http://localhost:8080`.
+The development server runs at [http://localhost:3000](http://localhost:3000).
 
-### Build for Production
+## System requirements
+
+### Production
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| CPU | 1 core | 2+ cores |
+| Memory | 1 GB | 2+ GB |
+| Storage | 1 GB | 10+ GB |
+| PostgreSQL | 14+ | 16+ |
+
+### Development
+
+- Node.js 20+
+- pnpm 10+
+- PostgreSQL 14+ (or use Docker)
+
+## Health check
+
+Verify your deployment is running:
 
 ```bash
-pnpm build
-pnpm start
+curl http://localhost:8080/api/health
 ```
 
-## Environment Variables
+Expected response:
 
-See [Environment Variables](../self-hosting/environment-variables) for a complete reference.
+```json
+{"status":"ok"}
+```
 
-## Next Steps
+## Next steps
 
-- [**Quickstart Guide**](./quickstart) - Get started with Docker
-- [**Self-Hosting**](../self-hosting/docker) - Production deployment
-- [**Configuration**](../self-hosting/environment-variables) - Environment variables reference
+- [Configure environment variables](/docs/self-hosting/environment-variables) for authentication and email
+- [Create your first config](/docs/getting-started/quickstart#step-3-create-a-config)
+- [Install the SDK](/docs/sdk/javascript) in your application

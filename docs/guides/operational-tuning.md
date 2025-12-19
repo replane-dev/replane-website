@@ -1,235 +1,312 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
+title: Operational Tuning
+description: Adjust rate limits, timeouts, and other settings in realtime
 ---
 
-# Operational Tuning
+# Operational tuning
 
-Adjust application behavior in realtime without deploying code.
+Operational tuning lets you adjust system parameters without deploying. Use it for:
 
-## Rate Limits
+- Rate limits and quotas
+- Timeouts and retries
+- Batch sizes and intervals
+- Cache TTLs
+- Thresholds and limits
 
-Store rate limit configurations:
+## Why use dynamic configuration?
 
-```json title="rate-limits"
-{
-  "api-requests-per-minute": 100,
-  "api-requests-per-hour": 5000,
-  "max-concurrent-connections": 50,
-  "max-payload-size-mb": 10
-}
+Traditional approach:
+```typescript
+// Hardcoded - requires deploy to change
+const RATE_LIMIT = 100;
+const TIMEOUT_MS = 5000;
+const BATCH_SIZE = 50;
 ```
 
-Use in your API:
+With Replane:
+```typescript
+// Dynamic - change in dashboard, updates instantly
+const rateLimit = replane.get('api-rate-limit');
+const timeout = replane.get('request-timeout-ms');
+const batchSize = replane.get('batch-size');
+```
 
-```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+## Common use cases
 
-const client = await createReplaneClient({
+### Rate limiting
+
+Adjust API rate limits per plan:
+
+```typescript
+interface Configs {
+  'rate-limit-requests-per-minute': number;
+}
+
+const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: process.env.REPLANE_URL
-})
+  baseUrl: 'https://replane.example.com',
+});
 
-// In your rate limiter
-function getRateLimit() {
-  const limits = client.get('rate-limits')
-  return limits['api-requests-per-minute']
+function checkRateLimit(user: User) {
+  const limit = replane.get('rate-limit-requests-per-minute', {
+    context: { plan: user.plan }
+  });
+
+  return user.requestCount < limit;
 }
 ```
 
-When you need to increase limits during a traffic spike:
+Config setup:
+```
+Name: rate-limit-requests-per-minute
+Base value: 60
 
-1. Update the config in the Replane UI
-2. Changes propagate instantly to all app instances
-3. No restart required
+Override: Premium users
+  Condition: plan equals "premium"
+  Value: 1000
 
-## Cache TTLs
-
-Tune cache behavior dynamically:
-
-```json title="cache-config"
-{
-  "user-profile-ttl-seconds": 300,
-  "product-catalog-ttl-seconds": 3600,
-  "homepage-ttl-seconds": 60
-}
+Override: Enterprise users
+  Condition: plan equals "enterprise"
+  Value: 10000
 ```
 
-Implementation:
+### Timeouts
 
-```javascript
-async function getCachedUserProfile(userId) {
-  const cacheConfig = client.get('cache-config')
-  const ttl = cacheConfig['user-profile-ttl-seconds']
-  return cache.get(`user:${userId}`, { ttl })
+Adjust timeouts based on conditions:
+
+```typescript
+interface Configs {
+  'api-timeout-ms': number;
+  'retry-count': number;
+  'retry-delay-ms': number;
 }
-```
 
-## Batch Sizes
+async function fetchWithTimeout(url: string) {
+  const timeout = replane.get('api-timeout-ms');
+  const retries = replane.get('retry-count');
+  const retryDelay = replane.get('retry-delay-ms');
 
-Control background job batch sizes:
-
-```json title="job-config"
-{
-  "email-batch-size": 100,
-  "webhook-batch-size": 50,
-  "export-batch-size": 1000
-}
-```
-
-Use in your worker:
-
-```javascript
-async function processEmails() {
-  const jobConfig = client.get('job-config')
-  const batchSize = jobConfig['email-batch-size']
-  const emails = await getEmailQueue(batchSize)
-  // Process batch...
-}
-```
-
-## Timeouts & Retries
-
-Store timeout and retry policies:
-
-```json title="resilience-config"
-{
-  "api-timeout-ms": 5000,
-  "database-timeout-ms": 3000,
-  "max-retries": 3,
-  "retry-delay-ms": 1000
-}
-```
-
-## Feature Thresholds
-
-Control when features trigger:
-
-```json title="thresholds"
-{
-  "free-tier-max-items": 100,
-  "premium-tier-max-items": 10000,
-  "bulk-import-min-items": 50,
-  "large-file-warning-mb": 50
-}
-```
-
-## Circuit Breaker Settings
-
-Manage circuit breaker behavior:
-
-```json title="circuit-breaker"
-{
-  "failure-threshold": 5,
-  "timeout-ms": 10000,
-  "reset-timeout-ms": 30000
-}
-```
-
-## JSON Schema for Safety
-
-Prevent invalid configurations:
-
-```json title="Schema for rate-limits"
-{
-  "type": "object",
-  "properties": {
-    "api-requests-per-minute": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 10000
-    },
-    "max-concurrent-connections": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 1000
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(timeout)
+      });
+      return response;
+    } catch (error) {
+      if (i < retries) {
+        await sleep(retryDelay);
+      }
     }
-  },
-  "required": ["api-requests-per-minute"],
-  "additionalProperties": false
+  }
+  throw new Error('Request failed after retries');
 }
 ```
 
-This ensures values stay within safe ranges.
+### Batch processing
 
-## Best Practices
+Tune batch job parameters:
 
-### Start Conservative
+```typescript
+interface Configs {
+  'batch-size': number;
+  'batch-interval-ms': number;
+  'concurrent-workers': number;
+}
 
-Begin with safe, conservative values:
+async function processBatch() {
+  const batchSize = replane.get('batch-size');
+  const interval = replane.get('batch-interval-ms');
+  const workers = replane.get('concurrent-workers');
+
+  const items = await getNextItems(batchSize);
+
+  await Promise.all(
+    chunk(items, Math.ceil(items.length / workers))
+      .map(chunk => processItems(chunk))
+  );
+
+  setTimeout(processBatch, interval);
+}
+```
+
+### Cache configuration
+
+Dynamic cache TTLs:
+
+```typescript
+interface Configs {
+  'cache-ttl-seconds': number;
+  'cache-max-items': number;
+}
+
+class ConfigurableCache {
+  async get(key: string) {
+    const ttl = replane.get('cache-ttl-seconds');
+    const maxItems = replane.get('cache-max-items');
+
+    // Use values for cache behavior
+  }
+}
+```
+
+### Feature limits
+
+Control feature quotas:
+
+```typescript
+interface Configs {
+  'max-file-size-mb': number;
+  'max-uploads-per-day': number;
+  'max-team-members': number;
+}
+
+function validateUpload(file: File, user: User) {
+  const maxSizeMb = replane.get('max-file-size-mb', {
+    context: { plan: user.plan }
+  });
+
+  if (file.size > maxSizeMb * 1024 * 1024) {
+    throw new Error(`File too large. Max: ${maxSizeMb}MB`);
+  }
+}
+```
+
+## Structured configuration
+
+For complex settings, use objects:
+
+```typescript
+interface Configs {
+  'email-settings': {
+    enabled: boolean;
+    rateLimit: number;
+    retries: number;
+    providers: string[];
+  };
+}
+
+const emailSettings = replane.get('email-settings');
+
+if (emailSettings.enabled) {
+  await sendEmail({
+    maxRetries: emailSettings.retries,
+    rateLimit: emailSettings.rateLimit
+  });
+}
+```
+
+## JSON Schema validation
+
+Prevent invalid values with JSON Schema:
 
 ```json
 {
-  "api-requests-per-minute": 50, // Start low
-  "max-concurrent-connections": 20
+  "type": "object",
+  "properties": {
+    "enabled": { "type": "boolean" },
+    "rateLimit": { "type": "number", "minimum": 1, "maximum": 10000 },
+    "retries": { "type": "integer", "minimum": 0, "maximum": 10 }
+  },
+  "required": ["enabled", "rateLimit"]
 }
 ```
 
-Increase gradually based on monitoring.
+The dashboard validates changes against the schema before saving.
 
-### Monitor Impact
+## Reacting to changes
 
-After changing a config:
+Update behavior when configs change:
 
-- Watch error rates
-- Monitor latency
-- Check resource usage
+```typescript
+// Initial setup
+let rateLimit = replane.get('api-rate-limit');
 
-### Document Units
+// Update when config changes
+replane.subscribe('api-rate-limit', (config) => {
+  rateLimit = config.value;
+  console.log('Rate limit updated:', rateLimit);
+});
 
-Be explicit about units in config names:
-
-```javascript
-// ❌ Ambiguous
-"timeout": 5
-
-// ✅ Clear
-"timeout-ms": 5000
-"cache-ttl-seconds": 300
+// Use the current value
+function checkRateLimit() {
+  return requestCount < rateLimit;
+}
 ```
 
-### Efficient Access Pattern
+## Environment-specific values
 
-The client maintains an in-memory cache that's updated in realtime via SSE:
+Different values per environment:
 
-```javascript
-// ✅ Client maintains cache, no network request per call
-function rateLimit(req) {
-  const limits = client.get('rate-limits')
-  const rpm = limits['api-requests-per-minute']
-  // ...
+| Config | Production | Staging | Development |
+|--------|------------|---------|-------------|
+| `api-rate-limit` | 100 | 1000 | 10000 |
+| `request-timeout-ms` | 5000 | 30000 | 60000 |
+| `log-level` | `"error"` | `"info"` | `"debug"` |
+
+## Best practices
+
+### Use sensible defaults
+
+Set base values that work in most cases:
+
+```
+api-rate-limit: 100 (safe default)
+request-timeout-ms: 5000 (reasonable timeout)
+batch-size: 100 (moderate batch)
+```
+
+### Document your configs
+
+Add descriptions in the dashboard explaining:
+- What the config controls
+- Valid value ranges
+- Impact of changes
+
+### Monitor after changes
+
+After changing operational configs:
+1. Watch metrics (latency, error rates)
+2. Be ready to roll back
+3. Consider gradual changes (100 → 150 → 200)
+
+### Separate concerns
+
+Keep configs focused:
+
+```
+✓ api-rate-limit
+✓ api-timeout-ms
+✓ api-retry-count
+
+✗ api-settings (too broad)
+```
+
+## Incident response
+
+Use dynamic configuration for quick incident response:
+
+```typescript
+// Kill switch for expensive operation
+if (!replane.get('feature-search-enabled')) {
+  return { error: 'Search is temporarily disabled' };
 }
 
-// The client receives realtime updates in the background
-// No need to fetch on every request
+// Circuit breaker
+const circuitOpen = replane.get('circuit-breaker-open');
+if (circuitOpen) {
+  return getCachedResponse();
+}
+
+// Reduce load
+const degradedMode = replane.get('degraded-mode-enabled');
+if (degradedMode) {
+  return getSimplifiedResponse();
+}
 ```
 
-### Rollback Plan
+## Next steps
 
-If a config change causes issues:
-
-1. Go to Replane UI
-2. Click "Version History"
-3. Select the previous version
-4. Click "Rollback"
-
-Changes propagate instantly.
-
-## Incident Response Example
-
-**Scenario**: API is overloaded during traffic spike
-
-1. Open Replane UI
-2. Navigate to `rate-limits` config
-3. Increase `api-requests-per-minute` from 100 to 200
-4. Save
-5. All app instances update within seconds
-6. Monitor metrics
-7. Adjust further if needed
-
-No deploy, no restart, no downtime.
-
-## Next Steps
-
-- [**Feature Flags**](./feature-flags) - Toggle features on/off
-- [**Gradual Rollouts**](./gradual-rollouts) - Safe feature releases
-- [**JavaScript SDK**](../sdk/javascript) - SDK reference
+- [Feature Flags](/docs/guides/feature-flags) — Toggle features
+- [Override Rules](/docs/guides/override-rules) — Per-user settings
+- [JavaScript SDK](/docs/sdk/javascript) — Full API reference

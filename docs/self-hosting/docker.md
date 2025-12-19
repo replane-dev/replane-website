@@ -1,286 +1,340 @@
 ---
 sidebar_position: 1
+title: Docker Deployment
+description: Deploy Replane with Docker and Docker Compose
 ---
 
-# Docker Deployment
+# Docker deployment
 
-Deploy Replane using Docker and Docker Compose for production.
+This guide covers deploying Replane with Docker for production use.
 
 ## Prerequisites
 
 - Docker 20.10+
-- Docker Compose v2.0+
-- A domain name (optional, but recommended for HTTPS)
-- OAuth provider (GitHub or Okta)
+- Docker Compose v2+
+- PostgreSQL 14+ (or use included container)
 
-## Production docker-compose.yml
+## Quick start
 
-```yaml
+```bash
+# Download docker-compose.yml
+curl -O https://raw.githubusercontent.com/replane-dev/replane/main/docker-compose.yml
+
+# Create .env file
+cat > .env << 'EOF'
+BASE_URL=https://replane.example.com
+SECRET_KEY=your-very-long-random-secret-key-here
+PASSWORD_AUTH_ENABLED=true
+EOF
+
+# Start services
+docker compose up -d
+```
+
+## Docker Compose setup
+
+### Basic configuration
+
+```yaml title="docker-compose.yml"
 services:
-  db:
+  postgres:
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: replane
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-replane}
       POSTGRES_DB: replane
     volumes:
-      - replane-db:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U replane"]
+      interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - replane-network
 
-  app:
-    image: ghcr.io/replane-dev/replane:latest
+  replane:
+    image: replane/replane:latest
     restart: unless-stopped
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
-    environment:
-      DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@db:5432/replane
-      BASE_URL: ${BASE_URL}
-      SECRET_KEY: ${SECRET_KEY}
-
-      # Authentication (choose one)
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
     ports:
       - '8080:8080'
-    networks:
-      - replane-network
+    environment:
+      DATABASE_URL: postgresql://replane:${POSTGRES_PASSWORD:-replane}@postgres:5432/replane
+      BASE_URL: ${BASE_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      PASSWORD_AUTH_ENABLED: ${PASSWORD_AUTH_ENABLED:-true}
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8080/api/health']
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
 
 volumes:
-  replane-db:
-
-networks:
-  replane-network:
+  postgres-data:
 ```
 
-## Environment Variables
+### Production configuration
 
-Create a `.env` file:
-
-```bash
-# Database
-DB_PASSWORD=your-secure-password-here
-
-# Application
-BASE_URL=https://replane.yourdomain.com
-SECRET_KEY=generate-a-long-random-string-here
-
-# GitHub OAuth
-GITHUB_CLIENT_ID=your-github-client-id
-GITHUB_CLIENT_SECRET=your-github-client-secret
-```
-
-### Generating SECRET_KEY
-
-```bash
-openssl rand -hex 64
-```
-
-## Deploy
-
-```bash
-# Start services
-docker-compose up -d
-
-# Check logs
-docker-compose logs -f app
-
-# Check health
-curl http://localhost:8080/api/health
-```
-
-Expected response:
-
-```json
-{
-  "status": "ok"
-}
-```
-
-## HTTPS with Caddy
-
-Use Caddy as a reverse proxy for automatic HTTPS:
-
-```yaml title="docker-compose.yml (add Caddy service)"
-  caddy:
-    image: caddy:2
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
+```yaml title="docker-compose.prod.yml"
+services:
+  postgres:
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: replane
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: replane
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy-data:/data
-      - caddy-config:/config
-    networks:
-      - replane-network
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U replane"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  replane:
+    image: replane/replane:latest
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+    environment:
+      # Required
+      DATABASE_URL: postgresql://replane:${POSTGRES_PASSWORD}@postgres:5432/replane
+      BASE_URL: ${BASE_URL}
+      SECRET_KEY: ${SECRET_KEY}
+
+      # Authentication (at least one required)
+      PASSWORD_AUTH_ENABLED: "true"
+      # MAGIC_LINK_ENABLED: "true"
+      # GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      # GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+
+      # Email (required for magic links and notifications)
+      # EMAIL_SERVER: smtp://user:pass@smtp.example.com:587
+      # EMAIL_FROM: noreply@example.com
+
+      # Optional
+      # ALLOWED_EMAIL_DOMAINS: example.com,company.com
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
 volumes:
-  caddy-data:
-  caddy-config:
+  postgres-data:
 ```
 
-Create `Caddyfile`:
+## External PostgreSQL
 
-```caddyfile
-replane.yourdomain.com {
-    reverse_proxy app:8080
-}
-```
-
-Update `.env`:
-
-```bash
-BASE_URL=https://replane.yourdomain.com
-```
-
-Remove port mapping from app service (Caddy handles it):
+Connect to an existing PostgreSQL database:
 
 ```yaml
-app:
-  # Remove: ports: - "8080:8080"
-  # Caddy will proxy to app:8080
+services:
+  replane:
+    image: replane/replane:latest
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_URL: postgresql://user:password@your-postgres-host:5432/replane
+      # Or use individual variables:
+      # DATABASE_USER: replane
+      # DATABASE_PASSWORD: ${DB_PASSWORD}
+      # DATABASE_HOST: your-postgres-host
+      # DATABASE_PORT: 5432
+      # DATABASE_NAME: replane
+      BASE_URL: https://replane.example.com
+      SECRET_KEY: ${SECRET_KEY}
+      PASSWORD_AUTH_ENABLED: "true"
 ```
 
-Restart:
+### SSL connection
 
-```bash
-docker-compose down
-docker-compose up -d
+For cloud databases (AWS RDS, Google Cloud SQL, etc.):
+
+```yaml
+environment:
+  DATABASE_URL: postgresql://user:pass@host:5432/replane?sslmode=require
+  # Or for custom CA certificate:
+  DATABASE_SSL_CA: |
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----
 ```
 
-Caddy automatically obtains and renews Let's Encrypt certificates.
+## Reverse proxy
 
-## HTTPS with Nginx
-
-Alternatively, use Nginx:
+### Nginx
 
 ```nginx title="nginx.conf"
 server {
     listen 80;
-    server_name replane.yourdomain.com;
+    server_name replane.example.com;
     return 301 https://$server_name$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name replane.yourdomain.com;
+    server_name replane.example.com;
 
-    ssl_certificate /etc/nginx/ssl/cert.pem;
-    ssl_certificate_key /etc/nginx/ssl/key.pem;
+    ssl_certificate /etc/ssl/certs/replane.crt;
+    ssl_certificate_key /etc/ssl/private/replane.key;
 
     location / {
-        proxy_pass http://app:8080;
+        proxy_pass http://localhost:8080;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # SSE support
+        proxy_buffering off;
+        proxy_read_timeout 86400s;
     }
 }
 ```
 
+### Traefik
+
+```yaml title="docker-compose.yml"
+services:
+  replane:
+    image: replane/replane:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.replane.rule=Host(`replane.example.com`)"
+      - "traefik.http.routers.replane.entrypoints=websecure"
+      - "traefik.http.routers.replane.tls.certresolver=letsencrypt"
+      - "traefik.http.services.replane.loadbalancer.server.port=8080"
+    environment:
+      BASE_URL: https://replane.example.com
+      # ...
+```
+
+### Caddy
+
+```caddyfile title="Caddyfile"
+replane.example.com {
+    reverse_proxy localhost:8080
+}
+```
+
+## Health checks
+
+### Endpoint
+
+```bash
+curl http://localhost:8080/api/health
+```
+
+Response:
+```json
+{"status":"ok"}
+```
+
+### Docker health check
+
+The image includes a health check. Verify with:
+
+```bash
+docker inspect --format='{{.State.Health.Status}}' replane
+```
+
 ## Backups
 
-### Database Backups
-
-Create a backup script `backup.sh`:
+### PostgreSQL backup
 
 ```bash
-#!/bin/bash
-DATE=$(date +%Y%m%d_%H%M%S)
-docker-compose exec -T db pg_dump -U postgres replane > backup_$DATE.sql
-gzip backup_$DATE.sql
+# Backup
+docker compose exec postgres pg_dump -U replane replane > backup.sql
+
+# Restore
+docker compose exec -T postgres psql -U replane replane < backup.sql
 ```
 
-Run daily via cron:
+### Automated backups
 
-```bash
-0 2 * * * /path/to/backup.sh
-```
-
-### Restore from Backup
-
-```bash
-gunzip backup_20250116_020000.sql.gz
-docker-compose exec -T db psql -U postgres replane < backup_20250116_020000.sql
+```yaml title="docker-compose.yml"
+services:
+  backup:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    volumes:
+      - ./backups:/backups
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: replane
+      POSTGRES_USER: replane
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
 ```
 
 ## Updates
 
-Update to the latest version:
+### Pull latest image
 
 ```bash
-# Pull latest image
-docker-compose pull app
-
-# Restart (migrations run automatically)
-docker-compose up -d app
-
-# Check logs
-docker-compose logs -f app
+docker compose pull replane
+docker compose up -d
 ```
 
-## Monitoring
+### Version pinning
 
-### Health Check
-
-```bash
-curl https://replane.yourdomain.com/api/health
-```
-
-### Logs
-
-```bash
-# Follow logs
-docker-compose logs -f app
-
-# Last 100 lines
-docker-compose logs --tail=100 app
-```
-
-### Metrics
-
-Monitor:
-
-- CPU and memory usage
-- Database connections
-- Response times
-- SSE connection count
-
-Use tools like Prometheus, Grafana, or your cloud provider's monitoring.
-
-## Scaling
-
-### Multiple App Instances
-
-Use Docker Swarm or Kubernetes to run multiple app instances behind a load balancer.
-
-### Database Read Replicas
-
-For read-heavy workloads, configure PostgreSQL read replicas:
+Pin to a specific version for stability:
 
 ```yaml
-app:
-  environment:
-    DATABASE_URL: postgresql://postgres:pass@db-primary:5432/replane
-    DATABASE_READ_URL: postgresql://postgres:pass@db-replica:5432/replane
+services:
+  replane:
+    image: replane/replane:v1.0.0
+```
+
+## Logging
+
+### View logs
+
+```bash
+# All services
+docker compose logs -f
+
+# Replane only
+docker compose logs -f replane
+
+# Last 100 lines
+docker compose logs --tail 100 replane
+```
+
+### Log configuration
+
+Replane uses JSON structured logging. Configure log drivers:
+
+```yaml
+services:
+  replane:
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 ```
 
 ## Troubleshooting
@@ -288,39 +342,34 @@ app:
 ### Container won't start
 
 Check logs:
-
 ```bash
-docker-compose logs app
+docker compose logs replane
 ```
 
 Common issues:
+- Database not ready — wait for PostgreSQL health check
+- Invalid environment variables — check required vars
+- Port already in use — change `8080:8080` to another port
 
-- Missing environment variables
-- Database connection errors
-- Invalid OAuth configuration
-
-### Database connection failed
-
-Ensure PostgreSQL is healthy:
+### Database connection errors
 
 ```bash
-docker-compose ps db
+# Test database connectivity
+docker compose exec replane curl -v postgres:5432
+
+# Check PostgreSQL logs
+docker compose logs postgres
 ```
 
-Check connectivity:
+### SSE connections dropping
 
-```bash
-docker-compose exec app sh -c 'psql $DATABASE_URL -c "SELECT 1"'
-```
+Ensure reverse proxy supports long-lived connections:
+- Nginx: `proxy_read_timeout 86400s;`
+- Traefik: Default should work
+- Cloudflare: Enable "HTTP/2 to Origin"
 
-### OAuth callback errors
+## Next steps
 
-Verify:
-
-- Callback URL matches OAuth provider settings exactly
-- BASE_URL environment variable is correct
-- OAuth credentials are valid
-
-## Next Steps
-
-- [**Environment Variables**](./environment-variables) - Full configuration reference
+- [Environment Variables](/docs/self-hosting/environment-variables) — Full configuration reference
+- [JavaScript SDK](/docs/sdk/javascript) — Connect your application
+- [Feature Flags](/docs/guides/feature-flags) — Start using Replane

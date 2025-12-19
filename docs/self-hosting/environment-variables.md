@@ -1,14 +1,48 @@
 ---
 sidebar_position: 2
+title: Environment Variables
+description: Complete reference for Replane configuration options
 ---
 
-# Environment Variables
+# Environment variables
 
-Complete reference for configuring Replane.
+Complete reference for configuring Replane via environment variables.
 
-## Required Variables
+## Required variables
 
-### DATABASE_URL
+### `BASE_URL`
+
+The public URL where Replane is accessible.
+
+```bash
+BASE_URL=https://replane.example.com
+```
+
+Used for:
+- OAuth callback URLs
+- Magic link URLs
+- SDK endpoint references
+
+### `SECRET_KEY`
+
+Secret key for signing sessions and tokens. Must be at least 32 characters.
+
+```bash
+SECRET_KEY=your-very-long-random-secret-key-minimum-32-chars
+```
+
+Generate a secure key:
+```bash
+openssl rand -base64 32
+```
+
+:::caution
+Keep this secret. Changing it invalidates all existing sessions.
+:::
+
+## Database
+
+### `DATABASE_URL`
 
 PostgreSQL connection string.
 
@@ -16,194 +50,270 @@ PostgreSQL connection string.
 DATABASE_URL=postgresql://user:password@host:5432/database
 ```
 
-**Example**:
-
+With SSL:
 ```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
+DATABASE_URL=postgresql://user:password@host:5432/database?sslmode=require
 ```
 
-### DATABASE_SSL_CA
+### Individual database variables
 
-_(Optional)_ Custom SSL/TLS certificate authority (CA) for PostgreSQL connections.
+Alternative to `DATABASE_URL`:
+
+```bash
+DATABASE_USER=replane
+DATABASE_PASSWORD=secret
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=replane
+```
+
+### `DATABASE_SSL_CA`
+
+Custom SSL certificate for database connection. Required for some cloud databases.
 
 ```bash
 DATABASE_SSL_CA="-----BEGIN CERTIFICATE-----
-MIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF
-...
+...certificate content...
 -----END CERTIFICATE-----"
 ```
 
-Use this when connecting to PostgreSQL instances that require custom SSL certificates (e.g., self-signed certificates, private CAs, or cloud providers with custom certificates).
+### `DATABASE_MAX_CONNECTIONS`
 
-### BASE_URL
-
-The public URL where Replane is accessible.
+Maximum database connections in the pool.
 
 ```bash
-BASE_URL=https://replane.yourdomain.com
+DATABASE_MAX_CONNECTIONS=10  # Default: 10
 ```
 
-**Important**: Must match the OAuth callback URL configuration.
+## Authentication
 
-### SECRET_KEY
+At least one authentication method must be enabled.
 
-A long random string used to sign session cookies.
+### Password authentication
 
 ```bash
-SECRET_KEY=your-very-long-random-string-here
+PASSWORD_AUTH_ENABLED=true
 ```
 
-**Generate**:
+Users can sign up and log in with email/password.
+
+### Magic links
 
 ```bash
-openssl rand -hex 64
+MAGIC_LINK_ENABLED=true
 ```
 
-## Authentication (Choose One)
+Requires email configuration. Users receive a login link via email.
 
 ### GitHub OAuth
 
 ```bash
-GITHUB_CLIENT_ID=your-github-client-id
-GITHUB_CLIENT_SECRET=your-github-client-secret
+GITHUB_CLIENT_ID=your-client-id
+GITHUB_CLIENT_SECRET=your-client-secret
 ```
 
-**Setup**: Create an OAuth app at [GitHub Developer Settings](https://github.com/settings/developers)
+Create an OAuth app at [GitHub Developer Settings](https://github.com/settings/developers).
 
-**Callback URL**: `${BASE_URL}/api/auth/callback/github`
+Callback URL: `{BASE_URL}/api/auth/callback/github`
+
+### GitLab OAuth
+
+```bash
+GITLAB_CLIENT_ID=your-client-id
+GITLAB_CLIENT_SECRET=your-client-secret
+```
+
+Callback URL: `{BASE_URL}/api/auth/callback/gitlab`
+
+### Google OAuth
+
+```bash
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+```
+
+Create credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials).
+
+Callback URL: `{BASE_URL}/api/auth/callback/google`
 
 ### Okta OAuth
 
 ```bash
-OKTA_CLIENT_ID=your-okta-client-id
-OKTA_CLIENT_SECRET=your-okta-client-secret
+OKTA_CLIENT_ID=your-client-id
+OKTA_CLIENT_SECRET=your-client-secret
 OKTA_ISSUER=https://your-domain.okta.com
 ```
 
-**Setup**: Create an app integration in your Okta admin console
+Callback URL: `{BASE_URL}/api/auth/callback/okta`
 
-**Callback URL**: `${BASE_URL}/api/auth/callback/okta`
+## Email
 
-## Optional Variables
+Required for magic links and notifications.
 
-### NODE_ENV
+### `EMAIL_SERVER`
 
-Node.js environment.
-
-```bash
-NODE_ENV=production
-```
-
-**Values**:
-
-- `production` (default in Docker)
-- `development`
-
-### PORT
-
-Port the app listens on (inside container).
+SMTP connection string.
 
 ```bash
-PORT=8080
+EMAIL_SERVER=smtp://user:password@smtp.example.com:587
 ```
 
-**Default**: `8080`
+### Individual email variables
 
-## Example Configurations
+Alternative to `EMAIL_SERVER`:
 
-### Local Development
+```bash
+EMAIL_SERVER_HOST=smtp.example.com
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER=user
+EMAIL_SERVER_PASSWORD=password
+```
+
+### `EMAIL_FROM`
+
+From address for outgoing emails.
+
+```bash
+EMAIL_FROM=noreply@example.com
+# Or with name:
+EMAIL_FROM="Replane <noreply@example.com>"
+```
+
+## Access control
+
+### `ALLOWED_EMAIL_DOMAINS`
+
+Restrict registration to specific email domains.
+
+```bash
+ALLOWED_EMAIL_DOMAINS=example.com,company.com
+```
+
+Users with other email domains cannot sign up.
+
+## Server
+
+### `PORT`
+
+HTTP server port.
+
+```bash
+PORT=8080  # Default: 8080
+```
+
+### `HEALTHCHECK_PATH`
+
+Custom health check endpoint path.
+
+```bash
+HEALTHCHECK_PATH=/api/health  # Default: /api/health
+```
+
+## Monitoring
+
+### Sentry integration
+
+```bash
+SENTRY_DSN=https://key@sentry.io/project
+SENTRY_ENVIRONMENT=production
+SENTRY_TRACES_SAMPLE_RATE=0.1  # 10% of requests
+```
+
+## Example configurations
+
+### Minimal (development)
 
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/replane
 BASE_URL=http://localhost:8080
-SECRET_KEY=dev-secret-key-not-for-production
-GITHUB_CLIENT_ID=your-dev-client-id
-GITHUB_CLIENT_SECRET=your-dev-client-secret
-NODE_ENV=development
+SECRET_KEY=development-secret-key-change-in-production
+PASSWORD_AUTH_ENABLED=true
 ```
 
-### Production (GitHub)
+### Production with GitHub OAuth
 
 ```bash
-DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
-BASE_URL=https://replane.company.com
-SECRET_KEY=very-long-random-string-generated-with-openssl
-GITHUB_CLIENT_ID=prod-github-client-id
-GITHUB_CLIENT_SECRET=prod-github-client-secret
-WORKSPACE_NAME=Company Name
-ALLOW_SELF_APPROVALS=false
-NODE_ENV=production
+# Database
+DATABASE_URL=postgresql://replane:password@db.example.com:5432/replane
+
+# Application
+BASE_URL=https://replane.example.com
+SECRET_KEY=your-production-secret-key-at-least-32-characters
+
+# Authentication
+PASSWORD_AUTH_ENABLED=true
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+
+# Email
+EMAIL_SERVER=smtp://user:pass@smtp.sendgrid.net:587
+EMAIL_FROM="Replane <noreply@example.com>"
+
+# Access control
+ALLOWED_EMAIL_DOMAINS=example.com
+
+# Monitoring
+SENTRY_DSN=https://key@sentry.io/project
+SENTRY_ENVIRONMENT=production
 ```
 
-### Production (Okta)
+### Production with Google OAuth and Magic Links
 
 ```bash
-DATABASE_URL=postgresql://replane:secure-password@db.internal:5432/replane
-BASE_URL=https://config.company.com
-SECRET_KEY=very-long-random-string-generated-with-openssl
-OKTA_CLIENT_ID=okta-client-id
-OKTA_CLIENT_SECRET=okta-client-secret
-OKTA_ISSUER=https://company.okta.com
-WORKSPACE_NAME=Company Name
-ALLOW_SELF_APPROVALS=false
-NODE_ENV=production
+# Database
+DATABASE_URL=postgresql://replane:password@db.example.com:5432/replane
+
+# Application
+BASE_URL=https://replane.example.com
+SECRET_KEY=your-production-secret-key-at-least-32-characters
+
+# Authentication
+MAGIC_LINK_ENABLED=true
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# Email (required for magic links)
+EMAIL_SERVER_HOST=smtp.gmail.com
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER=your-email@gmail.com
+EMAIL_SERVER_PASSWORD=your-app-password
+EMAIL_FROM="Replane <your-email@gmail.com>"
 ```
 
-## Security Notes
+### Docker Compose with .env file
 
-### Protecting Secrets
+```yaml title="docker-compose.yml"
+services:
+  replane:
+    image: replane/replane:latest
+    env_file: .env
+    ports:
+      - '8080:8080'
+```
 
-**Never commit secrets to version control.**
+```bash title=".env"
+DATABASE_URL=postgresql://replane:password@postgres:5432/replane
+BASE_URL=https://replane.example.com
+SECRET_KEY=your-secret-key
+PASSWORD_AUTH_ENABLED=true
+GITHUB_CLIENT_ID=xxx
+GITHUB_CLIENT_SECRET=xxx
+EMAIL_SERVER=smtp://user:pass@smtp.example.com:587
+EMAIL_FROM=noreply@example.com
+```
 
-Use:
+## Validation
 
-- `.env` files (add to `.gitignore`)
-- Docker secrets
-- Cloud provider secret managers (AWS Secrets Manager, Azure Key Vault, etc.)
+Replane validates environment variables on startup. Missing required variables or invalid values cause the application to exit with an error message.
 
-### Rotating Secrets
-
-To rotate `SECRET_KEY`:
-
-1. Generate a new key
-2. Update environment variable
-3. Restart app
-4. All users will be signed out (they'll need to re-authenticate)
-
-### Database Credentials
-
-Use strong passwords for production databases. Rotate regularly.
-
-## Validating Configuration
-
-Start the app and check logs:
+Check logs for configuration errors:
 
 ```bash
-docker-compose logs app
+docker compose logs replane | grep -i "error\|config"
 ```
 
-Successful startup shows:
+## Next steps
 
-```
-✓ Database connected
-✓ Migrations applied
-✓ Server listening on :8080
-```
-
-Test health endpoint:
-
-```bash
-curl http://localhost:8080/api/health
-```
-
-Expected:
-
-```json
-{
-  "status": "ok"
-}
-```
-
-## Next Steps
-
-- [**Docker Deployment**](./docker) - Deploy with Docker Compose
+- [Docker Deployment](/docs/self-hosting/docker) — Deployment guide
+- [JavaScript SDK](/docs/sdk/javascript) — Connect your application
+- [Quickstart](/docs/getting-started/quickstart) — Get started

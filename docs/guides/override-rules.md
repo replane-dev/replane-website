@@ -1,519 +1,266 @@
 ---
-sidebar_position: 5
+sidebar_position: 2
+title: Override Rules
+description: Return different config values based on user context
 ---
 
-# Override Rules
+# Override rules
 
-Override rules enable you to return different config values based on context properties like user email, subscription tier, country, or any custom data you provide.
+Override rules let you return different config values based on context. Use them for:
 
-## What Are Override Rules?
+- User targeting (specific users or segments)
+- A/B testing (different variants)
+- Regional configuration (different values per region)
+- Gradual rollouts (percentage-based)
 
-Instead of managing separate configs for different scenarios, you can define **conditional overrides** on a single config:
+## How overrides work
 
-```javascript
-// Single config with overrides handles all scenarios
-const maxItems = client.get('max-items', {
-  context: {
-    userEmail: 'vip@example.com',
-    tier: 'premium',
-    country: 'US'
-  }
-})
-// Returns different values based on which override rules match
-```
-
-## How It Works
-
-1. **Define a base value** - The default value returned when no override matches
-2. **Add value override rules** - Define conditions that must match
-3. **Specify override value** - The value to return when conditions match
-4. **Provide context** - Pass context when fetching the config
-
-### Evaluation Flow
+1. Your app passes context: `{ userId: "123", plan: "premium" }`
+2. Replane evaluates overrides in order
+3. First matching override's value is returned
+4. If no override matches, base value is returned
 
 ```
-For each override (in order):
-  Check if all conditions match
-  If yes → return override value
-  If no → try next override
-
-If no override matched → return base value
+Context: { plan: "premium" }
+                │
+                ▼
+┌─────────────────────────────┐
+│ Override 1: plan === "free" │ ──── No match
+└─────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────┐
+│ Override 2: plan === "premium"  │ ──── Match! Return override value
+└─────────────────────────────────┘
+                │
+                ▼
+        (stops here)
 ```
 
-**First matching override wins!** Order matters.
+## Create an override
 
-## Creating Overrides in the UI
+1. Click on a config in the dashboard
+2. Click **Add Override**
+3. Configure:
+   - **Name**: Human-readable description
+   - **Conditions**: Rules that must all match
+   - **Value**: What to return when conditions match
+4. Click **Save**
 
-1. Navigate to your config
-2. Click **"Add Value Override Rule"**
-3. Set the **override value** (what to return)
-4. Define **conditions** (when to return it)
-5. Add multiple conditions - all must match (implicit AND)
+## Condition types
 
-### Example: VIP Users
+### Equals
 
-**Base value:**
+Exact match on a context property.
 
-```json
-{ "maxItems": 10 }
+**Example**: Enable for premium users
+
+```
+plan equals "premium"
 ```
 
-**Override: "VIP Users"**
-
-- Conditions:
-  - Property: `userEmail` | Operator: `equals` | Value: `vip@example.com`
-- Override Value: `{"maxItems": 1000}`
-
-When you fetch with context `{userEmail: "vip@example.com"}`, you get `{"maxItems": 1000}`.
-
-## Available Operators
-
-### Comparison Operators
-
-| Operator                  | Description           | Example                                   |
-| ------------------------- | --------------------- | ----------------------------------------- |
-| **Equals**                | Exact match           | Property `tier` equals `"premium"`        |
-| **Not In**                | Value is not in array | Property `country` not in `["CN","RU"]`   |
-| **Less Than**             | Numeric comparison    | Property `accountAge` less than `30`      |
-| **Less Than or Equal**    | Numeric comparison    | Property `count` less than or equal `100` |
-| **Greater Than**          | Numeric comparison    | Property `creditScore` greater than `700` |
-| **Greater Than or Equal** | Numeric comparison    | Property `age` greater than or equal `18` |
-
-### Composite Operators
-
-| Operator | Description                              |
-| -------- | ---------------------------------------- |
-| **AND**  | All nested conditions must match         |
-| **OR**   | At least one nested condition must match |
-| **NOT**  | Inverts/negates the nested condition     |
-
-## Common Use Cases
-
-### User-Specific Configuration
-
-```javascript
-// Override for specific user
-{
-  name: "Admin User",
-  conditions: [
-    { operator: "equals", property: "userEmail", value: "admin@company.com" }
-  ],
-  value: { adminMode: true, maxItems: 1000 }
-}
+```typescript
+replane.get('feature', { context: { plan: 'premium' } }); // matches
+replane.get('feature', { context: { plan: 'free' } }); // no match
 ```
 
-### Tier-Based Limits
+### In / Not in
 
-```javascript
-// Higher limits for premium users (using NOT to exclude specific tiers)
-{
-  name: "Premium Tier",
-  conditions: [
-    {
-      operator: "not",
-      condition: {
-        operator: "not_in",
-        property: "tier",
-        value: ["free", "trial"]
-      }
-    }
-  ],
-  value: { maxItems: 100, rateLimit: 1000 }
-}
+Check if value is in (or not in) a list.
+
+**Example**: Enable for US and Canada
+
+```
+country in ["US", "CA"]
 ```
 
-### Age-Based Access
-
-```javascript
-// Adult content - age >= 18
-{
-  name: "Adult Users",
-  conditions: [
-    { operator: "greater_than_or_equal", property: "age", value: 18 }
-  ],
-  value: { accessLevel: "full" }
-}
+```typescript
+replane.get('feature', { context: { country: 'US' } }); // matches
+replane.get('feature', { context: { country: 'UK' } }); // no match
 ```
 
-### Complex Conditions (Multiple Conditions)
+### Numeric comparisons
 
-```javascript
-// All conditions must match (implicit AND)
-{
-  name: "High-Value Users",
-  conditions: [
-    { operator: "equals", property: "tier", value: "premium" },
-    { operator: "greater_than", property: "accountAge", value: 365 },
-    { operator: "equals", property: "country", value: "US" }
-  ],
-  value: { specialOffer: true }
-}
+Compare numbers with `<`, `<=`, `>`, `>=`.
+
+**Example**: Enable for users with 10+ purchases
+
+```
+purchaseCount >= 10
 ```
 
-## Using AND/OR Logic
-
-### AND Operator
-
-All nested conditions must match:
-
-```javascript
-{
-  name: "Internal Engineering",
-  conditions: [
-    {
-      operator: "and",
-      conditions: [
-        { operator: "equals", property: "department", value: "engineering" },
-        { operator: "greater_than", property: "yearsExperience", value: 2 }
-      ]
-    }
-  ],
-  value: { debugMode: true }
-}
+```typescript
+replane.get('feature', { context: { purchaseCount: 15 } }); // matches
+replane.get('feature', { context: { purchaseCount: 5 } }); // no match
 ```
 
-### OR Operator
+### Percentage
 
-At least one nested condition must match:
+Enable for a percentage of users based on a bucketing key.
 
-```javascript
-{
-  name: "Premium Access",
-  conditions: [
-    {
-      operator: "or",
-      conditions: [
-        { operator: "equals", property: "tier", value: "premium" },
-        { operator: "equals", property: "isVip", value: true }
-      ]
-    }
-  ],
-  value: { premiumFeatures: true }
-}
+**Example**: Enable for 25% of users
+
+```
+25% of userId
 ```
 
-### NOT Operator
-
-Inverts a condition:
-
-```javascript
-{
-  name: "Not Banned",
-  conditions: [
-    {
-      operator: "not",
-      condition: {
-        operator: "equals",
-        property: "status",
-        value: "banned"
-      }
-    }
-  ],
-  value: { access: "granted" }
-}
+```typescript
+// Some users will match, others won't (deterministic per userId)
+replane.get('feature', { context: { userId: 'user-123' } });
 ```
 
-### Nested Logic
+The same user always gets the same result.
 
-Combine AND/OR/NOT for complex scenarios:
+## Multiple conditions
 
-```javascript
-{
-  name: "Special Access",
-  conditions: [
-    {
-      operator: "or",
-      conditions: [
-        // US Premium users
-        {
-          operator: "and",
-          conditions: [
-            { operator: "equals", property: "country", value: "US" },
-            { operator: "equals", property: "tier", value: "premium" }
-          ]
-        },
-        // OR any VIP user
-        { operator: "equals", property: "isVip", value: true }
-      ]
-    }
-  ],
-  value: { limit: 1000 }
-}
+All conditions in an override must match (AND logic).
+
+**Example**: Premium users in the US
+
+```
+plan equals "premium"
+AND
+country equals "US"
 ```
 
-## Fetching with Context
+```typescript
+// Must match both conditions
+replane.get('feature', {
+  context: { plan: 'premium', country: 'US' }
+}); // matches
 
-### JavaScript/TypeScript SDK
+replane.get('feature', {
+  context: { plan: 'premium', country: 'UK' }
+}); // no match (wrong country)
+```
 
-```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+## Override priority
 
-const client = await createReplaneClient({
+Overrides are evaluated in order. First match wins.
+
+**Example configuration**:
+
+| Priority | Override | Condition | Value |
+|----------|----------|-----------|-------|
+| 1 | VIP users | `userId in ["vip-1", "vip-2"]` | `"vip"` |
+| 2 | Premium | `plan === "premium"` | `"premium"` |
+| 3 | Free | `plan === "free"` | `"free"` |
+| — | Base | (none) | `"default"` |
+
+```typescript
+// VIP user with premium plan → "vip" (first match)
+replane.get('feature', {
+  context: { userId: 'vip-1', plan: 'premium' }
+});
+
+// Regular premium user → "premium"
+replane.get('feature', {
+  context: { userId: 'user-123', plan: 'premium' }
+});
+```
+
+Drag and drop overrides in the dashboard to reorder them.
+
+## Context best practices
+
+### Common context properties
+
+| Property | Type | Use case |
+|----------|------|----------|
+| `userId` | string | User targeting, percentage rollouts |
+| `plan` | string | Subscription tier features |
+| `country` | string | Regional configuration |
+| `region` | string | Infrastructure region |
+| `deviceType` | string | Mobile vs desktop features |
+| `appVersion` | string | Version-specific behavior |
+| `env` | string | Environment-specific values |
+
+### Set default context
+
+Configure context at the client level:
+
+```typescript
+const replane = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: process.env.REPLANE_URL
-})
-
-// Provide context to evaluate overrides
-const config = client.get('max-items', {
+  baseUrl: 'https://replane.example.com',
   context: {
-    userEmail: user.email,
-    tier: user.subscription.tier,
-    country: user.location.country,
-    accountAge: user.accountAgeDays
-    // Any custom properties you need
+    env: 'production',
+    region: 'us-east'
   }
-})
+});
+
+// Every get() call includes env and region
+const value = replane.get('config-name');
 ```
 
-### Direct API Call
+### Merge context per request
 
-```bash
-GET /v1/configs/max-items/value?context={"userEmail":"user@example.com","tier":"premium"}
-Authorization: Bearer YOUR_API_KEY
-```
+Override or extend client context:
 
-The context is a JSON object with any properties you want to use in your override rules.
-
-## Best Practices
-
-### 1. Order Matters
-
-Overrides are evaluated in order. Put more specific rules first:
-
-```javascript
-// ✅ Good - specific first
-Override 1: userEmail equals "admin@company.com" → admin value
-Override 2: tier equals "premium" → premium value
-Override 3: default (no override matches) → base value
-
-// ❌ Bad - general first (admin never gets special value)
-Override 1: tier equals "premium" → premium value
-Override 2: userEmail equals "admin@company.com" → admin value
-```
-
-### 2. Use Descriptive Names
-
-Name your overrides clearly:
-
-```javascript
-// ✅ Good
-'VIP Users'
-'Premium Tier - US'
-'Internal Employees'
-
-// ❌ Bad
-'Override 1'
-'Test'
-'Temp'
-```
-
-### 3. Keep It Simple
-
-- Start with simple equals/in operators
-- Use AND/OR only when needed
-- Avoid deep nesting (2-3 levels max)
-
-### 4. Validate Override Values
-
-Enable JSON Schema to ensure all override values match the expected structure:
-
-```json
-{
-  "type": "object",
-  "properties": {
-    "maxItems": { "type": "number", "minimum": 1 }
+```typescript
+// Merges with client context
+const value = replane.get('config-name', {
+  context: {
+    userId: user.id,
+    plan: user.plan
   }
-}
+});
 ```
-
-This validates both the base value and all override values.
-
-### 5. Test Your Rules
-
-Before deploying:
-
-1. Add the override in the UI
-2. Test with actual context values
-3. Verify the correct value is returned
-
-## Context Properties
-
-Common context properties to use:
-
-| Property     | Type    | Example                | Notes                  |
-| ------------ | ------- | ---------------------- | ---------------------- |
-| `userEmail`  | string  | `"user@example.com"`   | User's email address   |
-| `userId`     | string  | `"user-123"`           | Unique user identifier |
-| `tier`       | string  | `"free"`, `"premium"`  | Subscription tier      |
-| `country`    | string  | `"US"`, `"UK"`, `"DE"` | ISO country code       |
-| `role`       | string  | `"admin"`, `"user"`    | User role              |
-| `accountAge` | number  | `365`                  | Days since signup      |
-| `age`        | number  | `25`                   | User's age             |
-| `isVip`      | boolean | `true`                 | VIP status flag        |
-| `betaOptIn`  | boolean | `true`                 | Beta features opt-in   |
-
-**You can use any property** - the system automatically casts types to match your context values.
-
-## Limitations
-
-- Maximum 100 overrides per config
-- Maximum 10 conditions per override
-- Context must be a JSON object
-- Infinite nesting depth allowed (but keep it reasonable)
-
-## Type Casting
-
-The override system automatically casts rule values to match your context types:
-
-**Example:** If your context has `age: 25` (number) and your rule has `value: "18"` (string), the system casts `"18"` → `18` for comparison.
-
-**Supported casts:**
-
-- String ↔ Number: `"100"` ↔ `100`
-- String ↔ Boolean: `"true"` ↔ `true`
-- Number → Boolean: `0` ↔ `false`, `1` ↔ `true`
-
-This makes it easier to define rules in the UI without worrying about exact type matching.
 
 ## Examples
 
-### Feature Flag with Gradual Rollout
+### Premium features
 
-**Config:** `new-ui-enabled`
+```
+Config: advanced-analytics
+Base value: false
 
-**Base value:** `false`
-
-**Override:** "Beta Users"
-
-- Conditions: Property `betaOptIn` equals `true`
-- Value: `true`
-
-```javascript
-// Beta user sees new UI
-client.get('new-ui-enabled', {
-  context: { betaOptIn: user.preferences.betaOptIn }
-})
+Override: Premium users
+  Condition: plan equals "premium"
+  Value: true
 ```
 
-### Regional Settings
+### Regional pricing
 
-**Config:** `data-retention-days`
+```
+Config: pricing-tier
+Base value: "standard"
 
-**Base value:** `30`
+Override: EU region
+  Condition: region in ["eu-west", "eu-central"]
+  Value: "eu"
 
-**Override:** "EU Users (GDPR)"
-
-- Conditions: Property `country` in `["DE","FR","UK","IT","ES"]`
-- Value: `90`
-
-```javascript
-client.get('data-retention-days', {
-  context: { country: user.country }
-})
+Override: APAC region
+  Condition: region in ["ap-south", "ap-northeast"]
+  Value: "apac"
 ```
 
-### Multi-Condition Override
+### Beta program
 
-**Config:** `api-rate-limit`
+```
+Config: feature-new-editor
+Base value: false
 
-**Base value:** `100`
+Override: Beta users
+  Condition: userFlags contains "beta"
+  Value: true
 
-**Override:** "Established Premium Users"
-
-- Conditions:
-  - Property `tier` equals `"premium"`
-  - Property `accountAge` greater than `30`
-- Value: `1000`
-
-```javascript
-client.get('api-rate-limit', {
-  context: {
-    tier: user.subscription.tier,
-    accountAge: user.accountAgeDays
-  }
-})
+Override: Internal team
+  Condition: email endsWith "@company.com"
+  Value: true
 ```
 
-## Simulating Removed Operators
+## Debugging overrides
 
-### Not Equals
+Check which override matched:
 
-**Use NOT + Equals:**
+1. Open the config in the dashboard
+2. Use the **Evaluate** panel
+3. Enter test context values
+4. See which override matches and the returned value
 
-```javascript
-{
-  operator: "not",
-  condition: {
-    operator: "equals",
-    property: "status",
-    value: "banned"
-  }
-}
-```
+## Next steps
 
-### In (array membership)
-
-**Use OR with multiple Equals:**
-
-```javascript
-{
-  operator: "or",
-  conditions: [
-    { operator: "equals", property: "tier", value: "premium" },
-    { operator: "equals", property: "tier", value: "enterprise" },
-    { operator: "equals", property: "tier", value: "gold" }
-  ]
-}
-```
-
-### Regex Matching
-
-**Not supported** - Use exact matches or multiple conditions with OR instead.
-
-## Troubleshooting
-
-### Override Not Matching
-
-**Problem:** Expected override to apply but got base value
-
-**Solutions:**
-
-1. Check context properties match exactly (case-sensitive)
-2. Verify all conditions in the override (AND logic)
-3. Check override order (earlier override might match first)
-4. Look at audit log to confirm override was saved
-
-### Condition Value Syntax
-
-**Problem:** Not sure how to format the value field
-
-**Solutions:**
-
-- **Strings:** Just type the string: `premium`
-- **Numbers:** Type the number: `100`
-- **Arrays:** Use JSON format: `["us","uk","ca"]`
-- **Booleans:** Type `true` or `false`
-
-The system auto-parses JSON and casts types to match your context.
-
-### Context Not Being Passed
-
-**Problem:** Always getting base value
-
-**Solution:** Make sure you're passing the `context` parameter:
-
-```javascript
-// ❌ No context - always returns base value
-client.get('config-name')
-
-// ✅ With context - evaluates overrides
-client.get('config-name', {
-  context: { userEmail: 'user@example.com' }
-})
-```
-
-## Next Steps
-
-- [**Feature Flags**](./feature-flags) - Use overrides for advanced feature flags
-- [**A/B Testing**](./ab-testing) - Run experiments with overrides
-- [**JavaScript SDK**](../sdk/javascript) - Full SDK documentation
+- [Gradual Rollouts](/docs/guides/gradual-rollouts) — Percentage-based releases
+- [Feature Flags](/docs/guides/feature-flags) — Toggle features
+- [JavaScript SDK](/docs/sdk/javascript) — Full API reference

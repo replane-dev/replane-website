@@ -10,7 +10,7 @@ const FeatureList = [
         instantly when things go wrong. Full audit trail included.
       </>
     ),
-    link: '/docs/guides/rollback'
+    link: '/docs/concepts/overview#versions'
   },
   {
     title: 'Realtime Updates',
@@ -21,7 +21,7 @@ const FeatureList = [
         no delays. Your apps stay in sync automatically.
       </>
     ),
-    link: '/docs/concepts/overview#realtime-updates-sse'
+    link: '/docs/concepts/architecture#realtime-updates'
   },
   {
     title: 'JSON Schema Validation',
@@ -32,7 +32,7 @@ const FeatureList = [
         structure before changes are saved. Keep your configs safe.
       </>
     ),
-    link: '/docs/concepts/overview#json-schema-validation'
+    link: '/docs/guides/operational-tuning#json-schema-validation'
   },
   {
     title: 'Role-Based Access',
@@ -43,7 +43,7 @@ const FeatureList = [
         manage configs. SDK keys for programmatic access.
       </>
     ),
-    link: '/docs/concepts/overview#roles--permissions'
+    link: '/docs/concepts/overview#workspaces'
   },
   {
     title: 'Self-Hosted',

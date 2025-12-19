@@ -1,10 +1,12 @@
 ---
 sidebar_position: 1
+title: JavaScript SDK
+description: Integrate Replane into Node.js, browsers, Deno, or Bun
 ---
 
-# JavaScript / TypeScript SDK
+# JavaScript SDK
 
-Official SDK for accessing Replane configs from JavaScript and TypeScript applications.
+The official JavaScript/TypeScript SDK for Replane. Works in Node.js 18+, browsers, Deno, and Bun.
 
 ## Installation
 
@@ -12,588 +14,468 @@ Official SDK for accessing Replane configs from JavaScript and TypeScript applic
 npm install @replanejs/sdk
 ```
 
-## Quick Start
+## Quick start
 
 ```typescript
-import { createReplaneClient } from '@replanejs/sdk'
+import { createReplaneClient } from '@replanejs/sdk';
 
 // Define your config types
 interface Configs {
-  'feature-flags': Record<string, boolean>
-  'api-settings': {
-    rateLimit: number
-    timeout: number
-  }
+  'feature-dark-mode': boolean;
+  'api-rate-limit': number;
+  'pricing-tiers': { free: number; premium: number };
 }
 
-// Create client (receives realtime updates via SSE)
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://replane.yourdomain.com'
-})
+// Initialize the client
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
 
 // Get a config value
-const flags = client.get('feature-flags')
-if (flags['new-feature']) {
-  console.log('Feature enabled!')
-}
+const darkModeEnabled = replane.get('feature-dark-mode');
 
-// With context for override evaluation
-const settings = client.get('api-settings', {
-  context: {
-    userId: 'user-123',
-    plan: 'premium'
-  }
-})
+// Get with context for override evaluation
+const rateLimit = replane.get('api-rate-limit', {
+  context: { userId: user.id, plan: user.plan }
+});
+
+// Subscribe to realtime updates
+replane.subscribe('feature-dark-mode', (config) => {
+  console.log('Dark mode changed:', config.value);
+});
+
+// Cleanup when done
+replane.close();
 ```
 
 ## API Reference
 
-### createReplaneClient(options)
+### `createReplaneClient<T>(options)`
 
-Creates a new Replane client instance that maintains a realtime connection via Server-Sent Events (SSE).
+Creates a new Replane client. Returns a Promise that resolves when the initial config fetch completes.
 
 #### Options
 
-| Option                   | Type                 | Required | Default            | Description                                                                                                   |
-| ------------------------ | -------------------- | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-| `sdkKey`                 | `string`             | Yes      | -                  | SDK key for authentication. Each key is tied to a specific project.                                           |
-| `baseUrl`                | `string`             | Yes      | -                  | Base URL of your Replane instance (no trailing slash)                                                         |
-| `context`                | `object`             | No       | `{}`               | Default context for all config evaluations (can be overridden per-request)                                    |
-| `required`               | `object` or `array`  | No       | -                  | Required configs. If any are missing, initialization throws. Can be object with boolean values or array.      |
-| `fallbacks`              | `object`             | No       | -                  | Fallback values to use if initial fetch fails. Allows client to start even when API is unavailable.           |
-| `fetchFn`                | `function`           | No       | `globalThis.fetch` | Custom fetch function (for testing or unsupported environments)                                               |
-| `requestTimeoutMs`       | `number`             | No       | `2000`             | Request timeout in milliseconds                                                                               |
-| `initializationTimeoutMs`| `number`             | No       | `5000`             | Timeout for client initialization in milliseconds                                                             |
-| `retryDelayMs`           | `number`             | No       | `200`              | Base delay between retries in milliseconds (with jitter)                                                      |
-| `logger`                 | `object`             | No       | `console`          | Custom logger with debug, info, warn, error methods                                                           |
-
-#### Returns
-
-`Promise<ReplaneClient<T>>` - Resolves to a client object with methods: `{ get, subscribe, close }`
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `sdkKey` | `string` | Yes | SDK key for authentication |
+| `baseUrl` | `string` | Yes | Replane server URL |
+| `required` | `string[] \| Record<string, boolean>` | No | Configs that must exist |
+| `fallbacks` | `Record<string, unknown>` | No | Fallback values if fetch fails |
+| `context` | `Record<string, unknown>` | No | Default context for all requests |
+| `fetchFn` | `typeof fetch` | No | Custom fetch implementation |
+| `timeoutMs` | `number` | No | Request timeout (default: 2000) |
+| `retries` | `number` | No | Retry attempts (default: 2) |
+| `retryDelayMs` | `number` | No | Delay between retries (default: 200) |
+| `logger` | `Logger` | No | Custom logger |
 
 #### Example
 
 ```typescript
-interface Configs {
-  'feature-flags': Record<string, boolean>
-  'api-key': string
-  'rate-limit': number
-}
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: 'rp_abc123...',
-  baseUrl: 'https://config.company.com',
-  context: {
-    environment: 'production',
-    region: 'us-east'
-  },
-  required: ['api-key'], // Throw if api-key is missing
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+  required: ['database-url', 'api-key'],
   fallbacks: {
-    'feature-flags': { 'new-feature': false },
-    'api-key': 'fallback-key',
+    'feature-flag': false,
     'rate-limit': 100
   },
-  requestTimeoutMs: 5000
-})
+  context: {
+    env: 'production',
+    region: 'us-east'
+  },
+  timeoutMs: 5000,
+  retries: 3
+});
 ```
 
-### client.get(configName, options?)
+### `replane.get<K>(name, options?)`
 
-Gets the current config value. The client maintains an up-to-date cache that receives realtime updates via Server-Sent Events (SSE) in the background.
+Gets a config value. Returns the current value synchronously.
 
 #### Parameters
 
-| Parameter         | Type     | Required | Description                                                      |
-| ----------------- | -------- | -------- | ---------------------------------------------------------------- |
-| `configName`      | `string` | Yes      | Config name to fetch. Must be a valid key from your Configs type |
-| `options`         | `object` | No       | Options for this request                                         |
-| `options.context` | `object` | No       | Context merged with client-level context for override evaluation |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `name` | `keyof T` | Yes | Config name |
+| `options.context` | `Record<string, unknown>` | No | Context for override evaluation |
 
 #### Returns
 
-The config value of type `T[K]` (synchronous). The return type is automatically inferred from your Configs interface.
+The config value with type `T[K]`.
 
-#### Errors
-
-Throws `ReplaneError` with code `not_found` if the config doesn't exist.
-
-#### Examples
-
-**Basic usage**:
+#### Example
 
 ```typescript
-interface Configs {
-  'feature-flags': Record<string, boolean>
-}
+// Simple get
+const enabled = replane.get('feature-dark-mode'); // boolean
 
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-const flags = client.get('feature-flags')
-console.log(flags) // { "new-onboarding": true, ... }
-```
-
-**With context for override evaluation**:
-
-```typescript
-interface Configs {
-  'premium-features': boolean
-}
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-// Evaluate for different users
-const freeUser = client.get('premium-features', {
-  context: { plan: 'free' }
-}) // false
-
-const premiumUser = client.get('premium-features', {
+// With context
+const limit = replane.get('api-rate-limit', {
   context: { plan: 'premium' }
-}) // true
+}); // number
 ```
 
-**Client-level context**:
+### `replane.subscribe(callback)` or `replane.subscribe(name, callback)`
+
+Subscribes to config changes. Returns an unsubscribe function.
+
+#### All configs
 
 ```typescript
-const client = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com',
+const unsubscribe = replane.subscribe((config) => {
+  console.log(`${config.name} changed to:`, config.value);
+});
+```
+
+#### Specific config
+
+```typescript
+const unsubscribe = replane.subscribe('feature-flag', (config) => {
+  console.log('Feature flag changed:', config.value);
+  // config.value is typed based on your Configs interface
+});
+```
+
+### `replane.close()`
+
+Closes the client and cleans up resources. Call this when shutting down your application.
+
+```typescript
+process.on('SIGTERM', () => {
+  replane.close();
+  process.exit(0);
+});
+```
+
+## Type safety
+
+Define your config types for full TypeScript support:
+
+```typescript
+interface Configs {
+  'feature-dark-mode': boolean;
+  'api-rate-limit': number;
+  'allowed-regions': string[];
+  'pricing': {
+    free: { requests: number };
+    premium: { requests: number };
+  };
+}
+
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
+
+// TypeScript knows the types
+const darkMode = replane.get('feature-dark-mode'); // boolean
+const regions = replane.get('allowed-regions'); // string[]
+const pricing = replane.get('pricing'); // { free: {...}, premium: {...} }
+
+// Type error - 'invalid-config' doesn't exist
+const invalid = replane.get('invalid-config');
+```
+
+## Context and overrides
+
+Context is used to evaluate override rules. Pass it at the client level or per request.
+
+### Client-level context
+
+Applied to all `get()` calls:
+
+```typescript
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
   context: {
-    environment: 'production',
+    env: 'production',
     region: 'us-east'
   }
-})
+});
 
-// Uses client-level context
-const value1 = client.get('feature')
-
-// Merges with client-level context
-const value2 = client.get('feature', {
-  context: { userId: '123' }
-})
+// Uses client context
+const value = replane.get('config-name');
 ```
 
-**In Express middleware**:
+### Per-request context
+
+Merged with client context:
 
 ```typescript
-interface Configs {
-  'rate-limits': Record<string, number>
-}
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-app.use((req, res, next) => {
-  const limits = client.get('rate-limits')
-  const rpm = limits['api-requests-per-minute']
-
-  // Apply rate limiting
-  if (rateLimiter.isExceeded(req.ip, rpm)) {
-    return res.status(429).json({ error: 'Too many requests' })
+const value = replane.get('feature-flag', {
+  context: {
+    userId: user.id,
+    plan: user.plan
   }
-
-  next()
-})
-
-// Cleanup on shutdown
-process.on('SIGTERM', () => {
-  client.close()
-})
+});
 ```
 
-**A/B testing with context**:
+### Context properties
+
+Common context properties:
 
 ```typescript
-interface Configs {
-  'homepage-variant': string
+{
+  userId: 'user-123',       // User identifier
+  plan: 'premium',          // Subscription tier
+  region: 'us-east',        // Geographic region
+  deviceType: 'mobile',     // Device type
+  appVersion: '2.1.0',      // App version
+  env: 'production'         // Environment
 }
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-app.get('/', (req, res) => {
-  // Evaluate based on user ID for consistent experience
-  const variant = client.get('homepage-variant', {
-    context: {
-      userId: req.user.id,
-      country: req.geo.country
-    }
-  })
-
-  res.render(variant === 'b' ? 'homepage-v2' : 'homepage-v1')
-})
 ```
 
-### client.subscribe(callback) or client.subscribe(configName, callback)
+## Required configs
 
-Subscribe to config changes and receive real-time updates when configs are modified.
-
-#### Overloads
-
-**1. Subscribe to all config changes:**
+Ensure critical configs exist on startup:
 
 ```typescript
-client.subscribe((config) => {
-  console.log(`Config ${config.name} changed to:`, config.value)
-})
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+  required: ['database-url', 'api-key']
+});
+// Throws if database-url or api-key is missing
 ```
 
-**2. Subscribe to a specific config:**
+Or with an object:
 
 ```typescript
-client.subscribe('feature-flag', (config) => {
-  console.log(`feature-flag changed to:`, config.value)
-})
+required: {
+  'database-url': true,
+  'api-key': true,
+  'optional-feature': false
+}
 ```
 
-#### Parameters
+## Fallback values
 
-| Parameter    | Type       | Required | Description                                                           |
-| ------------ | ---------- | -------- | --------------------------------------------------------------------- |
-| `callback`   | `function` | Yes      | Function called when config(s) change. Receives `{ name, value }`.   |
-| `configName` | `string`   | No       | If provided, only changes to this specific config trigger callback.  |
-
-#### Returns
-
-A function to unsubscribe from the config changes.
-
-#### Examples
-
-**Subscribe to all changes**:
+Provide fallback values if the initial fetch fails:
 
 ```typescript
-const unsubscribe = client.subscribe((config) => {
-  console.log(`Config ${config.name} updated:`, config.value)
-
-  // React to specific configs
-  if (config.name === 'feature-flag') {
-    console.log('Feature flag changed!')
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+  fallbacks: {
+    'feature-flag': false,
+    'rate-limit': 100,
+    'timeout-ms': 5000
   }
-})
-
-// Later: unsubscribe
-unsubscribe()
+});
 ```
 
-**Subscribe to specific config**:
+The client starts with fallback values and updates when connection is restored.
+
+## Realtime updates
+
+The SDK maintains a persistent SSE connection for realtime updates.
+
+### How it works
+
+1. Client connects to `/api/sdk/v1/replication/stream`
+2. Server sends all current configs
+3. Connection stays open
+4. Server pushes changes as they happen
+5. `get()` always returns the latest value
+
+### Subscribing to changes
 
 ```typescript
-interface Configs {
-  'feature-flag': boolean
-  'max-users': number
+// Subscribe to all changes
+const unsubAll = replane.subscribe((config) => {
+  console.log(`${config.name} updated:`, config.value);
+});
+
+// Subscribe to specific config
+const unsubFeature = replane.subscribe('feature-flag', (config) => {
+  // React to change
+  updateUI(config.value);
+});
+
+// Unsubscribe when done
+unsubAll();
+unsubFeature();
+```
+
+### React integration
+
+```typescript
+import { useEffect, useState } from 'react';
+
+function useConfig<K extends keyof Configs>(name: K) {
+  const [value, setValue] = useState(() => replane.get(name));
+
+  useEffect(() => {
+    return replane.subscribe(name, (config) => {
+      setValue(config.value as Configs[K]);
+    });
+  }, [name]);
+
+  return value;
 }
 
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
+// Usage
+function App() {
+  const darkMode = useConfig('feature-dark-mode');
 
-const unsubscribe = client.subscribe('feature-flag', (config) => {
-  console.log('Feature flag changed:', config.value)
-  // config.value is automatically typed as boolean
-})
-
-// Cleanup
-unsubscribe()
-```
-
-**Multiple subscriptions**:
-
-```typescript
-const unsubscribe1 = client.subscribe('feature-flag', (config) => {
-  console.log('Feature flag:', config.value)
-})
-
-const unsubscribe2 = client.subscribe('max-users', (config) => {
-  console.log('Max users:', config.value)
-})
-
-// Cleanup both
-unsubscribe1()
-unsubscribe2()
-```
-
-### client.close()
-
-Gracefully shuts down the client and cleans up resources. Subsequent calls to `get()` will throw.
-
-#### Example
-
-```typescript
-// During application shutdown
-client.close()
-```
-
-### createInMemoryReplaneClient(initialData)
-
-Creates a client backed by an in-memory store instead of making HTTP requests. Useful for testing or local development where you want deterministic config values without a server.
-
-#### Parameters
-
-| Parameter     | Type                  | Required | Description                 |
-| ------------- | --------------------- | -------- | --------------------------- |
-| `initialData` | `Record<string, any>` | Yes      | Map of config name to value |
-
-#### Returns
-
-Client with same API as `createReplaneClient`: `{ get, subscribe, close }`
-
-#### Notes
-
-- `get(name)` resolves to the value from `initialData`
-- Throws `ReplaneError` if config name is missing
-- Client works as usual but doesn't receive SSE updates (values remain static from `initialData`)
-- `subscribe()` returns no-op unsubscribe function
-
-#### Example
-
-```typescript
-import { createInMemoryReplaneClient } from '@replanejs/sdk'
-
-interface Configs {
-  'feature-flags': Record<string, boolean>
-  'rate-limits': Record<string, number>
+  return <div className={darkMode ? 'dark' : 'light'}>...</div>;
 }
-
-const client = createInMemoryReplaneClient<Configs>({
-  'feature-flags': { 'new-feature': true },
-  'rate-limits': { 'api-requests-per-minute': 100 }
-})
-
-const flags = client.get('feature-flags')
-console.log(flags) // { "new-feature": true }
-
-const limits = client.get('rate-limits')
-console.log(limits['api-requests-per-minute']) // 100
 ```
 
-## Error Handling
+## Error handling
 
-### ReplaneError
-
-The SDK throws `ReplaneError` for various failures:
+### Initialization errors
 
 ```typescript
-import { ReplaneError } from '@replanejs/sdk'
-
 try {
-  const client = await createReplaneClient({
-    sdkKey: 'invalid-key',
-    baseUrl: 'https://config.company.com'
-  })
+  const replane = await createReplaneClient<Configs>({
+    sdkKey: process.env.REPLANE_SDK_KEY,
+    baseUrl: 'https://replane.example.com',
+  });
 } catch (error) {
   if (error instanceof ReplaneError) {
-    console.error('Replane error:', error.message)
-    console.error('Error code:', error.code)
-  } else {
-    console.error('Other error:', error)
+    console.error('Replane error:', error.code, error.message);
   }
+  // Use fallback configuration
 }
+```
 
-// Or when getting a non-existent config
+### Config not found
+
+```typescript
 try {
-  const value = client.get('non-existent-config')
+  const value = replane.get('missing-config');
 } catch (error) {
   if (error instanceof ReplaneError && error.code === 'not_found') {
-    console.error('Config not found')
+    console.error('Config not found');
   }
 }
 ```
 
-### Retry Behavior
+## Testing
 
-Transient failures (5xx responses or network errors) are automatically retried with exponential backoff:
+### In-memory client
+
+Use `createInMemoryReplaneClient` for tests:
 
 ```typescript
-const client = await createReplaneClient({
-  sdkKey: 'rp_...',
-  baseUrl: 'https://config.company.com',
-  retryDelayMs: 200 // Base delay (exponential backoff with jitter applied)
-})
+import { createInMemoryReplaneClient } from '@replanejs/sdk';
+
+const replane = createInMemoryReplaneClient<Configs>({
+  'feature-flag': true,
+  'rate-limit': 100,
+  'pricing': { free: { requests: 100 }, premium: { requests: 10000 } }
+});
+
+// Use in tests
+expect(replane.get('feature-flag')).toBe(true);
 ```
 
-Non-transient errors (4xx) are not retried. Background SSE connection errors are logged and automatically retried, but don't affect `get()` calls (which return the last known value).
+### Custom fetch
 
-## Environment Support
-
-- **Node.js 18+**: Built-in `fetch` support
-- **Browsers**: Modern browsers with `fetch` and `EventSource`
-- **Edge runtimes**: Cloudflare Workers, Vercel Edge, Deno
-- **Older environments**: Provide a polyfill via `fetchFn`
-
-## TypeScript
-
-The SDK is written in TypeScript and exports full type definitions.
+Mock the fetch function:
 
 ```typescript
-import { createReplaneClient, ReplaneError, createInMemoryReplaneClient } from '@replanejs/sdk'
-import type { ReplaneClient, ReplaneContext, GetConfigOptions } from '@replanejs/sdk'
+const mockFetch = vi.fn().mockResolvedValue({
+  ok: true,
+  json: () => Promise.resolve({ configs: [...] })
+});
 
-interface Configs {
-  'feature-flags': Record<string, boolean>
-  'rate-limit': number
-}
-
-const client: ReplaneClient<Configs> = await createReplaneClient<Configs>({
-  sdkKey: 'rp_...',
-  baseUrl: 'https://config.company.com'
-})
-
-const flags = client.get('feature-flags') // Typed as Record<string, boolean>
+const replane = await createReplaneClient<Configs>({
+  sdkKey: 'test-key',
+  baseUrl: 'https://test.com',
+  fetchFn: mockFetch
+});
 ```
 
-## Best Practices
+## Multiple projects
 
-### Store SDK Keys Securely
+Each SDK key is tied to one project. For multiple projects, create separate clients:
 
 ```typescript
-// ✅ Good: Use environment variables
-const client = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: process.env.REPLANE_URL!
-})
+const projectA = await createReplaneClient<ProjectAConfigs>({
+  sdkKey: process.env.PROJECT_A_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
 
-// ❌ Bad: Hardcode credentials
-const client = await createReplaneClient({
-  sdkKey: 'rpk_abc123...',
-  baseUrl: 'https://...'
-})
+const projectB = await createReplaneClient<ProjectBConfigs>({
+  sdkKey: process.env.PROJECT_B_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
 ```
 
-### Initialize Once, Read Many Times
+## Best practices
 
-The client maintains a realtime connection and up-to-date cache:
+### Initialize once
+
+Create the client once at application startup:
 
 ```typescript
-// Initialize once at startup
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
+// config.ts
+export const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
 
-app.get('/api/data', (req, res) => {
-  // Always up-to-date via SSE, no network request needed
-  const flags = client.get('feature-flags')
-  // ...
-})
+// app.ts
+import { replane } from './config';
+const value = replane.get('feature-flag');
 ```
 
-### Provide Fallbacks
+### Clean up on shutdown
 
 ```typescript
-interface Configs {
-  'my-config': {
-    'feature-enabled': boolean
-    'rate-limit': number
-  }
-}
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com',
-  fallbacks: {
-    'my-config': {
-      'feature-enabled': false,
-      'rate-limit': 100
-    }
-  }
-})
-
-// If initial fetch fails, fallback values are used
-// Once connected, receives realtime updates
-```
-
-### Clean Up Resources
-
-```typescript
-// Close client on shutdown
 process.on('SIGTERM', () => {
-  client.close()
-})
+  replane.close();
+});
 
-// Or manually
-client.close()
+process.on('SIGINT', () => {
+  replane.close();
+});
 ```
 
-## Examples
+### Use fallbacks for resilience
 
-### Feature Flags
+```typescript
+const replane = await createReplaneClient<Configs>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+  fallbacks: {
+    // Sensible defaults if Replane is unavailable
+    'feature-flag': false,
+    'rate-limit': 100
+  }
+});
+```
+
+### Type your configs
+
+Always define config types for safety and autocomplete:
 
 ```typescript
 interface Configs {
-  'feature-flags': Record<string, boolean>
-}
-
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-const flags = client.get('feature-flags')
-
-if (flags['new-checkout']) {
-  return renderNewCheckout()
-} else {
-  return renderOldCheckout()
+  'feature-new-ui': boolean;
+  'max-upload-size': number;
+  // ...
 }
 ```
 
-### Rate Limiting
+## Environment compatibility
 
-```typescript
-interface Configs {
-  'rate-limits': Record<string, number>
-}
+| Environment | Support |
+|-------------|---------|
+| Node.js 18+ | Full |
+| Node.js 16-17 | Requires fetch polyfill |
+| Browsers (modern) | Full |
+| Deno | Full |
+| Bun | Full |
+| Edge Workers | Full (Cloudflare, Vercel) |
 
-const client = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
+## Next steps
 
-// Value is always up-to-date via SSE
-const limits = client.get('rate-limits')
-const rpm = limits['api-requests-per-minute']
-rateLimiter.setLimit(rpm)
-```
-
-### Multiple Projects
-
-Each SDK key is tied to a specific project. For multiple projects, create separate clients:
-
-```typescript
-interface ProjectAConfigs {
-  'flags': Record<string, boolean>
-}
-
-interface ProjectBConfigs {
-  'flags': Record<string, boolean>
-}
-
-const projectAClient = await createReplaneClient<ProjectAConfigs>({
-  sdkKey: process.env.PROJECT_A_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-const projectBClient = await createReplaneClient<ProjectBConfigs>({
-  sdkKey: process.env.PROJECT_B_SDK_KEY!,
-  baseUrl: 'https://config.company.com'
-})
-
-const flagsA = projectAClient.get('flags')
-const flagsB = projectBClient.get('flags')
-```
-
-## Next Steps
-
-- [**API Reference**](../api) - Direct API access
-- [**Guides**](../guides/feature-flags) - Common use cases
+- [Feature Flags](/docs/guides/feature-flags) — Toggle features
+- [Override Rules](/docs/guides/override-rules) — Target specific users
+- [Gradual Rollouts](/docs/guides/gradual-rollouts) — Percentage-based releases

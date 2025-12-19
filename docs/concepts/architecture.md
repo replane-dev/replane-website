@@ -1,147 +1,239 @@
 ---
 sidebar_position: 2
+title: Architecture
+description: How Replane works - system design, realtime updates, and data flow
 ---
 
 # Architecture
 
-Replane's architecture is straightforward: a Next.js web app backed by PostgreSQL.
+This page explains how Replane is designed and how data flows through the system.
 
-## System Components
+## System overview
+
+Replane uses a unified architecture where the same Docker image serves both the dashboard and SDK API. This enables flexible deployment — from a single instance for self-hosting to globally distributed edge servers for Replane Cloud.
 
 ```
-┌─────────────────┐
-│   Web Browser   │
-│   (React UI)    │
-└────────┬────────┘
-         │
-         │ HTTPS
-         ↓
-┌─────────────────┐
-│   Next.js App   │
-│   (API + UI)    │
-└────────┬────────┘
-         │
-         │ PostgreSQL
-         ↓
-┌─────────────────┐
-│   PostgreSQL    │
-│   (Database)    │
-└─────────────────┘
+                               ╭──────────────────╮
+                               │    PostgreSQL    │
+                               │  Source of Truth │
+                               ╰────────┬─────────╯
+                                        │
+              ┌─────────────────────────┼─────────────────────────┐
+              │                         │                         │
+              ▼                         ▼                         ▼
+     ╭─────────────────╮       ╭─────────────────╮       ╭─────────────────╮
+     │     Replane     │       │     Replane     │       │     Replane     │
+     │    Region A     │       │    Region B     │       │    Region C     │
+     │  ·············  │       │  ·············  │       │  ·············  │
+     │  Dashboard      │       │  Dashboard      │       │  Dashboard      │
+     │  SDK API        │       │  SDK API        │       │  SDK API        │
+     │  SQLite cache   │       │  SQLite cache   │       │  SQLite cache   │
+     ╰────────┬────────╯       ╰────────┬────────╯       ╰────────┬────────╯
+              │                         │                         │
+              │ SSE                     │ SSE                     │ SSE
+              ▼                         ▼                         ▼
+     ╭─────────────────╮       ╭─────────────────╮       ╭─────────────────╮
+     │    Your Apps    │       │    Your Apps    │       │    Your Apps    │
+     │  ·············  │       │  ·············  │       │  ·············  │
+     │   local cache   │       │   local cache   │       │   local cache   │
+     ╰─────────────────╯       ╰─────────────────╯       ╰─────────────────╯
 ```
 
-## Technology Stack
+**Key characteristics:**
 
-- **Frontend**: React with Next.js App Router
-- **Backend**: Next.js API routes + custom server (for SSE)
-- **Database**: PostgreSQL 14+
-- **Authentication**: OAuth (GitHub or Okta)
-- **Realtime**: Server-Sent Events (SSE)
+- **Single image**: One Docker image serves dashboard, SDK API, and edge functionality
+- **Pull-based replication**: Each instance pulls changes from PostgreSQL and caches locally
+- **Horizontal scaling**: Deploy multiple instances behind a load balancer
+- **High availability**: Each node operates independently — as long as one node is running, clients receive configs
+- **Low latency**: SDKs connect to the nearest instance for fast config reads
 
-## Data Model
+## Components
 
-### Projects
+### Dashboard
 
-Each project is isolated and contains:
+The web UI for managing configs, users, and projects. Create and edit configs, set up override rules, view version history, and manage access control.
 
-- Configs
-- Snapshots (version history)
-- Team members
-- SDK keys
-- Audit log entries
+### SDK API
 
-### Configs
+The API that SDK clients connect to:
+- Bearer token authentication (SDK keys)
+- Server-Sent Events (SSE) for realtime updates
+- Serves configs from local cache for fast responses
 
-A config has:
+### PostgreSQL
 
-- Name (unique per project)
-- Current value (JSON)
-- Optional JSON schema
-- List of snapshots (versions)
+The source of truth for all data:
+- Configs, versions, and audit logs
+- User accounts and permissions
+- Workspace and project settings
 
-### Snapshots
+### Local SQLite cache
 
-Each snapshot stores:
+Each Replane instance replicates all configs to a local SQLite database:
+- Enables fast reads without hitting PostgreSQL
+- Keeps the instance operational if PostgreSQL is temporarily unavailable
+- Syncs automatically when changes occur
 
-- Config value at that point in time
-- Who created it
-- When it was created
-- Version number (auto-incrementing)
+## Realtime updates
 
-Snapshots are **append-only**. Rollbacks create new snapshots pointing to old values.
+Replane uses Server-Sent Events (SSE) for realtime config updates.
 
-### SDK Keys
+### How it works
 
-Each SDK key:
-
-- Belongs to one project
-- Has a hashed token
-- Can be revoked (soft delete)
-
-## Authentication Flow
-
-1. User clicks "Sign in with GitHub/Okta"
-2. OAuth provider authenticates user
-3. Replane receives user info and creates/updates account
-4. Session cookie is set
-5. User is redirected to dashboard
-
-SDK keys use Bearer token authentication:
-
-```http
-Authorization: Bearer your-api-key-here
+```
+SDK Client                    Replane Server                Database
+    │                              │                           │
+    │ POST /api/sdk/v1/            │                           │
+    │   replication/stream         │                           │
+    │ ─────────────────────────────▶                           │
+    │                              │                           │
+    │◀─────────────────────────────│                           │
+    │   SSE: init                  │                           │
+    │   (all current configs)      │                           │
+    │                              │                           │
+    │                              │                           │
+    │   ... connection open ...    │                           │
+    │                              │                           │
+    │                              │  Config changed           │
+    │                              │◀──────────────────────────│
+    │◀─────────────────────────────│                           │
+    │   SSE: config_change         │                           │
+    │   (updated config)           │                           │
+    │                              │                           │
 ```
 
-## Realtime Updates (SSE)
+### Event types
 
-When a client calls `get`:
+| Event | Description |
+|-------|-------------|
+| `init` | Initial payload with all configs for the project |
+| `config_change` | Single config was created, updated, or deleted |
 
-1. SDK opens an SSE connection to `/api/v1/configs/{name}/watch`
-2. Server streams the current value immediately
-3. On config updates, server pushes new values to all connected clients
-4. Client SDK updates the in-memory value automatically
+### Connection lifecycle
 
-SSE is unidirectional (server → client) and works over HTTP/1.1. It's simpler than WebSockets for this use case.
+1. SDK connects via `POST /api/sdk/v1/replication/stream`
+2. Server sends `init` event with all current configs
+3. Connection stays open
+4. Server pushes `config_change` events as they occur
+5. SDK automatically reconnects on disconnect
+
+## Override evaluation
+
+Overrides are evaluated client-side in the SDK for low latency.
+
+### Evaluation flow
+
+```
+1. replane.get('feature-flag', { context: { plan: 'premium' } })
+                 │
+                 ▼
+2. Find config in local cache
+                 │
+                 ▼
+3. Iterate through overrides in order
+                 │
+                 ▼
+4. For each override:
+   - Evaluate all conditions against context
+   - If all conditions match → return override value
+                 │
+                 ▼
+5. No override matched → return base value
+```
+
+## Data model
+
+### Entity relationships
+
+```
+Workspace (1) ──────────────── (N) Project
+                                      │
+                                      │
+              ┌───────────────────────┼───────────────────────┐
+              │                       │                       │
+              ▼                       ▼                       ▼
+        Environment (N)          Config (N)            SDK Key (N)
+              │                       │
+              │                       │
+              ▼                       ▼
+     Config Variant (N)      Config Version (N)
+     (env-specific values)   (immutable history)
+```
+
+### Key tables
+
+| Table | Purpose |
+|-------|---------|
+| `workspaces` | Organizational units |
+| `projects` | Config containers |
+| `project_environments` | Deployment targets |
+| `configs` | Configuration definitions |
+| `config_versions` | Immutable change history |
+| `config_variants` | Per-environment values |
+| `sdk_keys` | API authentication tokens |
+| `audit_logs` | Change audit trail |
 
 ## Security
 
-- **HTTPS required** in production (use a reverse proxy like Nginx or Caddy)
-- **Session cookies** are httpOnly and secure
-- **SDK keys** are hashed with bcrypt before storage
-- **SQL injection** prevented by parameterized queries
-- **CSRF protection** via Next.js middleware
+### Authentication
+
+- **Dashboard**: NextAuth.js with OAuth providers or email/password
+- **SDK API**: Bearer token authentication with hashed SDK keys
+
+### Authorization
+
+- **Workspace level**: Admin and member roles
+- **Project level**: Admin and maintainer roles
+- SDK keys provide read-only access to their project
+
+### Data protection
+
+- SDK keys are hashed before storage
+- Passwords use Argon2 hashing
+- SSL/TLS support for database connections
+- Audit logs are immutable
 
 ## Scalability
 
-Replane is designed for **tens of thousands of configs** and **hundreds of users**:
+### Single instance
 
-- Database queries are optimized with indexes
-- SSE connections are lightweight (one per watcher)
-- No heavy background jobs or queues
+Suitable for most deployments:
+- Handles thousands of SDK connections
+- PostgreSQL connection pooling
+- In-memory config cache
 
-For larger deployments:
+### High availability
 
-- Use read replicas for API requests
-- Load balance multiple app instances
-- Keep SSE connections on dedicated instances
+For larger deployments, run multiple Replane instances behind a load balancer:
 
-## Backups
-
-All state is in PostgreSQL. Use standard backup tools:
-
-```bash
-# Backup
-pg_dump -U postgres replane > backup.sql
-
-# Restore
-psql -U postgres replane < backup.sql
+```
+                              ╭─────────────────╮
+                              │  Load Balancer  │
+                              ╰────────┬────────╯
+                                       │
+              ┌────────────────────────┼────────────────────────┐
+              │                        │                        │
+              ▼                        ▼                        ▼
+     ╭─────────────────╮      ╭─────────────────╮      ╭─────────────────╮
+     │    Replane 1    │      │    Replane 2    │      │    Replane 3    │
+     │  ·············  │      │  ·············  │      │  ·············  │
+     │  SQLite cache   │      │  SQLite cache   │      │  SQLite cache   │
+     ╰────────┬────────╯      ╰────────┬────────╯      ╰────────┬────────╯
+              │                        │                        │
+              └────────────────────────┼────────────────────────┘
+                                       │
+                              ╭────────┴────────╮
+                              │   PostgreSQL    │
+                              ╰─────────────────╯
 ```
 
-## Deployment
+- Each instance operates independently with its own SQLite cache
+- All instances connect to shared PostgreSQL
+- If one instance fails, others continue serving configs
+- SSE connections are distributed across instances
 
-See the [Self-Hosting Guide](../self-hosting/docker) for deployment instructions.
+## Next steps
 
-## Next Steps
-
-- [**Self-Hosting**](../self-hosting/docker) - Deploy Replane
-- [**Environment Variables**](../self-hosting/environment-variables) - Configuration reference
-- [**Guides**](../guides/feature-flags) - Common use cases
+- [Self-Hosting](/docs/self-hosting/docker) — Deploy Replane
+- [Environment Variables](/docs/self-hosting/environment-variables) — Configuration reference
+- [JavaScript SDK](/docs/sdk/javascript) — Client integration

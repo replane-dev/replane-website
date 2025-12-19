@@ -1,192 +1,137 @@
 ---
 sidebar_position: 1
+title: Quickstart
+description: Deploy Replane and read your first config in under 5 minutes
 ---
 
 # Quickstart
 
-Get Replane running locally in under 5 minutes.
+This guide walks you through deploying Replane, creating your first config, and reading it from your application.
 
 ## Prerequisites
 
-- Docker and Docker Compose
-- A GitHub or Okta account (for OAuth authentication)
+- Docker and Docker Compose installed
+- Node.js 18+ (for the SDK)
 
-## 1. Create OAuth Application
+## Step 1: Deploy Replane
 
-### For GitHub
+Create a `docker-compose.yml` file:
 
-1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
-2. Click "New OAuth App"
-3. Fill in:
-   - **Application name**: Replane Local
-   - **Homepage URL**: `http://localhost:8080`
-   - **Authorization callback URL**: `http://localhost:8080/api/auth/callback/github`
-4. Click "Register application"
-5. Note your **Client ID** and generate a **Client Secret**
-
-### For Okta
-
-1. Log in to your Okta admin console
-2. Go to Applications → Create App Integration
-3. Select "OIDC - OpenID Connect" and "Web Application"
-4. Configure:
-   - **Sign-in redirect URIs**: `http://localhost:8080/api/auth/callback/okta`
-   - **Sign-out redirect URIs**: `http://localhost:8080`
-5. Save and note your **Client ID**, **Client Secret**, and **Issuer URL**
-
-## 2. Create docker-compose.yml
-
-Create a new directory and add this `docker-compose.yml`:
-
-```yaml
+```yaml title="docker-compose.yml"
 services:
-  db:
+  postgres:
     image: postgres:17
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: replane
     volumes:
-      - replane-db:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
+      - replane-data:/var/lib/postgresql/data
 
-  app:
-    image: ghcr.io/replane-dev/replane:latest
+  replane:
+    image: replane/replane:latest
     depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
-      BASE_URL: http://localhost:8080
-      SECRET_KEY: your-secret-key-change-me-in-production
-
-      # GitHub OAuth (use one provider)
-      GITHUB_CLIENT_ID: your-github-client-id
-      GITHUB_CLIENT_SECRET: your-github-client-secret
-
-      # OR Okta OAuth (comment out GitHub if using Okta)
-      # OKTA_CLIENT_ID: your-okta-client-id
-      # OKTA_CLIENT_SECRET: your-okta-client-secret
-      # OKTA_ISSUER: https://your-domain.okta.com
+      - postgres
     ports:
       - '8080:8080'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/replane
+      BASE_URL: http://localhost:8080
+      SECRET_KEY: change-me-to-a-long-random-string
+      PASSWORD_AUTH_ENABLED: true
 
 volumes:
-  replane-db:
+  replane-data:
 ```
 
-## 3. Start Replane
+Start Replane:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-The first startup will:
+Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-- Create the database schema automatically
-- Start the web server on port 8080
+## Step 2: Create your account
 
-## 4. Access Replane
+1. Click **Sign up** and create an account with email/password
+2. Create a new **workspace** (e.g., "My Company")
+3. Create a new **project** (e.g., "Backend API")
 
-Open your browser and navigate to:
+## Step 3: Create a config
 
-```
-http://localhost:8080
-```
+1. Navigate to your project
+2. Click **New Config**
+3. Enter the config details:
+   - **Name**: `feature-new-checkout`
+   - **Value**: `false`
+4. Click **Create**
 
-Click "Sign in with GitHub" (or Okta) to authenticate.
+You've created your first feature flag.
 
-## 5. Create Your First Config
+## Step 4: Create an SDK key
 
-<!-- Screenshot: Creating a config will be added here -->
+1. Go to **SDK Keys** in the project sidebar
+2. Click **Create SDK Key**
+3. Select your environment (e.g., "Production")
+4. Copy the generated key — you'll need it in the next step
 
-1. Click "New config"
-2. Enter a name (e.g., `feature-flags`)
-3. Add a JSON value:
-   ```json
-   {
-     "new-onboarding": true,
-     "dark-mode": false
-   }
-   ```
-4. Click "Save"
+:::caution
+SDK keys are shown only once. Store them securely.
+:::
 
-## 6. Generate an SDK Key
+## Step 5: Install the SDK
 
-<!-- Screenshot: SDK key generation will be added here -->
-
-1. Go to Settings → SDK Keys
-2. Click "Create SDK Key"
-3. Name it (e.g., `dev-key`)
-4. Copy the key immediately (it's shown only once)
-
-## 7. Test with SDK
-
-Install the JavaScript SDK:
-
-```bash npm2yarn
+```bash
 npm install @replanejs/sdk
 ```
 
-Create a test file `test.js`:
+## Step 6: Read the config
 
-```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+```typescript title="app.ts"
+import { createReplaneClient } from '@replanejs/sdk';
 
-const client = await createReplaneClient({
-  sdkKey: 'your-sdk-key-here',
-  baseUrl: 'http://localhost:8080'
-})
+const replane = await createReplaneClient({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'http://localhost:8080',
+});
 
-// Get a config value
-const flags = client.get('feature-flags')
-console.log(flags) // { "new-onboarding": true, "dark-mode": false }
+// Read the feature flag
+const newCheckoutEnabled = replane.get('feature-new-checkout');
+console.log('New checkout enabled:', newCheckoutEnabled); // false
 
-// Clean up when done
-client.close()
+// Subscribe to changes
+replane.subscribe('feature-new-checkout', (config) => {
+  console.log('Feature flag changed:', config.value);
+});
 ```
 
-Run it:
+## Step 7: Update the config
 
-```bash
-node test.js
+1. Go back to the Replane dashboard
+2. Click on `feature-new-checkout`
+3. Change the value to `true`
+4. Click **Save**
+
+Your application receives the update instantly via Server-Sent Events. Check your console — you should see:
+
+```
+Feature flag changed: true
 ```
 
-## Next Steps
+## Next steps
 
-- [**Core Concepts**](../concepts/overview) - Learn how Replane works
-- [**Self-Hosting Guide**](../self-hosting/docker) - Production deployment
-- [**JavaScript SDK**](../sdk/javascript) - Full SDK documentation
-- [**API Reference**](../api) - Explore the REST API
+- [Add override rules](/docs/guides/override-rules) to return different values based on user context
+- [Learn about gradual rollouts](/docs/guides/gradual-rollouts) to release features to a percentage of users
+- [Configure authentication](/docs/self-hosting/environment-variables) for production deployments
 
-## Troubleshooting
+## Using Replane Cloud
 
-### Port already in use
+Don't want to self-host? [Replane Cloud](https://app.replane.dev) provides a managed service. Sign up and skip to Step 2.
 
-If port 8080 is already in use, change the port mapping in `docker-compose.yml`:
-
-```yaml
-ports:
-  - '8081:8080' # Use port 8081 instead
+```typescript
+const replane = await createReplaneClient({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://app.replane.dev',
+});
 ```
-
-### Database connection error
-
-Ensure PostgreSQL is running:
-
-```bash
-docker-compose ps
-```
-
-Check logs:
-
-```bash
-docker-compose logs app
-```
-
-### OAuth callback mismatch
-
-Verify your OAuth callback URL matches exactly:
-
-- GitHub: `http://localhost:8080/api/auth/callback/github`
-- Okta: `http://localhost:8080/api/auth/callback/okta`

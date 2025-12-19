@@ -63,7 +63,8 @@ const sidebars = {
       label: 'SDK',
       collapsed: false,
       items: [
-        'sdk/javascript'
+        'sdk/javascript',
+        'sdk/building-an-sdk'
       ]
     }
   ],

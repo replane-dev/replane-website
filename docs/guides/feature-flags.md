@@ -1,208 +1,167 @@
 ---
 sidebar_position: 1
+title: Feature Flags
+description: Toggle features on or off without deploying code
 ---
 
-# Feature Flags
+# Feature flags
 
-Use Replane to manage feature flags across your applications without deploying code.
+Feature flags let you enable or disable functionality without deploying code. Use them to:
 
-## Basic Feature Flags
+- Release features gradually
+- Test in production with specific users
+- Create kill switches for instant rollback
+- Run A/B tests
 
-Create a config named `feature-flags` with simple boolean values:
+## Create a feature flag
 
-```json
-{
-  "new-onboarding": true,
-  "dark-mode": false,
-  "billing-v2": false,
-  "advanced-search": true
-}
-```
+1. Navigate to your project in the Replane dashboard
+2. Click **New Config**
+3. Enter the details:
+   - **Name**: `feature-dark-mode`
+   - **Value**: `false`
+4. Click **Create**
 
-In your application:
+## Read the flag in your app
 
-```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+```typescript
+import { createReplaneClient } from '@replanejs/sdk';
 
-const client = await createReplaneClient({
+const replane = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: process.env.REPLANE_URL
-})
+  baseUrl: 'https://replane.example.com',
+});
 
-// Check a flag
-const flags = client.get('feature-flags')
-
-if (flags['new-onboarding']) {
-  // Show new onboarding flow
-} else {
-  // Show old onboarding
+if (replane.get('feature-dark-mode')) {
+  enableDarkMode();
 }
 ```
 
-## Targeted Rollouts with Override Rules
+## Enable for specific users
 
-Use [**override rules**](./override-rules) to target specific users or groups without managing separate values:
+Add an override to enable the feature for beta testers:
 
-**Config:** `new-feature-enabled`  
-**Base value:** `false`  
-**Override:** VIP Users
+1. Click on your config
+2. Click **Add Override**
+3. Configure:
+   - **Name**: "Beta users"
+   - **Condition**: `userGroup` equals `beta`
+   - **Value**: `true`
+4. Click **Save**
 
-- Condition: Property `userEmail` in `["vip1@example.com", "vip2@example.com"]`
-- Value: `true`
+Now pass the context when reading:
 
-```javascript
-// Regular user - gets base value (false)
-const enabled1 = client.get('new-feature-enabled', {
-  context: { userEmail: 'user@example.com' }
-})
-
-// VIP user - gets override value (true)
-const enabled2 = client.get('new-feature-enabled', {
-  context: { userEmail: 'vip1@example.com' }
-})
+```typescript
+const enabled = replane.get('feature-dark-mode', {
+  context: { userGroup: user.group }
+});
 ```
 
-See the [**Override Rules Guide**](./override-rules) for advanced targeting scenarios.
+Beta users see `true`, everyone else sees `false`.
 
-## Tier-Based Features
+## Enable for a percentage of users
 
-Target users by subscription tier:
+For gradual rollouts, use percentage-based conditions:
 
-**Config:** `feature-flags`  
-**Base value:**
+1. Click **Add Override**
+2. Configure:
+   - **Name**: "10% rollout"
+   - **Condition**: `10%` of `userId`
+   - **Value**: `true`
+4. Click **Save**
 
-```json
-{
-  "advanced-search": false,
-  "export-data": false
-}
+```typescript
+const enabled = replane.get('feature-dark-mode', {
+  context: { userId: user.id }
+});
 ```
 
-**Override:** Premium Users
+The same user always gets the same result (deterministic bucketing).
 
-- Condition: Property `tier` equals `"premium"`
-- Value:
+## React to changes in realtime
 
-```json
-{
-  "advanced-search": true,
-  "export-data": true
-}
-```
+Subscribe to flag changes:
 
-```javascript
-const flags = client.get('feature-flags', {
-  context: { tier: user.subscription.tier }
-})
-
-if (flags['advanced-search']) {
-  // Show advanced search (premium users only)
-}
-```
-
-## Realtime Flag Updates
-
-The client automatically receives realtime updates via Server-Sent Events (SSE). Subscribe to changes:
-
-```javascript
-// Subscribe to flag changes
-const unsubscribe = client.subscribe('feature-flags', (config) => {
-  console.log('Flags updated:', config.value)
-  // React to the change, e.g., update UI
-})
-
-// Get current value anytime
-function isEnabled(flagName) {
-  const flags = client.get('feature-flags')
-  return flags[flagName] || false
-}
-
-// The value updates automatically when someone changes it in the UI
-```
-
-## JSON Schema for Safety
-
-Prevent invalid flag configurations with a schema:
-
-```json title="Schema for feature-flags"
-{
-  "type": "object",
-  "properties": {
-    "new-onboarding": { "type": "boolean" },
-    "dark-mode": { "type": "boolean" },
-    "billing-v2": { "type": "boolean" },
-    "advanced-search": { "type": "boolean" }
-  },
-  "additionalProperties": false,
-  "required": ["new-onboarding", "dark-mode"]
-}
-```
-
-<!-- Screenshot: Schema validation will be added here -->
-
-This ensures:
-
-- Only boolean values are allowed
-- Required flags are always present
-- No typos in flag names
-
-## Best Practices
-
-### Use Descriptive Names
-
-```javascript
-// ❌ Bad
-"flag1": true
-"f2": false
-
-// ✅ Good
-"new-onboarding-flow": true
-"billing-v2-enabled": false
-```
-
-### Group Related Flags
-
-Create separate configs for different domains:
-
-- `feature-flags` - UI features
-- `api-flags` - API behavior
-- `experiments` - A/B tests
-
-### Default to Safe Values
-
-Always provide fallbacks during client initialization:
-
-```javascript
-const client = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: process.env.REPLANE_URL,
-  fallbacks: {
-    'feature-flags': {
-      'new-feature': false // Safe default
-    }
+```typescript
+replane.subscribe('feature-dark-mode', (config) => {
+  if (config.value) {
+    enableDarkMode();
+  } else {
+    disableDarkMode();
   }
-})
+});
 ```
 
-### Document Your Flags
+## Type-safe flags
 
-Keep a README or wiki documenting:
+Define your flag types:
 
-- What each flag does
-- Who owns it
-- When it was added
-- Removal plan
+```typescript
+interface Flags {
+  'feature-dark-mode': boolean;
+  'feature-new-checkout': boolean;
+  'feature-ai-assistant': boolean;
+}
 
-## Migration Strategy
+const replane = await createReplaneClient<Flags>({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://replane.example.com',
+});
 
-When removing a flag:
+// TypeScript knows this is a boolean
+const darkMode = replane.get('feature-dark-mode');
+```
 
-1. Set it to the final value (e.g., `true` for fully rolled out)
-2. Remove the code that checks it
-3. Delete the flag from config (or leave it for audit history)
+## Best practices
 
-## Next Steps
+### Naming conventions
 
-- [**Operational Tuning**](./operational-tuning) - Adjust app behavior without deploys
-- [**Gradual Rollouts**](./gradual-rollouts) - Safe feature releases
-- [**JavaScript SDK**](../sdk/javascript) - Full SDK reference
+Use a consistent prefix for feature flags:
+
+```
+feature-dark-mode
+feature-new-checkout
+feature-ai-recommendations
+```
+
+### Default to off
+
+Set the base value to `false` and use overrides to enable. This makes it easy to disable globally.
+
+### Clean up old flags
+
+Remove flags after full rollout to avoid code clutter. Replane keeps version history, so you can always see what a flag was set to.
+
+### Use environments
+
+Different values per environment:
+
+| Environment | Value | Use case |
+|-------------|-------|----------|
+| Production | `false` | Feature not yet released |
+| Staging | `true` | Testing the feature |
+| Development | `true` | Building the feature |
+
+## Example: Kill switch
+
+Create a kill switch to disable a feature instantly:
+
+```typescript
+// Config: feature-payments-enabled, value: true
+
+async function processPayment(order: Order) {
+  if (!replane.get('feature-payments-enabled')) {
+    throw new Error('Payments are temporarily disabled');
+  }
+
+  // Process payment...
+}
+```
+
+If something goes wrong, set `feature-payments-enabled` to `false` in the dashboard. All instances update immediately via SSE.
+
+## Next steps
+
+- [Override Rules](/docs/guides/override-rules) — Advanced targeting
+- [Gradual Rollouts](/docs/guides/gradual-rollouts) — Percentage-based releases
+- [JavaScript SDK](/docs/sdk/javascript) — Full API reference
