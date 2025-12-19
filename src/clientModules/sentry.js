@@ -16,7 +16,7 @@ Sentry.init({
     Sentry.feedbackIntegration({
       // Button appearance
       colorScheme: 'system',
-      buttonLabel: 'Send Feedback',
+      buttonLabel: '💬 Send Feedback',
       submitButtonLabel: 'Send Feedback',
       cancelButtonLabel: 'Cancel',
       
@@ -29,6 +29,7 @@ Sentry.init({
       messageLabel: 'Message',
       messagePlaceholder: 'What\'s on your mind?',
       successMessageText: 'Thank you for your feedback!',
+      triggerLabel: '',
       
       // Form behavior
       isNameRequired: false,
@@ -36,12 +37,11 @@ Sentry.init({
       showBranding: false,
       
       // Attach replay to feedback
-      autoInject: true
+      autoInject: false
     })
   ],
 
-  // Only send errors in production
-  enabled: process.env.NODE_ENV === 'production',
+  enabled: true,
 
   // Set environment
   environment: process.env.NODE_ENV || 'development'
