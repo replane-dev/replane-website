@@ -93,7 +93,7 @@ The endpoint returns a Server-Sent Events (SSE) stream.
 ```typescript
 type ReplicationStreamRecord =
   | { type: "init"; configs: ConfigDto[] }
-  | { type: "config_change"; name: string; value: unknown; overrides: Override[] };
+  | { type: "config_change"; config: ConfigDto };
 ```
 
 **`init` event** — Sent immediately after connection with all configs:
@@ -105,7 +105,7 @@ data: {"type":"init","configs":[{"name":"feature-flag","value":true,"overrides":
 **`config_change` event** — Sent when a config is created or updated (deleted configs are not sent):
 
 ```
-data: {"type":"config_change","name":"feature-flag","value":false,"overrides":[]}
+data: {"type":"config_change","config":{"name":"feature-flag","value":false,"overrides":[]}}
 ```
 
 **Keep-alive comments** — Sent every 15 seconds to keep the connection alive (you can use them to detect if the connection is still alive):
