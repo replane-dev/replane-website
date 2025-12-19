@@ -21,11 +21,11 @@ BASE_URL=https://replane.example.com
 Used for:
 - OAuth callback URLs
 - Magic link URLs
-- SDK endpoint references
+- Email notifications
 
 ### `SECRET_KEY`
 
-Secret key for signing sessions and tokens. Must be at least 32 characters.
+Secret key for signing sessions and tokens. Should be at least 32 characters.
 
 ```bash
 SECRET_KEY=your-very-long-random-secret-key-minimum-32-chars

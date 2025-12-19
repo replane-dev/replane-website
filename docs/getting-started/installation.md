@@ -16,7 +16,7 @@ The easiest way to deploy Replane is with Docker Compose.
 
 ```bash
 # Download the example docker-compose.yml
-curl -O https://raw.githubusercontent.com/replane-dev/replane/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/example/docker-compose.yml
 
 # Start Replane
 docker compose up -d

@@ -18,14 +18,7 @@ This guide covers deploying Replane with Docker for production use.
 
 ```bash
 # Download docker-compose.yml
-curl -O https://raw.githubusercontent.com/replane-dev/replane/main/docker-compose.yml
-
-# Create .env file
-cat > .env << 'EOF'
-BASE_URL=https://replane.example.com
-SECRET_KEY=your-very-long-random-secret-key-here
-PASSWORD_AUTH_ENABLED=true
-EOF
+curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/example/docker-compose.yml
 
 # Start services
 docker compose up -d
@@ -34,6 +27,12 @@ docker compose up -d
 ## Docker Compose setup
 
 ### Basic configuration
+
+```bash title=".env"
+BASE_URL=https://replane.example.com
+SECRET_KEY=your-very-long-random-secret-key-here
+PASSWORD_AUTH_ENABLED=true
+```
 
 ```yaml title="docker-compose.yml"
 services:
@@ -70,69 +69,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-
-volumes:
-  postgres-data:
-```
-
-### Production configuration
-
-```yaml title="docker-compose.prod.yml"
-services:
-  postgres:
-    image: postgres:17
-    restart: always
-    environment:
-      POSTGRES_USER: replane
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: replane
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U replane"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-
-  replane:
-    image: replane/replane:latest
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - '8080:8080'
-    environment:
-      # Required
-      DATABASE_URL: postgresql://replane:${POSTGRES_PASSWORD}@postgres:5432/replane
-      BASE_URL: ${BASE_URL}
-      SECRET_KEY: ${SECRET_KEY}
-
-      # Authentication (at least one required)
-      PASSWORD_AUTH_ENABLED: "true"
-      # MAGIC_LINK_ENABLED: "true"
-      # GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-      # GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-
-      # Email (required for magic links and notifications)
-      # EMAIL_SERVER: smtp://user:pass@smtp.example.com:587
-      # EMAIL_FROM: noreply@example.com
-
-      # Optional
-      # ALLOWED_EMAIL_DOMAINS: example.com,company.com
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    deploy:
-      resources:
-        limits:
-          memory: 1G
 
 volumes:
   postgres-data:

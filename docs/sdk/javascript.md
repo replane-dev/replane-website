@@ -61,12 +61,11 @@ Creates a new Replane client. Returns a Promise that resolves when the initial c
 |--------|------|----------|-------------|
 | `sdkKey` | `string` | Yes | SDK key for authentication |
 | `baseUrl` | `string` | Yes | Replane server URL |
-| `required` | `string[] \| Record<string, boolean>` | No | Configs that must exist |
+| `required` | `string[] \| Record<string, boolean>` | No | Configs that must exist for the client to initialize |
 | `fallbacks` | `Record<string, unknown>` | No | Fallback values if fetch fails |
-| `context` | `Record<string, unknown>` | No | Default context for all requests |
+| `context` | `Record<string, unknown>` | No | Default context to use for all override evaluations |
 | `fetchFn` | `typeof fetch` | No | Custom fetch implementation |
 | `timeoutMs` | `number` | No | Request timeout (default: 2000) |
-| `retries` | `number` | No | Retry attempts (default: 2) |
 | `retryDelayMs` | `number` | No | Delay between retries (default: 200) |
 | `logger` | `Logger` | No | Custom logger |
 
@@ -76,7 +75,7 @@ Creates a new Replane client. Returns a Promise that resolves when the initial c
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
-  required: ['database-url', 'api-key'],
+  required: ['rate-limit', 'pricing-tiers'],
   fallbacks: {
     'feature-flag': false,
     'rate-limit': 100
@@ -99,7 +98,7 @@ Gets a config value. Returns the current value synchronously.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `name` | `keyof T` | Yes | Config name |
-| `options.context` | `Record<string, unknown>` | No | Context for override evaluation |
+| `options.context` | `Record<string, string \| number \| boolean \| null \| undefined>` | No | Context for override evaluation |
 
 #### Returns
 
@@ -200,7 +199,7 @@ const replane = await createReplaneClient<Configs>({
 const value = replane.get('config-name');
 ```
 
-### Per-request context
+### Per-evaluation context
 
 Merged with client context:
 
@@ -225,6 +224,8 @@ Common context properties:
   deviceType: 'mobile',     // Device type
   appVersion: '2.1.0',      // App version
   env: 'production'         // Environment
+  rateLimit: 100,           // Number
+  isAdmin: true,            // Boolean
 }
 ```
 
@@ -236,7 +237,7 @@ Ensure critical configs exist on startup:
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
-  required: ['database-url', 'api-key']
+  required: ['rate-limit', 'is-admin']
 });
 // Throws if database-url or api-key is missing
 ```

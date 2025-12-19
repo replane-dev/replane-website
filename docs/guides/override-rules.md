@@ -40,7 +40,7 @@ Context: { plan: "premium" }
 ## Create an override
 
 1. Click on a config in the dashboard
-2. Click **Add Override**
+2. Click **Add Conditional Override**
 3. Configure:
    - **Name**: Human-readable description
    - **Conditions**: Rules that must all match
@@ -184,8 +184,8 @@ const replane = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
   context: {
-    env: 'production',
-    region: 'us-east'
+    region: 'us-east',
+    userId: 'user-123'
   }
 });
 

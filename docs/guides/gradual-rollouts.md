@@ -22,9 +22,9 @@ Replane uses deterministic bucketing:
 3. Compare against the percentage threshold
 
 ```
-User A: hash("feature-x" + "user-a") % 100 = 23
-User B: hash("feature-x" + "user-b") % 100 = 67
-User C: hash("feature-x" + "user-c") % 100 = 45
+User A: hash("feature-x" + "user-a") / MAX_HASH_VALUE * 100 = 23
+User B: hash("feature-x" + "user-b") / MAX_HASH_VALUE * 100 = 67
+User C: hash("feature-x" + "user-c") / MAX_HASH_VALUE * 100 = 45
 
 At 30% rollout:
 - User A (23): ✓ Enabled

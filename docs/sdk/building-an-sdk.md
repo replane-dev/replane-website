@@ -64,6 +64,26 @@ On first connection, send empty `currentConfigs`:
 }
 ```
 
+If your SDK supports fallbacks, you can send them in the request body:
+
+```json
+{
+  "currentConfigs": [
+    {
+      "name": "rate-limit",
+      "value": 100,
+      "overrides": []
+    },
+    {
+      "name": "is-admin",
+      "value": false,
+      "overrides": []
+    }
+  ],
+  "requiredConfigs": ["rate-limit", "is-admin"]
+}
+```
+
 #### Response
 
 The endpoint returns a Server-Sent Events (SSE) stream.
@@ -82,13 +102,13 @@ type ReplicationStreamRecord =
 data: {"type":"init","configs":[{"name":"feature-flag","value":true,"overrides":[]}]}
 ```
 
-**`config_change` event** — Sent when a config is created, updated, or deleted:
+**`config_change` event** — Sent when a config is created or updated (deleted configs are not sent):
 
 ```
 data: {"type":"config_change","name":"feature-flag","value":false,"overrides":[]}
 ```
 
-**Keep-alive comments** — Sent periodically to keep the connection alive:
+**Keep-alive comments** — Sent every 15 seconds to keep the connection alive (you can use them to detect if the connection is still alive):
 
 ```
 :ping
@@ -180,6 +200,7 @@ def evaluate_property_condition(condition, context):
     if context_value is None:
         return "unknown"
 
+    # coverts condition value to match context value type (e.g. string to number)
     expected = cast_to_context_type(condition.value, context_value)
 
     if condition.operator == "equals":
@@ -324,6 +345,7 @@ import json
 import requests
 from typing import Any, Dict, Optional
 
+# doesn't support live updates (only initial configs)
 class ReplaneClient:
     def __init__(self, sdk_key: str, base_url: str):
         self.sdk_key = sdk_key

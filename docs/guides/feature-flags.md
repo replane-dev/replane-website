@@ -106,6 +106,12 @@ interface Flags {
 const replane = await createReplaneClient<Flags>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
+  // Fallback values to use if the initial request to fetch configs fails.
+  fallbacks: {
+    'feature-dark-mode': false,
+    'feature-new-checkout': true,
+    'feature-ai-assistant': false,
+  }
 });
 
 // TypeScript knows this is a boolean
@@ -123,10 +129,6 @@ feature-dark-mode
 feature-new-checkout
 feature-ai-recommendations
 ```
-
-### Default to off
-
-Set the base value to `false` and use overrides to enable. This makes it easy to disable globally.
 
 ### Clean up old flags
 

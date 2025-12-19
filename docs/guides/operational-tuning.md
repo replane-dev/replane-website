@@ -246,16 +246,6 @@ Different values per environment:
 
 ## Best practices
 
-### Use sensible defaults
-
-Set base values that work in most cases:
-
-```
-api-rate-limit: 100 (safe default)
-request-timeout-ms: 5000 (reasonable timeout)
-batch-size: 100 (moderate batch)
-```
-
 ### Document your configs
 
 Add descriptions in the dashboard explaining:
