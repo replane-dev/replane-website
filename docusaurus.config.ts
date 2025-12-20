@@ -5,6 +5,17 @@ import type { PluginOptions as IdealImagePluginOptions } from '@docusaurus/plugi
 const config: Config = {
   clientModules: [require.resolve('./src/clientModules/sentry.ts')],
 
+  headTags: [
+    {
+      tagName: 'script',
+      attributes: {
+        defer: 'true',
+        'data-domain': 'replane.dev',
+        src: 'https://plausible.tilyupo.com/js/script.js'
+      }
+    }
+  ],
+
   title: 'Replane',
   tagline: 'Dynamic configuration for apps and services. Self-hosted.',
   favicon: '/img/favicon.ico',
