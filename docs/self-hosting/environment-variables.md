@@ -181,6 +181,20 @@ EMAIL_FROM="Replane <noreply@example.com>"
 
 ## Access control
 
+### `DISABLE_REGISTRATION`
+
+Disable new user registration entirely.
+
+```bash
+DISABLE_REGISTRATION=true
+```
+
+When enabled:
+- New users cannot sign up via any method (password, OAuth, magic link)
+- Existing users can still sign in normally
+
+Useful for private instances or when you want to manage users manually.
+
 ### `ALLOWED_EMAIL_DOMAINS`
 
 Restrict registration to specific email domains.
