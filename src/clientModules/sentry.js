@@ -22,9 +22,9 @@ Sentry.init({
       
       // Form labels
       formTitle: 'Send Feedback',
-      nameLabel: 'Name',
+      nameLabel: 'Name (optional)',
       namePlaceholder: 'Your name',
-      emailLabel: 'Email',
+      emailLabel: 'Email (optional)',
       emailPlaceholder: 'your@email.com',
       messageLabel: 'Message',
       messagePlaceholder: 'What\'s on your mind?',
