@@ -8,7 +8,38 @@ import TimeStamp from '@components/TimeStamp'
 import { Avatar } from '@components/ui/avatar'
 import { Card, CardContent } from '@components/ui/card'
 
-export default function BlogPostItems({ items, component: BlogPostItemComponent = BlogPostItem }) {
+interface Author {
+  name: string
+  imageURL?: string
+}
+
+interface Tag {
+  label: string
+  permalink: string
+}
+
+interface BlogItem {
+  content: {
+    metadata: {
+      permalink: string
+      title: string
+      description?: string
+      date: string
+      tags: Tag[]
+      authors: Author[]
+      frontMatter: { image?: string }
+      readingTime: number
+    }
+    frontMatter: Record<string, unknown>
+  }
+}
+
+interface BlogPostItemsProps {
+  items: BlogItem[]
+  component?: React.ComponentType<{ children: React.ReactNode }>
+}
+
+export default function BlogPostItems({ items, component: BlogPostItemComponent = BlogPostItem }: BlogPostItemsProps) {
   return (
     <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
       {items.map((blog) => (

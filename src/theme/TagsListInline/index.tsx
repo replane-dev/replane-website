@@ -3,7 +3,17 @@ import clsx from 'clsx'
 import Translate from '@docusaurus/Translate'
 import Tag from '@theme/Tag'
 import styles from './styles.module.css'
-export default function TagsListInline({ tags }) {
+
+interface TagItem {
+  label: string
+  permalink: string
+}
+
+interface TagsListInlineProps {
+  tags: TagItem[]
+}
+
+export default function TagsListInline({ tags }: TagsListInlineProps) {
   return (
     <>
       <b>

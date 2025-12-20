@@ -6,7 +6,23 @@ import BlogLayout from '@theme/BlogLayout'
 import SearchMetadata from '@theme/SearchMetadata'
 import Heading from '@theme/Heading'
 
-export default function BlogTagsListPage({ tags, sidebar }) {
+interface TagItem {
+  label: string
+  permalink: string
+  count: number
+}
+
+interface Sidebar {
+  items: Array<{ title: string; permalink: string }>
+  title?: string
+}
+
+interface BlogTagsListPageProps {
+  tags: TagItem[]
+  sidebar: Sidebar
+}
+
+export default function BlogTagsListPage({ tags, sidebar }: BlogTagsListPageProps) {
   const title = translateTagsPageTitle()
 
   return (

@@ -8,21 +8,29 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious
-} from '@/components/ui/pagination.tsx'
+} from '@/components/ui/pagination'
 
-export const BlogPagination = ({ metadata }) => {
+interface BlogPaginationMetadata {
+  totalPages: number
+}
+
+interface BlogPaginationProps {
+  metadata: BlogPaginationMetadata
+}
+
+export const BlogPagination: React.FC<BlogPaginationProps> = ({ metadata }) => {
   const history = useHistory()
 
-  const handleParams = () => {
+  const handleParams = (): number => {
     const path = history.location.pathname
     const parts = path.split('/')
     const pageNumber = parts[parts.length - 1]
-    return isNaN(pageNumber) ? 1 : parseInt(pageNumber)
+    return isNaN(Number(pageNumber)) ? 1 : parseInt(pageNumber)
   }
 
   const page = handleParams()
 
-  const handlePageChange = (value) => {
+  const handlePageChange = (value: number) => {
     if (value === page) {
       return
     }
@@ -31,8 +39,8 @@ export const BlogPagination = ({ metadata }) => {
   }
 
   // Generate array of page numbers
-  const generatePagination = (currentPage, totalPages) => {
-    let pages = []
+  const generatePagination = (currentPage: number, totalPages: number): (number | 'ellipsis')[] => {
+    const pages: (number | 'ellipsis')[] = []
 
     // Always show first page
     pages.push(1)

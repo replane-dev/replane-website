@@ -3,7 +3,24 @@ import clsx from 'clsx'
 import Layout from '@theme/Layout'
 import BlogSidebar from '@theme/BlogSidebar'
 
-export default function BlogLayout(props) {
+interface SidebarItem {
+  title: string
+  permalink: string
+}
+
+interface Sidebar {
+  items: SidebarItem[]
+  title?: string
+}
+
+interface BlogLayoutProps {
+  sidebar?: Sidebar
+  toc?: React.ReactNode
+  children: React.ReactNode
+  [key: string]: unknown
+}
+
+export default function BlogLayout(props: BlogLayoutProps) {
   const { sidebar, toc, children, ...layoutProps } = props
   const hasSidebar = sidebar && sidebar.items.length > 0
 

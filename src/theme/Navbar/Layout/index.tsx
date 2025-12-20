@@ -5,7 +5,10 @@ import { useHideableNavbar, useNavbarMobileSidebar } from '@docusaurus/theme-com
 import { translate } from '@docusaurus/Translate'
 import NavbarMobileSidebar from '@theme/Navbar/MobileSidebar'
 import styles from './styles.module.css'
-function NavbarBackdrop(props) {
+
+interface NavbarBackdropProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+function NavbarBackdrop(props: NavbarBackdropProps) {
   return (
     <div
       role='presentation'
@@ -14,7 +17,12 @@ function NavbarBackdrop(props) {
     />
   )
 }
-export default function NavbarLayout({ children }) {
+
+interface NavbarLayoutProps {
+  children: React.ReactNode
+}
+
+export default function NavbarLayout({ children }: NavbarLayoutProps) {
   const {
     navbar: { hideOnScroll, style }
   } = useThemeConfig()

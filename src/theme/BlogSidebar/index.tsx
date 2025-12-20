@@ -3,7 +3,22 @@ import { useWindowSize } from '@docusaurus/theme-common'
 import BlogSidebarDesktop from '@theme/BlogSidebar/Desktop'
 import BlogSidebarMobile from '@theme/BlogSidebar/Mobile'
 
-export default function BlogSidebar({ sidebar, hideOnDesktop }) {
+interface SidebarItem {
+  title: string
+  permalink: string
+}
+
+interface Sidebar {
+  items: SidebarItem[]
+  title?: string
+}
+
+interface BlogSidebarProps {
+  sidebar?: Sidebar
+  hideOnDesktop?: boolean
+}
+
+export default function BlogSidebar({ sidebar, hideOnDesktop }: BlogSidebarProps) {
   const windowSize = useWindowSize()
 
   if (!sidebar?.items.length) {

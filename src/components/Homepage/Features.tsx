@@ -1,6 +1,14 @@
+import React from 'react'
 import Link from '@docusaurus/Link'
 
-const FeatureList = [
+interface Feature {
+  title: string
+  icon: string
+  description: React.ReactNode
+  link: string
+}
+
+const FeatureList: Feature[] = [
   {
     title: 'Version History & Rollback',
     icon: '🕐',
@@ -69,7 +77,14 @@ const FeatureList = [
   }
 ]
 
-function Feature({ icon, title, description, link }) {
+interface FeatureProps {
+  icon: string
+  title: string
+  description: React.ReactNode
+  link: string
+}
+
+function Feature({ icon, title, description, link }: FeatureProps) {
   return (
     <div className='group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'>
       {/* Gradient accent on hover */}

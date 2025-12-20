@@ -1,7 +1,15 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
 
-const authMethods = [
+interface AuthMethod {
+  name: string
+  description: string
+  icon: React.ReactNode
+  features: string[]
+  docsLink: string
+}
+
+const authMethods: AuthMethod[] = [
   {
     name: 'GitHub',
     description: 'Sign in with your GitHub account using OAuth 2.0',

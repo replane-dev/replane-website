@@ -7,7 +7,47 @@ import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
-function RecentBlogPostCard({ recentPost }) {
+interface Author {
+  name: string
+  imageURL?: string
+  page?: { permalink: string }
+}
+
+interface Tag {
+  label: string
+  permalink: string
+}
+
+interface BlogMetadata {
+  title: string
+  description: string
+  permalink: string
+  date: string
+  readingTime: number
+  tags: Tag[]
+  authors: Author[]
+  frontMatter: {
+    image?: string
+  }
+}
+
+interface RecentPost {
+  blogData: {
+    metadata: BlogMetadata
+  }
+}
+
+interface HomePageBlogMetadata {
+  blogTitle?: string
+  blogDescription?: string
+  path?: string
+}
+
+interface RecentBlogPostCardProps {
+  recentPost: RecentPost
+}
+
+function RecentBlogPostCard({ recentPost }: RecentBlogPostCardProps) {
   const { blogData } = recentPost
   const hasImage = blogData.metadata.frontMatter.image
 
@@ -77,7 +117,12 @@ function RecentBlogPostCard({ recentPost }) {
   )
 }
 
-export default function LatestNews({ homePageBlogMetadata, recentPosts }) {
+interface LatestNewsProps {
+  homePageBlogMetadata?: HomePageBlogMetadata
+  recentPosts?: RecentPost[]
+}
+
+export default function LatestNews({ homePageBlogMetadata, recentPosts }: LatestNewsProps) {
   if (!homePageBlogMetadata || !recentPosts || recentPosts.length === 0) {
     return null
   }

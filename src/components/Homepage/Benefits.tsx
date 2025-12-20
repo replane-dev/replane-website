@@ -1,7 +1,14 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
 
-const benefits = [
+interface Benefit {
+  number: string
+  title: string
+  description: string
+  icon: string
+}
+
+const benefits: Benefit[] = [
   {
     number: '1',
     title: 'Ship Faster',

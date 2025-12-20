@@ -9,7 +9,51 @@ import BlogPostItems from '@theme/BlogPostItems'
 
 import { BlogPagination } from '../BlogPagination'
 
-function BlogListPageMetadata(props) {
+interface Author {
+  name: string
+  imageURL?: string
+}
+
+interface Tag {
+  label: string
+  permalink: string
+}
+
+interface BlogMetadata {
+  blogDescription: string
+  blogTitle: string
+  permalink: string
+  totalPages: number
+}
+
+interface BlogItem {
+  content: {
+    metadata: {
+      permalink: string
+      title: string
+      description?: string
+      date: string
+      tags: Tag[]
+      authors: Author[]
+      frontMatter: { image?: string }
+      readingTime: number
+    }
+    frontMatter: Record<string, unknown>
+  }
+}
+
+interface Sidebar {
+  items: Array<{ title: string; permalink: string }>
+  title?: string
+}
+
+interface BlogListPageProps {
+  metadata: BlogMetadata
+  items: BlogItem[]
+  sidebar: Sidebar
+}
+
+function BlogListPageMetadata(props: BlogListPageProps) {
   const { metadata } = props
   const {
     siteConfig: { title: siteTitle }
@@ -26,7 +70,7 @@ function BlogListPageMetadata(props) {
   )
 }
 
-function BlogHomepageBanner(props) {
+function BlogHomepageBanner(props: BlogListPageProps) {
   const { metadata, items } = props
 
   // Get featured post (first post with specific tag or just the latest)
@@ -122,7 +166,7 @@ function BlogHomepageBanner(props) {
   )
 }
 
-function BlogListPageContent(props) {
+function BlogListPageContent(props: BlogListPageProps) {
   const { metadata, items, sidebar } = props
 
   // Skip first item in the list since it's featured
@@ -154,7 +198,7 @@ function BlogListPageContent(props) {
   )
 }
 
-export default function BlogListPage(props) {
+export default function BlogListPage(props: BlogListPageProps) {
   return (
     <HtmlClassNameProvider
       className={clsx(ThemeClassNames.wrapper.blogPages, ThemeClassNames.page.blogListPage)}

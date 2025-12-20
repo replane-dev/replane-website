@@ -3,9 +3,13 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import { useLocation } from '@docusaurus/router'
 import * as Sentry from '@sentry/react'
 
+interface FeedbackWidget {
+  removeFromDom: () => void
+}
+
 function FeedbackWidget() {
   const location = useLocation()
-  const widgetRef = useRef(null)
+  const widgetRef = useRef<FeedbackWidget | null>(null)
   const isDocsPage = location.pathname.startsWith('/docs')
 
   useEffect(() => {
@@ -34,7 +38,11 @@ function FeedbackWidgetWrapper() {
   return <BrowserOnly fallback={null}>{() => <FeedbackWidget />}</BrowserOnly>
 }
 
-export default function Root({ children }) {
+interface RootProps {
+  children: React.ReactNode
+}
+
+export default function Root({ children }: RootProps) {
   return (
     <>
       {children}

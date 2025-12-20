@@ -1,9 +1,48 @@
+import type { LoadContext, Plugin, PluginOptions } from '@docusaurus/types'
+
 const blogPluginExports = require('@docusaurus/plugin-content-blog')
 const defaultBlogPlugin = blogPluginExports.default
 
-async function blogPluginExtended(...pluginArgs) {
-  const blogPluginInstance = await defaultBlogPlugin(...pluginArgs)
-  const pluginOptions = pluginArgs[1]
+interface BlogPostMetadata {
+  title: string
+  description: string
+  permalink: string
+  date: string
+  source: string
+}
+
+interface BlogPost {
+  metadata: BlogPostMetadata
+}
+
+interface BlogContent {
+  blogPosts: BlogPost[]
+}
+
+interface BlogPluginOptions extends PluginOptions {
+  blogTitle?: string
+  blogDescription?: string
+  path?: string
+}
+
+interface ContentLoadedParams {
+  content: BlogContent
+  actions: {
+    createData: (name: string, data: string) => Promise<string>
+    addRoute: (route: {
+      path: string
+      exact: boolean
+      component: string
+      modules: Record<string, unknown>
+    }) => void
+  }
+}
+
+async function blogPluginExtended(
+  context: LoadContext,
+  options: BlogPluginOptions
+): Promise<Plugin> {
+  const blogPluginInstance = await defaultBlogPlugin(context, options)
 
   return {
     // Add all properties of the default blog plugin so existing functionality is preserved
@@ -11,14 +50,14 @@ async function blogPluginExtended(...pluginArgs) {
     /**
      * Override the default `contentLoaded` hook to access blog posts data
      */
-    contentLoaded: async function (params) {
+    contentLoaded: async function (params: ContentLoadedParams) {
       const { content, actions } = params
 
       // Get the 6 latest blog posts
       const recentPostsLimit = 6
       const recentPosts = [...content.blogPosts].splice(0, recentPostsLimit)
 
-      async function createRecentPostModule(blogPost, index) {
+      async function createRecentPostModule(blogPost: BlogPost, index: number) {
         return {
           // Inject the metadata you need for each recent blog post
           blogData: await actions.createData(
@@ -47,16 +86,16 @@ async function blogPluginExtended(...pluginArgs) {
         exact: true,
 
         // The component to use for the "Home" page route
-        component: '@site/src/components/Homepage/index.js',
+        component: '@site/src/components/Homepage/index.tsx',
 
         // These are the props that will be passed to our "Home" page component
         modules: {
           homePageBlogMetadata: await actions.createData(
             'home-page-blog-metadata.json',
             JSON.stringify({
-              blogTitle: pluginOptions.blogTitle,
-              blogDescription: pluginOptions.blogDescription,
-              path: pluginOptions.path,
+              blogTitle: options.blogTitle,
+              blogDescription: options.blogDescription,
+              path: options.path,
               totalPosts: content.blogPosts.length,
               totalRecentPosts: recentPosts.length
             })

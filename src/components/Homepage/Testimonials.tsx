@@ -1,6 +1,13 @@
 import React from 'react'
 
-const testimonials = [
+interface Testimonial {
+  quote: string
+  author: string
+  role: string
+  company: string
+}
+
+const testimonials: Testimonial[] = [
   {
     quote:
       'We were drowning in spreadsheets and env files. Replane gave us a single source of truth with audit logs. Game changer for our compliance needs.',

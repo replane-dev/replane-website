@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 
-export default function TimeStamp({ timestamp }) {
+interface TimeStampProps {
+  timestamp: string
+}
+
+export default function TimeStamp({ timestamp }: TimeStampProps) {
   // Use client-side rendering for timestamp, against React Minified React error #418 and #425
   const [mounted, setMounted] = useState(false)
 

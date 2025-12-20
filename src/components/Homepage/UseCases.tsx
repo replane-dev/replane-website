@@ -1,7 +1,14 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
 
-const useCases = [
+interface UseCase {
+  title: string
+  description: string
+  icon: React.ReactNode
+  link: string
+}
+
+const useCases: UseCase[] = [
   {
     title: 'Feature Flags',
     description: 'Ship code with features off. Enable gradually for 1% → 10% → 100% of users. Kill switch ready if things go wrong.',

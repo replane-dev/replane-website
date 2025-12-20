@@ -1,6 +1,13 @@
 import React from 'react'
 
-export default function FooterLayout({ style, links, logo, copyright }) {
+interface FooterLayoutProps {
+  style?: string
+  links?: React.ReactNode
+  logo?: React.ReactNode
+  copyright?: React.ReactNode
+}
+
+export default function FooterLayout({ style, links, logo, copyright }: FooterLayoutProps) {
   return (
     <footer className='border-t border-gray-200 bg-slate-50 dark:border-gray-800 dark:bg-slate-950/50'>
       <div className='mx-auto max-w-7xl px-4 py-10'>

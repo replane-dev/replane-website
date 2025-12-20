@@ -1,6 +1,7 @@
-const path = require('path')
+import path from 'path'
+import type { Plugin } from '@docusaurus/types'
 
-module.exports = function () {
+export default function webpackAliasPlugin(): Plugin {
   return {
     name: 'webpack-alias-plugin',
     configureWebpack() {

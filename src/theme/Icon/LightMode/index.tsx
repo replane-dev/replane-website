@@ -1,4 +1,8 @@
-export default function IconLightMode(props) {
+import React from 'react'
+
+interface IconLightModeProps extends React.SVGProps<SVGSVGElement> {}
+
+export default function IconLightMode(props: IconLightModeProps) {
   return (
     <svg viewBox='0 0 48 48' width={24} height={24} {...props} id='sun'>
       <defs>

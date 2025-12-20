@@ -7,7 +7,55 @@ import BlogPostItems from '@theme/BlogPostItems'
 import SearchMetadata from '@theme/SearchMetadata'
 import { BlogPagination } from '../BlogPagination'
 
-export default function BlogTagsPostsPage(props) {
+interface TagData {
+  label: string
+  count: number
+  permalink: string
+}
+
+interface Author {
+  name: string
+  imageURL?: string
+}
+
+interface Tag {
+  label: string
+  permalink: string
+}
+
+interface BlogItem {
+  content: {
+    metadata: {
+      permalink: string
+      title: string
+      description?: string
+      date: string
+      tags: Tag[]
+      authors: Author[]
+      frontMatter: { image?: string }
+      readingTime: number
+    }
+    frontMatter: Record<string, unknown>
+  }
+}
+
+interface Sidebar {
+  items: Array<{ title: string; permalink: string }>
+  title?: string
+}
+
+interface ListMetadata {
+  totalPages: number
+}
+
+interface BlogTagsPostsPageProps {
+  tag: TagData
+  items: BlogItem[]
+  sidebar: Sidebar
+  listMetadata: ListMetadata
+}
+
+export default function BlogTagsPostsPage(props: BlogTagsPostsPageProps) {
   const { tag, items, sidebar, listMetadata } = props
 
   const title = `Posts tagged with "${tag.label}"`

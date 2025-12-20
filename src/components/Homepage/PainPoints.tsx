@@ -1,6 +1,12 @@
 import React from 'react'
 
-const problems = [
+interface Problem {
+  icon: string
+  title: string
+  description: string
+}
+
+const problems: Problem[] = [
   {
     icon: '😰',
     title: 'Deploying for Every Config Change',

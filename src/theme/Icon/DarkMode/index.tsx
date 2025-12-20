@@ -1,4 +1,8 @@
-export default function IconDarkMode(props) {
+import React from 'react'
+
+interface IconDarkModeProps extends React.SVGProps<SVGSVGElement> {}
+
+export default function IconDarkMode(props: IconDarkModeProps) {
   return (
     <svg viewBox='0 0 16 16' width={24} height={24} {...props}>
       <path
