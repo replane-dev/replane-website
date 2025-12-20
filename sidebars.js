@@ -64,6 +64,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'sdk/javascript',
+        'sdk/python',
         'sdk/building-an-sdk'
       ]
     }
