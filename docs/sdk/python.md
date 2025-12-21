@@ -20,35 +20,50 @@ pip install replane[async]
 
 ## Quick start
 
+### Synchronous client
+
 ```python
-from replane import SyncReplaneClient
+from replane import Replane
 
 # Using context manager (recommended)
-with SyncReplaneClient(
+with Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
-) as client:
+) as replane:
     # Get a config value
-    rate_limit = client.get("rate-limit")
+    rate_limit = replane.get("rate-limit")
 
     # Get with context for override evaluation
-    feature_enabled = client.get(
+    feature_enabled = replane.get(
         "new-feature",
         context={"user_id": user.id, "plan": user.plan},
     )
 
-    # Subscribe to realtime updates
-    def on_change(name, config):
-        print(f"{name} changed to: {config.value}")
+    # Get with fallback default
+    timeout = replane.get("request-timeout", default=30)
+```
 
-    unsubscribe = client.subscribe(on_change)
+### Asynchronous client
 
-# Client automatically closed when exiting context manager
+Requires `pip install replane[async]`:
+
+```python
+from replane import AsyncReplane
+
+async with AsyncReplane(
+    base_url="https://replane.example.com",
+    sdk_key="sk_live_...",
+) as replane:
+    # get() is sync since it reads from local cache
+    rate_limit = replane.get("rate-limit")
+
+    # With context
+    enabled = replane.get("feature", context={"plan": "premium"})
 ```
 
 ## API Reference
 
-### `SyncReplaneClient(options)`
+### `Replane(options)`
 
 Creates a synchronous Replane client. Uses only Python standard library (zero dependencies).
 
@@ -70,7 +85,7 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 #### Example
 
 ```python
-client = SyncReplaneClient(
+replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
     context={"environment": "production"},
@@ -84,24 +99,24 @@ client = SyncReplaneClient(
 )
 ```
 
-### `AsyncReplaneClient(options)`
+### `AsyncReplane(options)`
 
 Creates an asynchronous Replane client. Requires the `async` extra (`pip install replane[async]`).
 
-Same options as `SyncReplaneClient`. Uses `httpx` for async HTTP operations.
+Same options as `Replane`. Uses `httpx` for async HTTP operations.
 
 ```python
-from replane import AsyncReplaneClient
+from replane import AsyncReplane
 
-async with AsyncReplaneClient(
+async with AsyncReplane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
-) as client:
+) as replane:
     # get() is synchronous - reads from local cache
-    value = client.get("config-name")
+    value = replane.get("config-name")
 ```
 
-### `client.get(name, *, context=None, default=None)`
+### `replane.get(name, *, context=None, default=None)`
 
 Gets a config value. Returns the current value synchronously (reads from local cache).
 
@@ -121,16 +136,16 @@ The config value, or `default` if not found.
 
 ```python
 # Simple get
-enabled = client.get("feature-flag")
+enabled = replane.get("feature-flag")
 
 # With context
-limit = client.get("rate-limit", context={"plan": "premium"})
+limit = replane.get("rate-limit", context={"plan": "premium"})
 
 # With default
-timeout = client.get("request-timeout", default=30)
+timeout = replane.get("request-timeout", default=30)
 ```
 
-### `client.subscribe(callback)`
+### `replane.subscribe(callback)`
 
 Subscribes to all config changes. Returns an unsubscribe function.
 
@@ -138,13 +153,13 @@ Subscribes to all config changes. Returns an unsubscribe function.
 def on_any_change(name: str, config):
     print(f"Config {name} changed to {config.value}")
 
-unsubscribe = client.subscribe(on_any_change)
+unsubscribe = replane.subscribe(on_any_change)
 
 # Later: stop receiving updates
 unsubscribe()
 ```
 
-### `client.subscribe_config(name, callback)`
+### `replane.subscribe_config(name, callback)`
 
 Subscribes to changes for a specific config. Returns an unsubscribe function.
 
@@ -152,37 +167,37 @@ Subscribes to changes for a specific config. Returns an unsubscribe function.
 def on_feature_change(config):
     update_feature_state(config.value)
 
-unsubscribe = client.subscribe_config("my-feature", on_feature_change)
+unsubscribe = replane.subscribe_config("my-feature", on_feature_change)
 ```
 
-### `client.connect(*, wait=True)`
+### `replane.connect(*, wait=True)`
 
 Connects to the Replane server. Called automatically when using context manager.
 
 ```python
-client = SyncReplaneClient(...)
-client.connect()  # Blocks until initialized
+replane = Replane(...)
+replane.connect()  # Blocks until initialized
 
 # Or non-blocking
-client.connect(wait=False)
-client.wait_for_init()  # Wait when ready
+replane.connect(wait=False)
+replane.wait_for_init()  # Wait when ready
 ```
 
-### `client.close()`
+### `replane.close()`
 
 Closes the client and cleans up resources. Called automatically when using context manager.
 
 ```python
-client.close()
+replane.close()
 ```
 
-### `client.is_initialized()`
+### `replane.is_initialized()`
 
 Returns `True` if the client has completed initial config fetch.
 
 ```python
-if client.is_initialized():
-    value = client.get("config")
+if replane.is_initialized():
+    value = replane.get("config")
 ```
 
 ## Context and overrides
@@ -194,14 +209,14 @@ Context is used to evaluate override rules. Context data stays in your applicati
 Applied to all `get()` calls:
 
 ```python
-client = SyncReplaneClient(
+replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
     context={"environment": "production", "region": "us-east"},
 )
 
 # Uses client context
-value = client.get("config-name")
+value = replane.get("config-name")
 ```
 
 ### Per-evaluation context
@@ -209,7 +224,7 @@ value = client.get("config-name")
 Merged with client context (per-call values take precedence):
 
 ```python
-value = client.get("feature-flag", context={
+value = replane.get("feature-flag", context={
     "user_id": user.id,
     "plan": user.plan,
 })
@@ -230,12 +245,32 @@ Common context properties:
 }
 ```
 
+### Override examples
+
+**Percentage rollout** (gradual feature release):
+```python
+# Server config has 10% rollout based on user_id
+# Same user always gets same result (deterministic hashing)
+enabled = replane.get("new-checkout", context={"user_id": user.id})
+```
+
+**Plan-based features**:
+```python
+max_items = replane.get("max-items", context={"plan": user.plan})
+# Returns different values for free/pro/enterprise plans
+```
+
+**Geographic targeting**:
+```python
+content = replane.get("homepage-banner", context={"country": request.country})
+```
+
 ## Required configs
 
 Ensure critical configs exist on startup:
 
 ```python
-client = SyncReplaneClient(
+replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
     required=["rate-limit", "feature-enabled"],
@@ -248,7 +283,7 @@ client = SyncReplaneClient(
 Provide fallback values if the server is unavailable during initialization:
 
 ```python
-client = SyncReplaneClient(
+replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
     fallbacks={
@@ -280,13 +315,13 @@ The SDK maintains a persistent SSE connection for realtime updates.
 def on_any_change(name, config):
     print(f"{name} updated: {config.value}")
 
-unsubscribe_all = client.subscribe(on_any_change)
+unsubscribe_all = replane.subscribe(on_any_change)
 
 # Subscribe to specific config
 def on_feature_change(config):
     update_ui(config.value)
 
-unsubscribe_feature = client.subscribe_config("feature-flag", on_feature_change)
+unsubscribe_feature = replane.subscribe_config("feature-flag", on_feature_change)
 
 # Unsubscribe when done
 unsubscribe_all()
@@ -295,13 +330,13 @@ unsubscribe_feature()
 
 ### Async callbacks
 
-With `AsyncReplaneClient`, callbacks can be async:
+With `AsyncReplane`, callbacks can be async:
 
 ```python
 async def on_change(name: str, config):
     await database.log_config_change(name, config.value)
 
-client.subscribe(on_change)
+replane.subscribe(on_change)
 ```
 
 ## Error handling
@@ -326,7 +361,7 @@ from replane import (
 
 ```python
 try:
-    value = client.get("my-config")
+    value = replane.get("my-config")
 except ConfigNotFoundError as e:
     print(f"Config not found: {e.config_name}")
 except TimeoutError as e:
@@ -387,14 +422,14 @@ import pytest
 from replane.testing import create_test_client
 
 @pytest.fixture
-def replane_client():
+def replane():
     return create_test_client({
         "feature-flags": {"dark-mode": True, "new-ui": False},
         "rate-limits": {"default": 100, "premium": 1000},
     })
 
-def test_feature_flag(replane_client):
-    flags = replane_client.get("feature-flags")
+def test_feature_flag(replane):
+    flags = replane.get("feature-flags")
     assert flags["dark-mode"] is True
 ```
 
@@ -417,81 +452,81 @@ assert changes == ["config1"]
 ```python
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
-from replane import AsyncReplaneClient
+from replane import AsyncReplane
 
-client: AsyncReplaneClient | None = None
+replane: AsyncReplane | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global client
-    client = AsyncReplaneClient(
+    global replane
+    replane = AsyncReplane(
         base_url="https://replane.example.com",
         sdk_key="sk_live_...",
     )
-    await client.connect()
+    await replane.connect()
     yield
-    await client.close()
+    await replane.close()
 
 app = FastAPI(lifespan=lifespan)
 
-def get_replane() -> AsyncReplaneClient:
-    assert client is not None
-    return client
+def get_replane() -> AsyncReplane:
+    assert replane is not None
+    return replane
 
 @app.get("/items")
-async def get_items(replane: AsyncReplaneClient = Depends(get_replane)):
-    max_items = replane.get("max-items", context={"plan": "free"})
+async def get_items(rp: AsyncReplane = Depends(get_replane)):
+    max_items = rp.get("max-items", context={"plan": "free"})
     return {"max_items": max_items}
 ```
 
 ### Flask
 
 ```python
-from flask import Flask, g
-from replane import SyncReplaneClient
+from flask import Flask
+from replane import Replane
 
 app = Flask(__name__)
-replane_client: SyncReplaneClient | None = None
+replane: Replane | None = None
 
 def get_replane():
-    global replane_client
-    if replane_client is None:
-        replane_client = SyncReplaneClient(
+    global replane
+    if replane is None:
+        replane = Replane(
             base_url="https://replane.example.com",
             sdk_key="sk_live_...",
         )
-        replane_client.connect()
-    return replane_client
+        replane.connect()
+    return replane
 
 @app.route("/items")
 def get_items():
-    client = get_replane()
-    max_items = client.get("max-items")
+    rp = get_replane()
+    max_items = rp.get("max-items")
     return {"max_items": max_items}
 
 @app.teardown_appcontext
 def close_replane(exception):
-    if replane_client is not None:
-        replane_client.close()
+    if replane is not None:
+        replane.close()
 ```
 
 ### Django
 
 ```python
 # settings.py
-from replane import SyncReplaneClient
+from replane import Replane
 
-REPLANE_CLIENT = SyncReplaneClient(
+REPLANE = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
 )
-REPLANE_CLIENT.connect()
+REPLANE.connect()
 
 # views.py
 from django.conf import settings
 
 def my_view(request):
-    rate_limit = settings.REPLANE_CLIENT.get(
+    rate_limit = settings.REPLANE.get(
         "rate-limit",
         context={"user_id": request.user.id}
     )
@@ -506,10 +541,10 @@ Create the client once at application startup:
 
 ```python
 # config.py
-from replane import SyncReplaneClient
+from replane import Replane
 import os
 
-replane = SyncReplaneClient(
+replane = Replane(
     base_url=os.environ["REPLANE_URL"],
     sdk_key=os.environ["REPLANE_SDK_KEY"],
 )
@@ -526,16 +561,16 @@ value = replane.get("feature-flag")
 Context managers ensure proper cleanup:
 
 ```python
-with SyncReplaneClient(...) as client:
+with Replane(...) as replane:
     # Client is connected and ready
-    value = client.get("config")
+    value = replane.get("config")
 # Client is automatically closed
 ```
 
 ### Use fallbacks for resilience
 
 ```python
-client = SyncReplaneClient(
+replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="sk_live_...",
     fallbacks={
@@ -550,10 +585,10 @@ client = SyncReplaneClient(
 ```python
 import atexit
 
-client = SyncReplaneClient(...)
-client.connect()
+replane = Replane(...)
+replane.connect()
 
-atexit.register(client.close)
+atexit.register(replane.close)
 ```
 
 ## Environment compatibility
