@@ -16,10 +16,9 @@ npm install @replanejs/svelte
 
 ## Quick start
 
-```html
+```svelte
 <script>
-  import { ReplaneContext, config } from '@replanejs/svelte';
-  import { createReplaneClient } from '@replanejs/svelte';
+  import { ReplaneContext, createReplaneClient } from '@replanejs/svelte';
 
   const client = await createReplaneClient({
     baseUrl: 'https://replane.example.com',
@@ -32,12 +31,12 @@ npm install @replanejs/svelte
 </ReplaneContext>
 ```
 
-```html
+```svelte
 <!-- MyComponent.svelte -->
 <script>
-  import { config } from '@replanejs/svelte';
+  import { config } from '@replanejs/svelte'
 
-  const feature = config<boolean>('feature-flag-name');
+  const feature = config<boolean>('feature-flag-name')
 </script>
 
 {#if $feature}
@@ -53,17 +52,17 @@ npm install @replanejs/svelte
 
 Creates a reactive store for a config value. Similar to `readable()` or `derived()`.
 
-```html
+```svelte
 <script>
-  import { config } from '@replanejs/svelte';
+  import { config } from '@replanejs/svelte'
 
   // Returns a Svelte readable store
-  const featureEnabled = config<boolean>('featureEnabled');
+  const featureEnabled = config<boolean>('featureEnabled')
 
   // With evaluation context
   const greeting = config<string>('greeting', {
     context: { userId: '123', isPremium: true }
-  });
+  })
 </script>
 
 {#if $featureEnabled}
@@ -75,15 +74,15 @@ Creates a reactive store for a config value. Similar to `readable()` or `derived
 
 Gets the Replane client from context.
 
-```html
+```svelte
 <script>
-  import { getReplane } from '@replanejs/svelte';
+  import { getReplane } from '@replanejs/svelte'
 
-  const { client } = getReplane();
+  const replane = getReplane()
 
   function handleClick() {
-    const value = client.get('some-config');
-    console.log(value);
+    const value = replane.get('some-config')
+    console.log(value)
   }
 </script>
 
@@ -92,14 +91,15 @@ Gets the Replane client from context.
 
 ### configFrom
 
-Creates a reactive store from a client directly (without context).
+Creates a reactive store from a client directly (without context). Type-safe with full autocomplete for config names.
 
-```html
+```svelte
 <script>
-  import { configFrom } from '@replanejs/svelte';
-  import { client } from './replane-client';
+  import { configFrom, getReplane } from '@replanejs/svelte'
 
-  const featureEnabled = configFrom<boolean>(client, 'featureEnabled');
+  const replane = getReplane()
+
+  const featureEnabled = configFrom(replane, 'featureEnabled')
 </script>
 
 {#if $featureEnabled}
@@ -113,7 +113,7 @@ Context component that provides the Replane client to your component tree.
 
 #### With a pre-created client
 
-```html
+```svelte
 <script>
   import { ReplaneContext, createReplaneClient } from '@replanejs/svelte';
 
@@ -130,14 +130,14 @@ Context component that provides the Replane client to your component tree.
 
 #### With options (client managed internally)
 
-```html
+```svelte
 <script>
-  import { ReplaneContext } from '@replanejs/svelte';
+  import { ReplaneContext } from '@replanejs/svelte'
 
   const options = {
     baseUrl: 'https://replane.example.com',
-    sdkKey: 'your-sdk-key',
-  };
+    sdkKey: 'your-sdk-key'
+  }
 </script>
 
 <svelte:boundary onerror={(e) => console.error(e)}>
@@ -157,7 +157,7 @@ Context component that provides the Replane client to your component tree.
 
 #### With snapshot (SSR/hydration)
 
-```html
+```svelte
 <script>
   import { ReplaneContext } from '@replanejs/svelte';
 
@@ -174,29 +174,42 @@ Context component that provides the Replane client to your component tree.
 </ReplaneContext>
 ```
 
+You can use the `getReplaneSnapshot` function to get the snapshot on the server and pass it to the client or obtain it directly from your client via `getSnapshot()` function:
+
+```ts
+import { createReplaneClient, getReplaneSnapshot } from '@replanejs/svelte'
+
+const snapshot = await getReplaneSnapshot({ baseUrl: '...', sdkKey: '...' })
+
+// or if you have a client already created
+
+const client = await createReplaneClient({ baseUrl: '...', sdkKey: '...' })
+const snapshot = client.getSnapshot()
+```
+
 ## Typed stores
 
 For better type safety, create typed store functions:
 
 ```ts
 // $lib/replane/index.ts
-import { createTypedConfig, createTypedReplane } from '@replanejs/svelte';
+import { createTypedConfig, createTypedReplane } from '@replanejs/svelte'
 
 interface AppConfigs {
-  theme: { darkMode: boolean; primaryColor: string };
-  features: { betaEnabled: boolean };
+  theme: { darkMode: boolean; primaryColor: string }
+  features: { betaEnabled: boolean }
 }
 
-export const appConfig = createTypedConfig<AppConfigs>();
-export const getAppReplane = createTypedReplane<AppConfigs>();
+export const appConfig = createTypedConfig<AppConfigs>()
+export const getAppReplane = createTypedReplane<AppConfigs>()
 ```
 
-```html
+```svelte
 <script lang="ts">
-  import { appConfig } from '$lib/replane';
+  import { appConfig } from '$lib/replane'
 
   // Config names autocomplete, values are fully typed
-  const theme = appConfig('theme');
+  const theme = appConfig('theme')
   // $theme is { darkMode: boolean; primaryColor: string }
 </script>
 
@@ -211,29 +224,29 @@ For server-side rendering, fetch configs on the server and restore on the client
 
 ```ts
 // src/routes/+layout.server.ts
-import { getReplaneSnapshot } from '@replanejs/svelte';
+import { getReplaneSnapshot } from '@replanejs/svelte'
 
 export async function load() {
   const snapshot = await getReplaneSnapshot({
     baseUrl: import.meta.env.REPLANE_BASE_URL,
-    sdkKey: import.meta.env.REPLANE_SDK_KEY,
-  });
+    sdkKey: import.meta.env.REPLANE_SDK_KEY
+  })
 
-  return { replaneSnapshot: snapshot };
+  return { replaneSnapshot: snapshot }
 }
 ```
 
-```html
+```svelte
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
-  import { ReplaneContext } from '@replanejs/svelte';
+  import { ReplaneContext } from '@replanejs/svelte'
 
-  let { data, children } = $props();
+  let { data, children } = $props()
 
   const options = {
     baseUrl: import.meta.env.VITE_REPLANE_BASE_URL,
-    sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY,
-  };
+    sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY
+  }
 </script>
 
 <ReplaneContext {options} snapshot={data.replaneSnapshot}>
@@ -245,11 +258,11 @@ export async function load() {
 
 All stores automatically subscribe to realtime updates via SSE. When a config changes on the server, the store updates automatically.
 
-```html
+```svelte
 <script>
-  import { config } from '@replanejs/svelte';
+  import { config } from '@replanejs/svelte'
 
-  const maintenanceMode = config<boolean>('maintenance-mode');
+  const maintenanceMode = config<boolean>('maintenance-mode')
 </script>
 
 <!-- Automatically updates when config changes -->
@@ -262,33 +275,21 @@ All stores automatically subscribe to realtime updates via SSE. When a config ch
 
 Pass evaluation context for override rules:
 
-```html
+```svelte
 <script>
-  import { config } from '@replanejs/svelte';
+  import { config } from '@replanejs/svelte'
 
   const premiumFeature = config<boolean>('premium-feature', {
     context: {
       userId: 'user-123',
-      plan: 'premium',
-    },
-  });
+      plan: 'premium'
+    }
+  })
 </script>
 
 {#if $premiumFeature}
   <PremiumContent />
 {/if}
-```
-
-## Environment variables
-
-```env
-# Server-side only (for SSR)
-REPLANE_BASE_URL=https://replane.example.com
-REPLANE_SDK_KEY=your-sdk-key
-
-# Client-side (for live updates)
-VITE_REPLANE_BASE_URL=https://replane.example.com
-VITE_REPLANE_SDK_KEY=your-sdk-key
 ```
 
 ## Best practices
@@ -297,9 +298,9 @@ VITE_REPLANE_SDK_KEY=your-sdk-key
 
 ```ts
 // $lib/replane.ts
-import { createTypedConfig } from '@replanejs/svelte';
+import { createTypedConfig } from '@replanejs/svelte'
 
-export const appConfig = createTypedConfig<AppConfigs>();
+export const appConfig = createTypedConfig<AppConfigs>()
 ```
 
 ### Use SSR for initial load
@@ -316,7 +317,7 @@ export async function load() {
 
 ### Handle errors gracefully
 
-```html
+```svelte
 <svelte:boundary onerror={(e) => reportError(e)}>
   <ReplaneContext {options}>
     <App />

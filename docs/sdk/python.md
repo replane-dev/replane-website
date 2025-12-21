@@ -8,6 +8,8 @@ description: Integrate Replane into Python applications with sync and async supp
 
 The official Python SDK for Replane. Works with Python 3.10+ and supports both synchronous and asynchronous usage.
 
+Full API documentation is available on [ReadTheDocs](https://replane.readthedocs.io).
+
 ## Installation
 
 ```bash
@@ -69,18 +71,18 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 
 #### Options
 
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `base_url` | `str` | Yes | Replane server URL |
-| `sdk_key` | `str` | Yes | SDK key for authentication |
-| `context` | `dict` | No | Default context for all override evaluations |
-| `fallbacks` | `dict` | No | Fallback values if server unavailable during init |
-| `required` | `list[str]` | No | Config names that must exist (raises if missing) |
-| `request_timeout_ms` | `int` | No | HTTP request timeout (default: 2000) |
-| `initialization_timeout_ms` | `int` | No | Initial connection timeout (default: 5000) |
-| `retry_delay_ms` | `int` | No | Base retry delay with exponential backoff (default: 200) |
-| `inactivity_timeout_ms` | `int` | No | Reconnect if no events for this duration (default: 30000) |
-| `debug` | `bool` | No | Enable debug logging (default: False) |
+| Option                      | Type        | Required | Description                                               |
+| --------------------------- | ----------- | -------- | --------------------------------------------------------- |
+| `base_url`                  | `str`       | Yes      | Replane server URL                                        |
+| `sdk_key`                   | `str`       | Yes      | SDK key for authentication                                |
+| `context`                   | `dict`      | No       | Default context for all override evaluations              |
+| `fallbacks`                 | `dict`      | No       | Fallback values if server unavailable during init         |
+| `required`                  | `list[str]` | No       | Config names that must exist (raises if missing)          |
+| `request_timeout_ms`        | `int`       | No       | HTTP request timeout (default: 2000)                      |
+| `initialization_timeout_ms` | `int`       | No       | Initial connection timeout (default: 5000)                |
+| `retry_delay_ms`            | `int`       | No       | Base retry delay with exponential backoff (default: 200)  |
+| `inactivity_timeout_ms`     | `int`       | No       | Reconnect if no events for this duration (default: 30000) |
+| `debug`                     | `bool`      | No       | Enable debug logging (default: False)                     |
 
 #### Example
 
@@ -122,11 +124,11 @@ Gets a config value. Returns the current value synchronously (reads from local c
 
 #### Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `name` | `str` | Yes | Config name |
-| `context` | `dict` | No | Context for override evaluation (merged with client context) |
-| `default` | `Any` | No | Default value if config not found |
+| Parameter | Type   | Required | Description                                                  |
+| --------- | ------ | -------- | ------------------------------------------------------------ |
+| `name`    | `str`  | Yes      | Config name                                                  |
+| `context` | `dict` | No       | Context for override evaluation (merged with client context) |
+| `default` | `Any`  | No       | Default value if config not found                            |
 
 #### Returns
 
@@ -248,6 +250,7 @@ Common context properties:
 ### Override examples
 
 **Percentage rollout** (gradual feature release):
+
 ```python
 # Server config has 10% rollout based on user_id
 # Same user always gets same result (deterministic hashing)
@@ -255,12 +258,14 @@ enabled = replane.get("new-checkout", context={"user_id": user.id})
 ```
 
 **Plan-based features**:
+
 ```python
 max_items = replane.get("max-items", context={"plan": user.plan})
 # Returns different values for free/pro/enterprise plans
 ```
 
 **Geographic targeting**:
+
 ```python
 content = replane.get("homepage-banner", context={"country": request.country})
 ```
@@ -275,7 +280,7 @@ replane = Replane(
     sdk_key="sk_live_...",
     required=["rate-limit", "feature-enabled"],
 )
-# Raises ConfigNotFoundError if any required config is missing
+# Raises ConfigNotFoundError if any required config is missing during initialization
 ```
 
 ## Fallback values
@@ -303,7 +308,7 @@ The SDK maintains a persistent SSE connection for realtime updates.
 ### How it works
 
 1. Client connects to `/api/sdk/v1/replication/stream`
-2. Server sends all current configs
+2. Server sends all current configs related to the SDK key
 3. Connection stays open
 4. Server pushes changes as they happen
 5. `get()` always returns the latest value
@@ -593,11 +598,11 @@ atexit.register(replane.close)
 
 ## Environment compatibility
 
-| Environment | Support |
-|-------------|---------|
-| Python 3.10+ | Full |
-| Sync client | Zero dependencies (stdlib only) |
-| Async client | Requires `httpx>=0.25.0` |
+| Environment  | Support                         |
+| ------------ | ------------------------------- |
+| Python 3.10+ | Full                            |
+| Sync client  | Zero dependencies (stdlib only) |
+| Async client | Requires `httpx>=0.25.0`        |
 
 ## Next steps
 

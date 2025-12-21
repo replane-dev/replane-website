@@ -75,6 +75,7 @@ await replane.ConnectAsync();
 | `InactivityTimeoutMs`     | `int`                         | `30000`  | SSE inactivity timeout          |
 | `HttpClient`              | `HttpClient`                  | `null`   | Custom HttpClient               |
 | `Debug`                   | `bool`                        | `false`  | Enable debug logging            |
+| `Logger`                  | `IReplaneLogger`              | `null`   | Custom logger implementation    |
 
 ### Get&lt;T&gt;
 
@@ -407,7 +408,12 @@ public class MyLogger : IReplaneLogger
     }
 }
 
-var replane = new ReplaneClient(options, new MyLogger());
+var replane = new ReplaneClient(new ReplaneClientOptions
+{
+    BaseUrl = "https://replane.example.com",
+    SdkKey = "your-sdk-key",
+    Logger = new MyLogger()
+});
 ```
 
 ## Error handling
@@ -459,12 +465,14 @@ The SDK supports these override operators:
 
 ## ASP.NET Core integration
 
+Both `ReplaneClient` and `InMemoryReplaneClient` implement the `IReplaneClient` interface, making it easy to swap implementations for testing or use with dependency injection.
+
 ```csharp
 // Program.cs
 var builder = WebApplication.CreateBuilder(args);
 
-// Register Replane client
-builder.Services.AddSingleton<ReplaneClient>(sp =>
+// Register Replane client as the interface
+builder.Services.AddSingleton<IReplaneClient>(sp =>
 {
     var client = new ReplaneClient(new ReplaneClientOptions
     {
@@ -477,17 +485,62 @@ builder.Services.AddSingleton<ReplaneClient>(sp =>
 var app = builder.Build();
 
 // Connect on startup
-var replane = app.Services.GetRequiredService<ReplaneClient>();
-await replane.ConnectAsync();
+var replane = app.Services.GetRequiredService<IReplaneClient>();
+if (replane is ReplaneClient realClient)
+{
+    await realClient.ConnectAsync();
+}
 
 // Use in endpoints
-app.MapGet("/api/items", (ReplaneClient replane) =>
+app.MapGet("/api/items", (IReplaneClient replane) =>
 {
     var maxItems = replane.Get<int>("max-items", defaultValue: 100);
     return Results.Ok(new { maxItems });
 });
 
 app.Run();
+```
+
+### Using in services
+
+```csharp
+public class FeatureService
+{
+    private readonly IReplaneClient _replane;
+
+    public FeatureService(IReplaneClient replane)
+    {
+        _replane = replane;
+    }
+
+    public bool IsFeatureEnabled(string userId)
+    {
+        return _replane.Get<bool>("new-feature", new ReplaneContext
+        {
+            ["user_id"] = userId
+        });
+    }
+}
+```
+
+### Testing with DI
+
+```csharp
+[Fact]
+public void TestFeatureService()
+{
+    // Create test client implementing IReplaneClient
+    using var testClient = TestClient.Create(new Dictionary<string, object?>
+    {
+        ["new-feature"] = true
+    });
+
+    // Inject into service
+    var service = new FeatureService(testClient);
+
+    // Test the service
+    service.IsFeatureEnabled("user-123").Should().BeTrue();
+}
 ```
 
 ## Best practices
@@ -515,10 +568,11 @@ var replane = new ReplaneClient(new ReplaneClientOptions
 });
 ```
 
-### Register as singleton in DI
+### Register as interface in DI
 
 ```csharp
-builder.Services.AddSingleton<ReplaneClient>(sp => {
+// Register as interface for easy testing
+builder.Services.AddSingleton<IReplaneClient>(sp => {
     var client = new ReplaneClient(options);
     return client;
 });

@@ -17,36 +17,36 @@ npm install @replanejs/sdk
 ## Quick start
 
 ```typescript
-import { createReplaneClient } from '@replanejs/sdk';
+import { createReplaneClient } from '@replanejs/sdk'
 
 // Define your config types
 interface Configs {
-  'feature-dark-mode': boolean;
-  'api-rate-limit': number;
-  'pricing-tiers': { free: number; premium: number };
+  'feature-dark-mode': boolean
+  'api-rate-limit': number
+  'pricing-tiers': { free: number; premium: number }
 }
 
 // Initialize the client
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 
 // Get a config value
-const darkModeEnabled = replane.get('feature-dark-mode');
+const darkModeEnabled = replane.get('feature-dark-mode')
 
 // Get with context for override evaluation
 const rateLimit = replane.get('api-rate-limit', {
   context: { userId: user.id, plan: user.plan }
-});
+})
 
 // Subscribe to realtime updates
 replane.subscribe('feature-dark-mode', (config) => {
-  console.log('Dark mode changed:', config.value);
-});
+  console.log('Dark mode changed:', config.value)
+})
 
 // Cleanup when done
-replane.close();
+replane.close()
 ```
 
 ## API Reference
@@ -57,17 +57,17 @@ Creates a new Replane client. Returns a Promise that resolves when the initial c
 
 #### Options
 
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `sdkKey` | `string` | Yes | SDK key for authentication |
-| `baseUrl` | `string` | Yes | Replane server URL |
-| `required` | `string[] \| Record<string, boolean>` | No | Configs that must exist for the client to initialize |
-| `fallbacks` | `Record<string, unknown>` | No | Fallback values if fetch fails |
-| `context` | `Record<string, unknown>` | No | Default context to use for all override evaluations |
-| `fetchFn` | `typeof fetch` | No | Custom fetch implementation |
-| `timeoutMs` | `number` | No | Request timeout (default: 2000) |
-| `retryDelayMs` | `number` | No | Delay between retries (default: 200) |
-| `logger` | `Logger` | No | Custom logger |
+| Option         | Type                                  | Required | Description                                          |
+| -------------- | ------------------------------------- | -------- | ---------------------------------------------------- |
+| `sdkKey`       | `string`                              | Yes      | SDK key for authentication                           |
+| `baseUrl`      | `string`                              | Yes      | Replane server URL                                   |
+| `required`     | `string[] \| Record<string, boolean>` | No       | Configs that must exist for the client to initialize |
+| `fallbacks`    | `Record<string, unknown>`             | No       | Fallback values if fetch fails                       |
+| `context`      | `Record<string, unknown>`             | No       | Default context to use for all override evaluations  |
+| `fetchFn`      | `typeof fetch`                        | No       | Custom fetch implementation                          |
+| `timeoutMs`    | `number`                              | No       | Request timeout (default: 2000)                      |
+| `retryDelayMs` | `number`                              | No       | Delay between retries (default: 200)                 |
+| `logger`       | `Logger`                              | No       | Custom logger                                        |
 
 #### Example
 
@@ -86,7 +86,7 @@ const replane = await createReplaneClient<Configs>({
   },
   timeoutMs: 5000,
   retries: 3
-});
+})
 ```
 
 ### `replane.get<K>(name, options?)`
@@ -95,25 +95,29 @@ Gets a config value. Returns the current value synchronously.
 
 #### Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `name` | `keyof T` | Yes | Config name |
-| `options.context` | `Record<string, string \| number \| boolean \| null \| undefined>` | No | Context for override evaluation |
+| Parameter         | Type                                                               | Required | Description                                                        |
+| ----------------- | ------------------------------------------------------------------ | -------- | ------------------------------------------------------------------ |
+| `name`            | `keyof T`                                                          | Yes      | Config name                                                        |
+| `options.context` | `Record<string, string \| number \| boolean \| null \| undefined>` | No       | Context for override evaluation                                    |
+| `options.default` | `T[K]`                                                             | No       | Default value to return if config not found (prevents throwing)    |
 
 #### Returns
 
-The config value with type `T[K]`.
+The config value with type `T[K]`, or the default value if provided and config is not found.
 
 #### Example
 
 ```typescript
 // Simple get
-const enabled = replane.get('feature-dark-mode'); // boolean
+const enabled = replane.get('feature-dark-mode') // boolean
 
 // With context
 const limit = replane.get('api-rate-limit', {
   context: { plan: 'premium' }
-}); // number
+}) // number
+
+// With default value - won't throw if config doesn't exist
+const timeout = replane.get('timeout-ms', { default: 5000 }) // number
 ```
 
 ### `replane.subscribe(callback)` or `replane.subscribe(name, callback)`
@@ -124,17 +128,17 @@ Subscribes to config changes. Returns an unsubscribe function.
 
 ```typescript
 const unsubscribe = replane.subscribe((config) => {
-  console.log(`${config.name} changed to:`, config.value);
-});
+  console.log(`${config.name} changed to:`, config.value)
+})
 ```
 
 #### Specific config
 
 ```typescript
 const unsubscribe = replane.subscribe('feature-flag', (config) => {
-  console.log('Feature flag changed:', config.value);
+  console.log('Feature flag changed:', config.value)
   // config.value is typed based on your Configs interface
-});
+})
 ```
 
 ### `replane.close()`
@@ -143,9 +147,9 @@ Closes the client and cleans up resources. Call this when shutting down your app
 
 ```typescript
 process.on('SIGTERM', () => {
-  replane.close();
-  process.exit(0);
-});
+  replane.close()
+  process.exit(0)
+})
 ```
 
 ## Type safety
@@ -154,27 +158,27 @@ Define your config types for full TypeScript support:
 
 ```typescript
 interface Configs {
-  'feature-dark-mode': boolean;
-  'api-rate-limit': number;
-  'allowed-regions': string[];
+  'feature-dark-mode': boolean
+  'api-rate-limit': number
+  'allowed-regions': string[]
   'pricing': {
-    free: { requests: number };
-    premium: { requests: number };
-  };
+    free: { requests: number }
+    premium: { requests: number }
+  }
 }
 
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 
 // TypeScript knows the types
-const darkMode = replane.get('feature-dark-mode'); // boolean
-const regions = replane.get('allowed-regions'); // string[]
-const pricing = replane.get('pricing'); // { free: {...}, premium: {...} }
+const darkMode = replane.get('feature-dark-mode') // boolean
+const regions = replane.get('allowed-regions') // string[]
+const pricing = replane.get('pricing') // { free: {...}, premium: {...} }
 
 // Type error - 'invalid-config' doesn't exist
-const invalid = replane.get('invalid-config');
+const invalid = replane.get('invalid-config')
 ```
 
 ## Context and overrides
@@ -193,10 +197,10 @@ const replane = await createReplaneClient<Configs>({
     env: 'production',
     region: 'us-east'
   }
-});
+})
 
 // Uses client context
-const value = replane.get('config-name');
+const value = replane.get('config-name')
 ```
 
 ### Per-evaluation context
@@ -209,7 +213,7 @@ const value = replane.get('feature-flag', {
     userId: user.id,
     plan: user.plan
   }
-});
+})
 ```
 
 ### Context properties
@@ -238,7 +242,7 @@ const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
   required: ['rate-limit', 'is-admin']
-});
+})
 // Throws if database-url or api-key is missing
 ```
 
@@ -265,7 +269,7 @@ const replane = await createReplaneClient<Configs>({
     'rate-limit': 100,
     'timeout-ms': 5000
   }
-});
+})
 ```
 
 The client starts with fallback values and updates when connection is restored.
@@ -277,7 +281,7 @@ The SDK maintains a persistent SSE connection for realtime updates.
 ### How it works
 
 1. Client connects to `/api/sdk/v1/replication/stream`
-2. Server sends all current configs
+2. Server sends all current configs related to the SDK key
 3. Connection stays open
 4. Server pushes changes as they happen
 5. `get()` always returns the latest value
@@ -287,18 +291,18 @@ The SDK maintains a persistent SSE connection for realtime updates.
 ```typescript
 // Subscribe to all changes
 const unsubAll = replane.subscribe((config) => {
-  console.log(`${config.name} updated:`, config.value);
-});
+  console.log(`${config.name} updated:`, config.value)
+})
 
 // Subscribe to specific config
 const unsubFeature = replane.subscribe('feature-flag', (config) => {
   // React to change
-  updateUI(config.value);
-});
+  updateUI(config.value)
+})
 
 // Unsubscribe when done
-unsubAll();
-unsubFeature();
+unsubAll()
+unsubFeature()
 ```
 
 ### React integration
@@ -334,11 +338,11 @@ function App() {
 try {
   const replane = await createReplaneClient<Configs>({
     sdkKey: process.env.REPLANE_SDK_KEY,
-    baseUrl: 'https://replane.example.com',
-  });
+    baseUrl: 'https://replane.example.com'
+  })
 } catch (error) {
   if (error instanceof ReplaneError) {
-    console.error('Replane error:', error.code, error.message);
+    console.error('Replane error:', error.code, error.message)
   }
   // Use fallback configuration
 }
@@ -347,13 +351,18 @@ try {
 ### Config not found
 
 ```typescript
+// Option 1: Catch the error
 try {
-  const value = replane.get('missing-config');
+  const value = replane.get('missing-config')
 } catch (error) {
   if (error instanceof ReplaneError && error.code === 'not_found') {
-    console.error('Config not found');
+    console.error('Config not found')
   }
 }
+
+// Option 2: Use a default value (recommended)
+const value = replane.get('missing-config', { default: 'fallback' })
+// Returns 'fallback' if config doesn't exist, no error thrown
 ```
 
 ## Testing
@@ -363,16 +372,16 @@ try {
 Use `createInMemoryReplaneClient` for tests:
 
 ```typescript
-import { createInMemoryReplaneClient } from '@replanejs/sdk';
+import { createInMemoryReplaneClient } from '@replanejs/sdk'
 
 const replane = createInMemoryReplaneClient<Configs>({
   'feature-flag': true,
   'rate-limit': 100,
   'pricing': { free: { requests: 100 }, premium: { requests: 10000 } }
-});
+})
 
 // Use in tests
-expect(replane.get('feature-flag')).toBe(true);
+expect(replane.get('feature-flag')).toBe(true)
 ```
 
 ### Custom fetch
@@ -399,13 +408,13 @@ Each SDK key is tied to one project. For multiple projects, create separate clie
 ```typescript
 const projectA = await createReplaneClient<ProjectAConfigs>({
   sdkKey: process.env.PROJECT_A_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 
 const projectB = await createReplaneClient<ProjectBConfigs>({
   sdkKey: process.env.PROJECT_B_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 ```
 
 ## Best practices
@@ -418,24 +427,24 @@ Create the client once at application startup:
 // config.ts
 export const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 
 // app.ts
-import { replane } from './config';
-const value = replane.get('feature-flag');
+import { replane } from './config'
+const value = replane.get('feature-flag')
 ```
 
 ### Clean up on shutdown
 
 ```typescript
 process.on('SIGTERM', () => {
-  replane.close();
-});
+  replane.close()
+})
 
 process.on('SIGINT', () => {
-  replane.close();
-});
+  replane.close()
+})
 ```
 
 ### Use fallbacks for resilience
@@ -449,7 +458,7 @@ const replane = await createReplaneClient<Configs>({
     'feature-flag': false,
     'rate-limit': 100
   }
-});
+})
 ```
 
 ### Type your configs
@@ -458,22 +467,22 @@ Always define config types for safety and autocomplete:
 
 ```typescript
 interface Configs {
-  'feature-new-ui': boolean;
-  'max-upload-size': number;
+  'feature-new-ui': boolean
+  'max-upload-size': number
   // ...
 }
 ```
 
 ## Environment compatibility
 
-| Environment | Support |
-|-------------|---------|
-| Node.js 18+ | Full |
-| Node.js 16-17 | Requires fetch polyfill |
-| Browsers (modern) | Full |
-| Deno | Full |
-| Bun | Full |
-| Edge Workers | Full (Cloudflare, Vercel) |
+| Environment       | Support                   |
+| ----------------- | ------------------------- |
+| Node.js 18+       | Full                      |
+| Node.js 16-17     | Requires fetch polyfill   |
+| Browsers (modern) | Full                      |
+| Deno              | Full                      |
+| Bun               | Full                      |
+| Edge Workers      | Full (Cloudflare, Vercel) |
 
 ## Next steps
 
