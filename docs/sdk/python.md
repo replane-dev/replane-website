@@ -30,7 +30,7 @@ from replane import Replane
 # Using context manager (recommended)
 with Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
 ) as replane:
     # Get a config value
     rate_limit = replane.get("rate-limit")
@@ -54,7 +54,7 @@ from replane import AsyncReplane
 
 async with AsyncReplane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
 ) as replane:
     # get() is sync since it reads from local cache
     rate_limit = replane.get("rate-limit")
@@ -89,7 +89,7 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
     context={"environment": "production"},
     fallbacks={
         "rate-limit": 100,
@@ -112,7 +112,7 @@ from replane import AsyncReplane
 
 async with AsyncReplane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
 ) as replane:
     # get() is synchronous - reads from local cache
     value = replane.get("config-name")
@@ -213,7 +213,7 @@ Applied to all `get()` calls:
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
     context={"environment": "production", "region": "us-east"},
 )
 
@@ -277,7 +277,7 @@ Ensure critical configs exist on startup:
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
     required=["rate-limit", "feature-enabled"],
 )
 # Raises ConfigNotFoundError if any required config is missing during initialization
@@ -290,7 +290,7 @@ Provide fallback values if the server is unavailable during initialization:
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
     fallbacks={
         "feature-flag": False,
         "rate-limit": 100,
@@ -466,7 +466,7 @@ async def lifespan(app: FastAPI):
     global replane
     replane = AsyncReplane(
         base_url="https://replane.example.com",
-        sdk_key="sk_live_...",
+        sdk_key="rp_...",
     )
     await replane.connect()
     yield
@@ -498,7 +498,7 @@ def get_replane():
     if replane is None:
         replane = Replane(
             base_url="https://replane.example.com",
-            sdk_key="sk_live_...",
+            sdk_key="rp_...",
         )
         replane.connect()
     return replane
@@ -523,7 +523,7 @@ from replane import Replane
 
 REPLANE = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
 )
 REPLANE.connect()
 
@@ -577,7 +577,7 @@ with Replane(...) as replane:
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
-    sdk_key="sk_live_...",
+    sdk_key="rp_...",
     fallbacks={
         "feature-flag": False,
         "rate-limit": 100,
