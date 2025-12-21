@@ -106,7 +106,7 @@ Place images in `static/img/` and reference them:
 
 ## Reporting Issues
 
-Found an error or have a suggestion? Please open an issue on GitHub.
+Found an error or have a suggestion? Please [open an issue](https://github.com/replane-dev/replane-website/issues) on GitHub.
 
 ## Community
 
