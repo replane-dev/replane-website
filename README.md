@@ -200,6 +200,10 @@ Contributions to the documentation are welcome!
 - Test all links and code snippets
 - Follow the existing structure and formatting
 
+## Community
+
+Have questions or want to discuss Replane? Join the conversation in [GitHub Discussions](https://github.com/orgs/replane-dev/discussions).
+
 ## Resources
 
 - [Replane Main Repository](https://github.com/replane-dev/replane)
