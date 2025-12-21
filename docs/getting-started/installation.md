@@ -16,7 +16,7 @@ The easiest way to deploy Replane is with Docker Compose.
 
 ```bash
 # Download the example docker-compose.yml
-curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/example/docker-compose.yml
+curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/examples/docker-compose/docker-compose.yml
 
 # Start Replane
 docker compose up -d
@@ -115,12 +115,12 @@ The development server runs at [http://localhost:3000](http://localhost:3000).
 
 ### Production
 
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| CPU | 1 core | 2+ cores |
-| Memory | 1 GB | 2+ GB |
-| Storage | 1 GB | 10+ GB |
-| PostgreSQL | 14+ | 16+ |
+| Component  | Minimum | Recommended |
+| ---------- | ------- | ----------- |
+| CPU        | 1 core  | 2+ cores    |
+| Memory     | 1 GB    | 2+ GB       |
+| Storage    | 1 GB    | 10+ GB      |
+| PostgreSQL | 14+     | 16+         |
 
 ### Development
 
@@ -139,7 +139,7 @@ curl http://localhost:8080/api/health
 Expected response:
 
 ```json
-{"status":"ok"}
+{ "status": "ok" }
 ```
 
 ## Next steps

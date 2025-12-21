@@ -18,7 +18,7 @@ This guide covers deploying Replane with Docker for production use.
 
 ```bash
 # Download docker-compose.yml
-curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/example/docker-compose.yml
+curl -O https://raw.githubusercontent.com/replane-dev/replane/refs/heads/main/examples/docker-compose/docker-compose.yml
 
 # Start services
 docker compose up -d
@@ -46,7 +46,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U replane"]
+      test: ['CMD-SHELL', 'pg_isready -U replane']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -65,7 +65,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       PASSWORD_AUTH_ENABLED: ${PASSWORD_AUTH_ENABLED:-true}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -94,7 +94,7 @@ services:
       # DATABASE_NAME: replane
       BASE_URL: https://replane.example.com
       SECRET_KEY: ${SECRET_KEY}
-      PASSWORD_AUTH_ENABLED: "true"
+      PASSWORD_AUTH_ENABLED: 'true'
 ```
 
 ### SSL connection
@@ -154,11 +154,11 @@ services:
   replane:
     image: replane/replane:latest
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.replane.rule=Host(`replane.example.com`)"
-      - "traefik.http.routers.replane.entrypoints=websecure"
-      - "traefik.http.routers.replane.tls.certresolver=letsencrypt"
-      - "traefik.http.services.replane.loadbalancer.server.port=8080"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.replane.rule=Host(`replane.example.com`)'
+      - 'traefik.http.routers.replane.entrypoints=websecure'
+      - 'traefik.http.routers.replane.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.replane.loadbalancer.server.port=8080'
     environment:
       BASE_URL: https://replane.example.com
       # ...
@@ -181,8 +181,9 @@ curl http://localhost:8080/api/health
 ```
 
 Response:
+
 ```json
-{"status":"ok"}
+{ "status": "ok" }
 ```
 
 ### Docker health check
@@ -219,7 +220,7 @@ services:
       POSTGRES_DB: replane
       POSTGRES_USER: replane
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      SCHEDULE: "@daily"
+      SCHEDULE: '@daily'
       BACKUP_KEEP_DAYS: 7
       BACKUP_KEEP_WEEKS: 4
       BACKUP_KEEP_MONTHS: 6
@@ -269,8 +270,8 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: '10m'
+        max-file: '3'
 ```
 
 ## Troubleshooting
@@ -278,11 +279,13 @@ services:
 ### Container won't start
 
 Check logs:
+
 ```bash
 docker compose logs replane
 ```
 
 Common issues:
+
 - Database not ready — wait for PostgreSQL health check
 - Invalid environment variables — check required vars
 - Port already in use — change `8080:8080` to another port
@@ -300,6 +303,7 @@ docker compose logs postgres
 ### SSE connections dropping
 
 Ensure reverse proxy supports long-lived connections:
+
 - Nginx: `proxy_read_timeout 86400s;`
 - Traefik: Default should work
 - Cloudflare: Enable "HTTP/2 to Origin"
