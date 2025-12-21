@@ -16,7 +16,7 @@ npm install @replanejs/svelte
 
 ## Quick start
 
-```svelte
+```html
 <script>
   import { ReplaneContext, config } from '@replanejs/svelte';
   import { createReplaneClient } from '@replanejs/svelte';
@@ -32,7 +32,7 @@ npm install @replanejs/svelte
 </ReplaneContext>
 ```
 
-```svelte
+```html
 <!-- MyComponent.svelte -->
 <script>
   import { config } from '@replanejs/svelte';
@@ -53,7 +53,7 @@ npm install @replanejs/svelte
 
 Creates a reactive store for a config value. Similar to `readable()` or `derived()`.
 
-```svelte
+```html
 <script>
   import { config } from '@replanejs/svelte';
 
@@ -75,7 +75,7 @@ Creates a reactive store for a config value. Similar to `readable()` or `derived
 
 Gets the Replane client from context.
 
-```svelte
+```html
 <script>
   import { getReplane } from '@replanejs/svelte';
 
@@ -94,7 +94,7 @@ Gets the Replane client from context.
 
 Creates a reactive store from a client directly (without context).
 
-```svelte
+```html
 <script>
   import { configFrom } from '@replanejs/svelte';
   import { client } from './replane-client';
@@ -113,7 +113,7 @@ Context component that provides the Replane client to your component tree.
 
 #### With a pre-created client
 
-```svelte
+```html
 <script>
   import { ReplaneContext, createReplaneClient } from '@replanejs/svelte';
 
@@ -130,7 +130,7 @@ Context component that provides the Replane client to your component tree.
 
 #### With options (client managed internally)
 
-```svelte
+```html
 <script>
   import { ReplaneContext } from '@replanejs/svelte';
 
@@ -157,7 +157,7 @@ Context component that provides the Replane client to your component tree.
 
 #### With snapshot (SSR/hydration)
 
-```svelte
+```html
 <script>
   import { ReplaneContext } from '@replanejs/svelte';
 
@@ -191,7 +191,7 @@ export const appConfig = createTypedConfig<AppConfigs>();
 export const getAppReplane = createTypedReplane<AppConfigs>();
 ```
 
-```svelte
+```html
 <script lang="ts">
   import { appConfig } from '$lib/replane';
 
@@ -223,7 +223,7 @@ export async function load() {
 }
 ```
 
-```svelte
+```html
 <!-- src/routes/+layout.svelte -->
 <script lang="ts">
   import { ReplaneContext } from '@replanejs/svelte';
@@ -245,7 +245,7 @@ export async function load() {
 
 All stores automatically subscribe to realtime updates via SSE. When a config changes on the server, the store updates automatically.
 
-```svelte
+```html
 <script>
   import { config } from '@replanejs/svelte';
 
@@ -262,7 +262,7 @@ All stores automatically subscribe to realtime updates via SSE. When a config ch
 
 Pass evaluation context for override rules:
 
-```svelte
+```html
 <script>
   import { config } from '@replanejs/svelte';
 
@@ -316,7 +316,7 @@ export async function load() {
 
 ### Handle errors gracefully
 
-```svelte
+```html
 <svelte:boundary onerror={(e) => reportError(e)}>
   <ReplaneContext {options}>
     <App />

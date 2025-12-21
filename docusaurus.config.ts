@@ -167,6 +167,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} Replane. Released under the MIT License.`
     },
     prism: {
+      theme: require('prism-react-renderer').themes.github,
+      darkTheme: require('prism-react-renderer').themes.vsDark,
       additionalLanguages: [
         'ruby',
         'csharp',
@@ -177,7 +179,21 @@ const config: Config = {
         'bash',
         'dart',
         'objectivec',
-        'r'
+        'r',
+        'typescript',
+        'tsx',
+        'jsx',
+        'yaml',
+        'toml',
+        'diff',
+        'markup'
+      ],
+      magicComments: [
+        {
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: { start: 'highlight-start', end: 'highlight-end' }
+        }
       ]
     },
     languageTabs: [
