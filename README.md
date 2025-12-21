@@ -2,7 +2,9 @@
 
 Official documentation website for [Replane](https://github.com/replane-dev/replane) - dynamic configuration for apps and services.
 
-**Live Site:** [https://replane.dev](https://replane.dev)
+[![Website](https://img.shields.io/badge/website-replane.dev-blue)](https://replane.dev)
+[![License](https://img.shields.io/github/license/replane-dev/replane-website)](https://github.com/replane-dev/replane-website/blob/main/LICENSE)
+[![Community](https://img.shields.io/badge/discussions-join-blue?logo=github)](https://github.com/orgs/replane-dev/discussions)
 
 ## Tech Stack
 
@@ -199,6 +201,10 @@ Contributions to the documentation are welcome!
 - Add screenshots for UI walkthroughs
 - Test all links and code snippets
 - Follow the existing structure and formatting
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and contribution guidelines.
 
 ## Community
 
