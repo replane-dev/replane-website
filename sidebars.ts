@@ -49,7 +49,11 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'sdk/javascript',
+        'sdk/react',
+        'sdk/nextjs',
+        'sdk/svelte',
         'sdk/python',
+        'sdk/dotnet',
         'sdk/building-an-sdk'
       ]
     }

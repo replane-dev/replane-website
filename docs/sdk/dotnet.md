@@ -62,19 +62,19 @@ await replane.ConnectAsync();
 
 #### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `BaseUrl` | `string` | required | Replane server URL |
-| `SdkKey` | `string` | required | SDK key for authentication |
-| `Context` | `ReplaneContext` | `null` | Default context for evaluations |
-| `Fallbacks` | `Dictionary<string, object?>` | `null` | Fallback values |
-| `Required` | `IReadOnlyList<string>` | `null` | Required config names |
-| `RequestTimeoutMs` | `int` | `2000` | HTTP request timeout |
-| `InitializationTimeoutMs` | `int` | `5000` | Initial connection timeout |
-| `RetryDelayMs` | `int` | `200` | Initial retry delay |
-| `InactivityTimeoutMs` | `int` | `30000` | SSE inactivity timeout |
-| `HttpClient` | `HttpClient` | `null` | Custom HttpClient |
-| `Debug` | `bool` | `false` | Enable debug logging |
+| Option                    | Type                          | Default  | Description                     |
+| ------------------------- | ----------------------------- | -------- | ------------------------------- |
+| `BaseUrl`                 | `string`                      | required | Replane server URL              |
+| `SdkKey`                  | `string`                      | required | SDK key for authentication      |
+| `Context`                 | `ReplaneContext`              | `null`   | Default context for evaluations |
+| `Fallbacks`               | `Dictionary<string, object?>` | `null`   | Fallback values                 |
+| `Required`                | `IReadOnlyList<string>`       | `null`   | Required config names           |
+| `RequestTimeoutMs`        | `int`                         | `2000`   | HTTP request timeout            |
+| `InitializationTimeoutMs` | `int`                         | `5000`   | Initial connection timeout      |
+| `RetryDelayMs`            | `int`                         | `200`    | Initial retry delay             |
+| `InactivityTimeoutMs`     | `int`                         | `30000`  | SSE inactivity timeout          |
+| `HttpClient`              | `HttpClient`                  | `null`   | Custom HttpClient               |
+| `Debug`                   | `bool`                        | `false`  | Enable debug logging            |
 
 ### Get&lt;T&gt;
 
@@ -88,6 +88,40 @@ var apiKey = replane.Get<string>("api-key");
 
 // With default value
 var timeout = replane.Get<int>("timeout-ms", defaultValue: 5000);
+```
+
+### Complex types
+
+Configs can store complex objects:
+
+```csharp
+// Define your config type
+public record ThemeConfig
+{
+    public bool DarkMode { get; init; }
+    public string PrimaryColor { get; init; } = "";
+    public int FontSize { get; init; }
+}
+
+public record FeatureFlags
+{
+    public bool NewUI { get; init; }
+    public List<string> EnabledModules { get; init; } = [];
+}
+
+// Get complex configs
+var theme = replane.Get<ThemeConfig>("theme");
+var features = replane.Get<FeatureFlags>("features");
+
+Console.WriteLine($"Dark mode: {theme.DarkMode}");
+Console.WriteLine($"Enabled modules: {string.Join(", ", features.EnabledModules)}");
+```
+
+Complex types work with overrides too:
+
+```csharp
+// Different themes for different user plans
+var userTheme = replane.Get<ThemeConfig>("theme", new ReplaneContext { ["plan"] = "premium" });
 ```
 
 ### Get with context
@@ -130,15 +164,26 @@ Subscribe to config changes:
 // Subscribe to all config changes
 replane.ConfigChanged += (sender, e) =>
 {
-    Console.WriteLine($"Config '{e.ConfigName}' updated to: {e.Config.Value}");
+    Console.WriteLine($"Config '{e.ConfigName}' updated");
 };
 
-// Filter for specific configs
+// Get typed value from the event
 replane.ConfigChanged += (sender, e) =>
 {
     if (e.ConfigName == "feature-flag")
     {
-        Console.WriteLine($"Feature flag changed: {e.Config.Value}");
+        var enabled = e.GetValue<bool>();
+        Console.WriteLine($"Feature flag changed to: {enabled}");
+    }
+};
+
+// Works with complex types too
+replane.ConfigChanged += (sender, e) =>
+{
+    if (e.ConfigName == "theme")
+    {
+        var theme = e.GetValue<ThemeConfig>();
+        Console.WriteLine($"Theme updated: dark={theme?.DarkMode}");
     }
 };
 
@@ -259,8 +304,69 @@ public void TestConfigChangeEvent()
     client.Set("feature", false);
 
     receivedEvents.Should().HaveCount(2);
-    receivedEvents[0].Config.Value.Should().Be(true);
-    receivedEvents[1].Config.Value.Should().Be(false);
+    receivedEvents[0].GetValue<bool>().Should().BeTrue();
+    receivedEvents[1].GetValue<bool>().Should().BeFalse();
+}
+```
+
+### Testing complex types
+
+```csharp
+public record ThemeConfig
+{
+    public bool DarkMode { get; init; }
+    public string PrimaryColor { get; init; } = "";
+    public int FontSize { get; init; }
+}
+
+[Fact]
+public void TestComplexType()
+{
+    var theme = new ThemeConfig
+    {
+        DarkMode = true,
+        PrimaryColor = "#3B82F6",
+        FontSize = 14
+    };
+
+    using var client = TestClient.Create(new Dictionary<string, object?>
+    {
+        ["theme"] = theme
+    });
+
+    var result = client.Get<ThemeConfig>("theme");
+
+    result!.DarkMode.Should().BeTrue();
+    result.PrimaryColor.Should().Be("#3B82F6");
+}
+
+[Fact]
+public void TestComplexTypeWithOverrides()
+{
+    using var client = TestClient.Create();
+
+    var defaultTheme = new ThemeConfig { DarkMode = false, PrimaryColor = "#000", FontSize = 12 };
+    var premiumTheme = new ThemeConfig { DarkMode = true, PrimaryColor = "#FFD700", FontSize = 16 };
+
+    client.SetConfigWithOverrides(
+        name: "theme",
+        value: defaultTheme,
+        overrides: [
+            new OverrideData
+            {
+                Name = "premium-theme",
+                Conditions = [
+                    new ConditionData { Operator = "equals", Property = "plan", Expected = "premium" }
+                ],
+                Value = premiumTheme
+            }
+        ]);
+
+    client.Get<ThemeConfig>("theme", new ReplaneContext { ["plan"] = "free" })!
+        .DarkMode.Should().BeFalse();
+
+    client.Get<ThemeConfig>("theme", new ReplaneContext { ["plan"] = "premium" })!
+        .DarkMode.Should().BeTrue();
 }
 ```
 
@@ -337,19 +443,19 @@ catch (ReplaneException ex)
 
 The SDK supports these override operators:
 
-| Operator | Description |
-|----------|-------------|
-| `equals` | Exact match |
-| `in` | Value is in list |
-| `not_in` | Value is not in list |
-| `less_than` | Less than comparison |
-| `less_than_or_equal` | Less than or equal |
-| `greater_than` | Greater than comparison |
-| `greater_than_or_equal` | Greater than or equal |
-| `segmentation` | Percentage-based bucketing |
-| `and` | All conditions must match |
-| `or` | Any condition must match |
-| `not` | Negate a condition |
+| Operator                | Description                |
+| ----------------------- | -------------------------- |
+| `equals`                | Exact match                |
+| `in`                    | Value is in list           |
+| `not_in`                | Value is not in list       |
+| `less_than`             | Less than comparison       |
+| `less_than_or_equal`    | Less than or equal         |
+| `greater_than`          | Greater than comparison    |
+| `greater_than_or_equal` | Greater than or equal      |
+| `segmentation`          | Percentage-based bucketing |
+| `and`                   | All conditions must match  |
+| `or`                    | Any condition must match   |
+| `not`                   | Negate a condition         |
 
 ## ASP.NET Core integration
 
