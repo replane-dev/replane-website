@@ -3,25 +3,19 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs'
 import replaneSidebar from './docs/api/sidebar'
 
 const sidebars: SidebarsConfig = {
-  'docsSidebar': [
+  docsSidebar: [
     'intro',
     {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
-      items: [
-        'getting-started/quickstart',
-        'getting-started/installation'
-      ]
+      items: ['getting-started/quickstart', 'getting-started/installation']
     },
     {
       type: 'category',
       label: 'Concepts',
       collapsed: false,
-      items: [
-        'concepts/overview',
-        'concepts/architecture'
-      ]
+      items: ['concepts/overview', 'concepts/architecture']
     },
     {
       type: 'category',
@@ -38,10 +32,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Self-Hosting',
       collapsed: false,
-      items: [
-        'self-hosting/docker',
-        'self-hosting/environment-variables'
-      ]
+      items: ['self-hosting/docker', 'self-hosting/environment-variables']
     },
     {
       type: 'category',
