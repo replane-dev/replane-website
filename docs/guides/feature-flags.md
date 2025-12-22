@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: Feature Flags
 description: Toggle features on or off without deploying code
 ---

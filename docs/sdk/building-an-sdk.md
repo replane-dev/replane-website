@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Building an SDK
 description: How to build your own Replane SDK in any language
 ---

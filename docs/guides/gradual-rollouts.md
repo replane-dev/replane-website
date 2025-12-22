@@ -1,5 +1,4 @@
 ---
-sidebar_position: 4
 title: Gradual Rollouts
 description: Release features to a percentage of users
 ---

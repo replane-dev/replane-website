@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Installation
 description: Different ways to install and deploy Replane
 ---

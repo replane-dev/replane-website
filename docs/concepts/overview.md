@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: Overview
 description: Core concepts in Replane - workspaces, projects, configs, and environments
 ---

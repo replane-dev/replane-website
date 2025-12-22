@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: Docker Deployment
 description: Deploy Replane with Docker and Docker Compose
 ---

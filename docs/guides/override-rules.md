@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Override Rules
 description: Return different config values based on user context
 ---

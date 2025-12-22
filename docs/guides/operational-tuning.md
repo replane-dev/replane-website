@@ -1,5 +1,4 @@
 ---
-sidebar_position: 3
 title: Operational Tuning
 description: Adjust rate limits, timeouts, and other settings in realtime
 ---

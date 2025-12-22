@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: JavaScript SDK
 description: Integrate Replane into Node.js, browsers, Deno, or Bun
 ---

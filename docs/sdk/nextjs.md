@@ -1,5 +1,4 @@
 ---
-sidebar_position: 4
 title: Next.js SDK
 description: Integrate Replane into Next.js with SSR/SSG support
 ---

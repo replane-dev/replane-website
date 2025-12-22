@@ -1,5 +1,4 @@
 ---
-sidebar_position: 5
 title: Svelte SDK
 description: Integrate Replane into Svelte applications with reactive stores
 ---

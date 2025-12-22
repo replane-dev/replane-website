@@ -1,5 +1,4 @@
 ---
-sidebar_position: 3
 title: React SDK
 description: Integrate Replane into React applications with hooks and context
 ---

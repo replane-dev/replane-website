@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Architecture
 description: How Replane works - system design, realtime updates, and data flow
 ---

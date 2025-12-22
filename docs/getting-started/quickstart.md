@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: Quickstart
 description: Deploy Replane and read your first config in under 5 minutes
 ---

@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Environment Variables
 description: Complete reference for Replane configuration options
 ---

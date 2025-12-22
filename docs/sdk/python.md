@@ -1,5 +1,4 @@
 ---
-sidebar_position: 2
 title: Python SDK
 description: Integrate Replane into Python applications with sync and async support
 ---

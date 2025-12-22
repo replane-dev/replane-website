@@ -57,12 +57,13 @@ npm run gen-api-docs
 ### Adding New Pages
 
 1. Create a new Markdown file in the appropriate `docs/` subdirectory
-2. Add frontmatter with metadata:
+2. Add the page to `sidebars.ts` in the appropriate category
+3. Add frontmatter with metadata:
 
 ```markdown
 ---
-sidebar_position: 1
 title: Your Page Title
+description: A brief description of the page content
 ---
 
 # Your Page Title

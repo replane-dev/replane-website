@@ -1,5 +1,4 @@
 ---
-sidebar_position: 6
 title: .NET SDK
 description: Integrate Replane into .NET applications with async support
 ---
