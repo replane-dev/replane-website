@@ -219,4 +219,4 @@ Have questions or want to discuss Replane? Join the conversation in [GitHub Disc
 
 ## License
 
-MIT - See [LICENSE](../LICENSE) file in the main repository.
+MIT
