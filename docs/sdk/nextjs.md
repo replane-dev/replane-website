@@ -117,6 +117,24 @@ export function FeatureFlag() {
 }
 ```
 
+## Client Options
+
+The `options` prop accepts all options from `@replanejs/sdk`:
+
+| Option                    | Type                   | Required | Description                                |
+| ------------------------- | ---------------------- | -------- | ------------------------------------------ |
+| `baseUrl`                 | `string`               | Yes      | Replane server URL                         |
+| `sdkKey`                  | `string`               | Yes      | SDK key for authentication                 |
+| `context`                 | `Record<string, any>`  | No       | Default context for override evaluations   |
+| `defaults`                | `Record<string, any>`  | No       | Default values if server is unavailable    |
+| `required`                | `string[]` or `object` | No       | Configs that must exist for initialization |
+| `requestTimeoutMs`        | `number`               | No       | SSE request timeout (default: 2000)        |
+| `initializationTimeoutMs` | `number`               | No       | SDK initialization timeout (default: 5000) |
+| `onConnectionError`       | `(error) => void`      | No       | Callback for SSE connection errors         |
+| `onConnected`             | `() => void`           | No       | Callback when SSE connection established   |
+
+See the [JavaScript SDK documentation](/docs/sdk/javascript#options) for the complete list of options.
+
 ## API Reference
 
 ### Components
