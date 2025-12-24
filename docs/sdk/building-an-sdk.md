@@ -63,7 +63,7 @@ On first connection, send empty `currentConfigs`:
 }
 ```
 
-If your SDK supports fallbacks, you can send them in the request body:
+If your SDK supports defaults, you can send them in the request body:
 
 ```json
 {
@@ -334,7 +334,7 @@ def cast_to_context_type(expected, context_value):
 - [ ] Subscription callbacks for config changes
 - [ ] Graceful shutdown (`close()` method)
 - [ ] Required configs validation
-- [ ] Fallback values support
+- [ ] Default values support
 - [ ] Configurable timeouts and retry delays
 
 ## Example: Minimal Python SDK

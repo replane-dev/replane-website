@@ -66,7 +66,7 @@ await replane.ConnectAsync();
 | `BaseUrl`                 | `string`                      | required | Replane server URL              |
 | `SdkKey`                  | `string`                      | required | SDK key for authentication      |
 | `Context`                 | `ReplaneContext`              | `null`   | Default context for evaluations |
-| `Fallbacks`               | `Dictionary<string, object?>` | `null`   | Fallback values                 |
+| `Defaults`                | `Dictionary<string, object?>` | `null`   | Default values                  |
 | `Required`                | `IReadOnlyList<string>`       | `null`   | Required config names           |
 | `RequestTimeoutMs`        | `int`                         | `2000`   | HTTP request timeout            |
 | `InitializationTimeoutMs` | `int`                         | `5000`   | Initial connection timeout      |
@@ -75,6 +75,7 @@ await replane.ConnectAsync();
 | `HttpClient`              | `HttpClient`                  | `null`   | Custom HttpClient               |
 | `Debug`                   | `bool`                        | `false`  | Enable debug logging            |
 | `Logger`                  | `IReplaneLogger`              | `null`   | Custom logger implementation    |
+| `Agent`                   | `string`                      | `null`   | Agent identifier for User-Agent |
 
 ### Get&lt;T&gt;
 
@@ -198,16 +199,16 @@ replane.ConfigChanged += OnConfigChanged;
 replane.ConfigChanged -= OnConfigChanged;
 ```
 
-### Fallback values
+### Default values
 
-Provide fallbacks for when configs aren't loaded:
+Provide defaults for when configs aren't loaded:
 
 ```csharp
 var replane = new ReplaneClient(new ReplaneClientOptions
 {
     BaseUrl = "https://replane.example.com",
     SdkKey = "your-sdk-key",
-    Fallbacks = new Dictionary<string, object?>
+    Defaults = new Dictionary<string, object?>
     {
         ["feature-enabled"] = false,
         ["rate-limit"] = 100
@@ -552,14 +553,14 @@ await replane.ConnectAsync();
 // Client is disposed when scope exits
 ```
 
-### Use fallbacks for resilience
+### Use defaults for resilience
 
 ```csharp
 var replane = new ReplaneClient(new ReplaneClientOptions
 {
     BaseUrl = "https://replane.example.com",
     SdkKey = "your-sdk-key",
-    Fallbacks = new Dictionary<string, object?>
+    Defaults = new Dictionary<string, object?>
     {
         ["feature-flag"] = false,
         ["rate-limit"] = 100

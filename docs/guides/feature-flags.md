@@ -24,15 +24,15 @@ Feature flags let you enable or disable functionality without deploying code. Us
 ## Read the flag in your app
 
 ```typescript
-import { createReplaneClient } from '@replanejs/sdk';
+import { createReplaneClient } from '@replanejs/sdk'
 
 const replane = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+  baseUrl: 'https://replane.example.com'
+})
 
 if (replane.get('feature-dark-mode')) {
-  enableDarkMode();
+  enableDarkMode()
 }
 ```
 
@@ -53,7 +53,7 @@ Now pass the context when reading:
 ```typescript
 const enabled = replane.get('feature-dark-mode', {
   context: { userGroup: user.group }
-});
+})
 ```
 
 Beta users see `true`, everyone else sees `false`.
@@ -67,12 +67,12 @@ For gradual rollouts, use percentage-based conditions:
    - **Name**: "10% rollout"
    - **Condition**: `10%` of `userId`
    - **Value**: `true`
-4. Click **Save**
+3. Click **Save**
 
 ```typescript
 const enabled = replane.get('feature-dark-mode', {
   context: { userId: user.id }
-});
+})
 ```
 
 The same user always gets the same result (deterministic bucketing).
@@ -84,11 +84,11 @@ Subscribe to flag changes:
 ```typescript
 replane.subscribe('feature-dark-mode', (config) => {
   if (config.value) {
-    enableDarkMode();
+    enableDarkMode()
   } else {
-    disableDarkMode();
+    disableDarkMode()
   }
-});
+})
 ```
 
 ## Type-safe flags
@@ -97,24 +97,24 @@ Define your flag types:
 
 ```typescript
 interface Flags {
-  'feature-dark-mode': boolean;
-  'feature-new-checkout': boolean;
-  'feature-ai-assistant': boolean;
+  'feature-dark-mode': boolean
+  'feature-new-checkout': boolean
+  'feature-ai-assistant': boolean
 }
 
 const replane = await createReplaneClient<Flags>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
-  // Fallback values to use if the initial request to fetch configs fails.
-  fallbacks: {
+  // Default values to use if the initial request to fetch configs fails.
+  defaults: {
     'feature-dark-mode': false,
     'feature-new-checkout': true,
-    'feature-ai-assistant': false,
+    'feature-ai-assistant': false
   }
-});
+})
 
 // TypeScript knows this is a boolean
-const darkMode = replane.get('feature-dark-mode');
+const darkMode = replane.get('feature-dark-mode')
 ```
 
 ## Best practices
@@ -137,11 +137,11 @@ Remove flags after full rollout to avoid code clutter. Replane keeps version his
 
 Different values per environment:
 
-| Environment | Value | Use case |
-|-------------|-------|----------|
-| Production | `false` | Feature not yet released |
-| Staging | `true` | Testing the feature |
-| Development | `true` | Building the feature |
+| Environment | Value   | Use case                 |
+| ----------- | ------- | ------------------------ |
+| Production  | `false` | Feature not yet released |
+| Staging     | `true`  | Testing the feature      |
+| Development | `true`  | Building the feature     |
 
 ## Example: Kill switch
 
@@ -152,7 +152,7 @@ Create a kill switch to disable a feature instantly:
 
 async function processPayment(order: Order) {
   if (!replane.get('feature-payments-enabled')) {
-    throw new Error('Payments are temporarily disabled');
+    throw new Error('Payments are temporarily disabled')
   }
 
   // Process payment...

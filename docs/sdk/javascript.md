@@ -56,17 +56,22 @@ Creates a new Replane client. Returns a Promise that resolves when the initial c
 
 #### Options
 
-| Option         | Type                                  | Required | Description                                          |
-| -------------- | ------------------------------------- | -------- | ---------------------------------------------------- |
-| `sdkKey`       | `string`                              | Yes      | SDK key for authentication                           |
-| `baseUrl`      | `string`                              | Yes      | Replane server URL                                   |
-| `required`     | `string[] \| Record<string, boolean>` | No       | Configs that must exist for the client to initialize |
-| `fallbacks`    | `Record<string, unknown>`             | No       | Fallback values if fetch fails                       |
-| `context`      | `Record<string, unknown>`             | No       | Default context to use for all override evaluations  |
-| `fetchFn`      | `typeof fetch`                        | No       | Custom fetch implementation                          |
-| `timeoutMs`    | `number`                              | No       | Request timeout (default: 2000)                      |
-| `retryDelayMs` | `number`                              | No       | Delay between retries (default: 200)                 |
-| `logger`       | `Logger`                              | No       | Custom logger                                        |
+| Option                   | Type                                  | Required | Description                                          |
+| ------------------------ | ------------------------------------- | -------- | ---------------------------------------------------- |
+| `sdkKey`                 | `string`                              | Yes      | SDK key for authentication                           |
+| `baseUrl`                | `string`                              | Yes      | Replane server URL                                   |
+| `required`               | `string[] \| Record<string, boolean>` | No       | Configs that must exist for the client to initialize |
+| `defaults`               | `Record<string, unknown>`             | No       | Default values if fetch fails or times out           |
+| `context`                | `Record<string, unknown>`             | No       | Default context for all override evaluations         |
+| `fetchFn`                | `typeof fetch`                        | No       | Custom fetch implementation                          |
+| `requestTimeoutMs`       | `number`                              | No       | SSE request timeout (default: 2000)                  |
+| `initializationTimeoutMs`| `number`                              | No       | SDK initialization timeout (default: 5000)           |
+| `retryDelayMs`           | `number`                              | No       | Delay between retries (default: 200)                 |
+| `inactivityTimeoutMs`    | `number`                              | No       | SSE inactivity timeout (default: 30000)              |
+| `logger`                 | `Logger`                              | No       | Custom logger                                        |
+| `agent`                  | `string`                              | No       | Agent identifier for User-Agent header               |
+| `onConnectionError`      | `(error: unknown) => void`            | No       | Callback for SSE connection errors                   |
+| `onConnected`            | `() => void`                          | No       | Callback when SSE connection is established          |
 
 #### Example
 
@@ -75,7 +80,7 @@ const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
   required: ['rate-limit', 'pricing-tiers'],
-  fallbacks: {
+  defaults: {
     'feature-flag': false,
     'rate-limit': 100
   },
@@ -83,8 +88,8 @@ const replane = await createReplaneClient<Configs>({
     env: 'production',
     region: 'us-east'
   },
-  timeoutMs: 5000,
-  retries: 3
+  requestTimeoutMs: 5000,
+  initializationTimeoutMs: 10000
 })
 ```
 
@@ -255,15 +260,15 @@ required: {
 }
 ```
 
-## Fallback values
+## Default values
 
-Provide fallback values if the initial fetch fails:
+Provide default values if the initial fetch fails:
 
 ```typescript
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
-  fallbacks: {
+  defaults: {
     'feature-flag': false,
     'rate-limit': 100,
     'timeout-ms': 5000
@@ -271,7 +276,7 @@ const replane = await createReplaneClient<Configs>({
 })
 ```
 
-The client starts with fallback values and updates when connection is restored.
+The client starts with default values and updates when connection is restored.
 
 ## Realtime updates
 
@@ -446,13 +451,13 @@ process.on('SIGINT', () => {
 })
 ```
 
-### Use fallbacks for resilience
+### Use defaults for resilience
 
 ```typescript
 const replane = await createReplaneClient<Configs>({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://replane.example.com',
-  fallbacks: {
+  defaults: {
     // Sensible defaults if Replane is unavailable
     'feature-flag': false,
     'rate-limit': 100

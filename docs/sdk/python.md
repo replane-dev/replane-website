@@ -75,12 +75,13 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 | `base_url`                  | `str`       | Yes      | Replane server URL                                        |
 | `sdk_key`                   | `str`       | Yes      | SDK key for authentication                                |
 | `context`                   | `dict`      | No       | Default context for all override evaluations              |
-| `fallbacks`                 | `dict`      | No       | Fallback values if server unavailable during init         |
+| `defaults`                  | `dict`      | No       | Default values if server unavailable during init          |
 | `required`                  | `list[str]` | No       | Config names that must exist (raises if missing)          |
 | `request_timeout_ms`        | `int`       | No       | HTTP request timeout (default: 2000)                      |
 | `initialization_timeout_ms` | `int`       | No       | Initial connection timeout (default: 5000)                |
 | `retry_delay_ms`            | `int`       | No       | Base retry delay with exponential backoff (default: 200)  |
 | `inactivity_timeout_ms`     | `int`       | No       | Reconnect if no events for this duration (default: 30000) |
+| `agent`                     | `str`       | No       | Agent identifier for User-Agent header                    |
 | `debug`                     | `bool`      | No       | Enable debug logging (default: False)                     |
 
 #### Example
@@ -90,7 +91,7 @@ replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="rp_...",
     context={"environment": "production"},
-    fallbacks={
+    defaults={
         "rate-limit": 100,
         "feature-enabled": False,
     },
@@ -282,15 +283,15 @@ replane = Replane(
 # Raises ConfigNotFoundError if any required config is missing during initialization
 ```
 
-## Fallback values
+## Default values
 
-Provide fallback values if the server is unavailable during initialization:
+Provide default values if the server is unavailable during initialization:
 
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="rp_...",
-    fallbacks={
+    defaults={
         "feature-flag": False,
         "rate-limit": 100,
         "timeout-ms": 5000,
@@ -298,7 +299,7 @@ replane = Replane(
 )
 ```
 
-The client starts with fallback values and updates when connection is restored.
+The client starts with default values and updates when connection is restored.
 
 ## Realtime updates
 
@@ -571,13 +572,13 @@ with Replane(...) as replane:
 # Client is automatically closed
 ```
 
-### Use fallbacks for resilience
+### Use defaults for resilience
 
 ```python
 replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="rp_...",
-    fallbacks={
+    defaults={
         "feature-flag": False,
         "rate-limit": 100,
     },
