@@ -193,6 +193,63 @@ The image includes a health check. Verify with:
 docker inspect --format='{{.State.Health.Status}}' replane
 ```
 
+## Prometheus metrics
+
+Replane exposes Prometheus-compatible metrics at `/metrics`.
+
+### Endpoint
+
+```bash
+curl http://localhost:8080/metrics
+```
+
+### Available metrics
+
+Default Node.js metrics are collected automatically:
+
+- `process_cpu_user_seconds_total` — CPU time spent in user mode
+- `process_cpu_system_seconds_total` — CPU time spent in system mode
+- `process_resident_memory_bytes` — Resident memory size
+- `process_heap_bytes` — Process heap size
+- `nodejs_eventloop_lag_seconds` — Event loop lag
+- `nodejs_active_handles_total` — Active handles
+- `nodejs_active_requests_total` — Active requests
+- `nodejs_gc_duration_seconds` — Garbage collection duration
+
+### Prometheus configuration
+
+Add Replane as a scrape target in `prometheus.yml`:
+
+```yaml title="prometheus.yml"
+scrape_configs:
+  - job_name: 'replane'
+    static_configs:
+      - targets: ['replane:8080']
+    metrics_path: /metrics
+    scrape_interval: 15s
+```
+
+### Docker Compose with Prometheus
+
+```yaml title="docker-compose.yml"
+services:
+  replane:
+    image: replane/replane:latest
+    ports:
+      - '8080:8080'
+    environment:
+      # ... your config
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+```
+
 ## Backups
 
 ### PostgreSQL backup
@@ -241,7 +298,7 @@ Pin to a specific version for stability:
 ```yaml
 services:
   replane:
-    image: replane/replane:v1.0.0
+    image: replane/replane:1.0.0
 ```
 
 ## Logging

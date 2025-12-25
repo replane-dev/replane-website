@@ -18,6 +18,7 @@ BASE_URL=https://replane.example.com
 ```
 
 Used for:
+
 - OAuth callback URLs
 - Magic link URLs
 - Email notifications
@@ -31,6 +32,7 @@ SECRET_KEY=your-very-long-random-secret-key-minimum-32-chars
 ```
 
 Generate a secure key:
+
 ```bash
 openssl rand -base64 32
 ```
@@ -50,6 +52,7 @@ DATABASE_URL=postgresql://user:password@host:5432/database
 ```
 
 With SSL:
+
 ```bash
 DATABASE_URL=postgresql://user:password@host:5432/database?sslmode=require
 ```
@@ -189,6 +192,7 @@ DISABLE_REGISTRATION=true
 ```
 
 When enabled:
+
 - New users cannot sign up via any method (password, OAuth, magic link)
 - Existing users can still sign in normally
 
