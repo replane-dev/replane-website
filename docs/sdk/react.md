@@ -26,7 +26,7 @@ import { ReplaneProvider, useConfig } from '@replanejs/react';
 function App() {
   return (
     <ReplaneProvider
-      options={{
+      connection={{
         baseUrl: 'https://replane.example.com',
         sdkKey: process.env.REPLANE_SDK_KEY,
       }}
@@ -54,33 +54,43 @@ function MyComponent() {
 
 Provider component that makes the Replane client available to your component tree.
 
-#### Client options
+#### Provider props
 
-The `options` prop accepts the following options:
+| Prop         | Type                        | Required | Description                                             |
+| ------------ | --------------------------- | -------- | ------------------------------------------------------- |
+| `connection` | `ConnectOptions \| null`    | Yes      | Connection options (see below), or `null` to skip connection |
+| `defaults`   | `Record<string, unknown>`   | No       | Default values if server is unavailable                 |
+| `context`    | `Record<string, unknown>`   | No       | Default context for override evaluations                |
+| `snapshot`   | `ReplaneSnapshot`           | No       | Snapshot for SSR hydration                              |
+| `logger`     | `ReplaneLogger`             | No       | Custom logger (default: console)                        |
+| `loader`     | `ReactNode`                 | No       | Component to show while loading                         |
+| `suspense`   | `boolean`                   | No       | Use React Suspense for loading state                    |
+| `async`      | `boolean`                   | No       | Connect asynchronously (renders immediately with defaults) |
+
+#### Connection options
+
+The `connection` prop accepts the following options:
 
 | Option               | Type                  | Required | Description                              |
 | -------------------- | --------------------- | -------- | ---------------------------------------- |
 | `baseUrl`            | `string`              | Yes      | Replane server URL                       |
 | `sdkKey`             | `string`              | Yes      | SDK key for authentication               |
-| `context`            | `Record<string, any>` | No       | Default context for override evaluations |
-| `defaults`           | `Record<string, any>` | No       | Default values if server is unavailable  |
 | `connectTimeoutMs`   | `number`              | No       | SDK connection timeout (default: 5000)   |
 | `requestTimeoutMs`   | `number`              | No       | Timeout for SSE requests (default: 2000) |
 | `retryDelayMs`       | `number`              | No       | Base delay between retries (default: 200)|
 | `inactivityTimeoutMs`| `number`              | No       | SSE inactivity timeout (default: 30000)  |
 | `fetchFn`            | `typeof fetch`        | No       | Custom fetch implementation              |
-| `logger`             | `ReplaneLogger`       | No       | Custom logger (default: console)         |
 
 See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
 
-#### With options (recommended)
+#### With connection (recommended)
 
 ```tsx
 import { ErrorBoundary } from 'react-error-boundary';
 
 <ErrorBoundary fallback={<div>Failed to load configuration</div>}>
   <ReplaneProvider
-    options={{
+    connection={{
       baseUrl: 'https://replane.example.com',
       sdkKey: process.env.REPLANE_SDK_KEY,
     }}
@@ -113,7 +123,7 @@ await client.connect({
 <ErrorBoundary fallback={<div>Failed to load configuration</div>}>
   <Suspense fallback={<LoadingSpinner />}>
     <ReplaneProvider
-      options={{
+      connection={{
         baseUrl: 'https://replane.example.com',
         sdkKey: process.env.REPLANE_SDK_KEY,
       }}
@@ -123,6 +133,23 @@ await client.connect({
     </ReplaneProvider>
   </Suspense>
 </ErrorBoundary>
+```
+
+#### With async mode
+
+Connect in the background while rendering immediately with defaults:
+
+```tsx
+<ReplaneProvider
+  connection={{
+    baseUrl: 'https://replane.example.com',
+    sdkKey: process.env.REPLANE_SDK_KEY,
+  }}
+  defaults={{ featureEnabled: false }}
+  async
+>
+  <App />
+</ReplaneProvider>
 ```
 
 #### With snapshot (SSR/hydration)
@@ -135,7 +162,7 @@ const snapshot = serverClient.getSnapshot();
 
 // On the client
 <ReplaneProvider
-  options={{
+  connection={{
     baseUrl: 'https://replane.example.com',
     sdkKey: process.env.REPLANE_SDK_KEY,
   }}
@@ -296,7 +323,7 @@ import { clearSuspenseCache } from '@replanejs/react';
   )}
   onReset={() => clearSuspenseCache()}
 >
-  <ReplaneProvider options={options} loader={<Loading />}>
+  <ReplaneProvider connection={connection} loader={<Loading />}>
     <App />
   </ReplaneProvider>
 </ErrorBoundary>
@@ -331,7 +358,7 @@ import { ReplaneProvider } from '@replanejs/react';
 
 function App() {
   return (
-    <ReplaneProvider options={options} loader={<Splash />}>
+    <ReplaneProvider connection={connection} loader={<Splash />}>
       <Router />
     </ReplaneProvider>
   );

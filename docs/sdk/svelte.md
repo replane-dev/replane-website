@@ -46,22 +46,34 @@ npm install @replanejs/svelte
 {/if}
 ```
 
-## Client Options
+## Provider Props
 
-The `options` prop accepts the following options:
+| Prop         | Type                        | Required | Description                                             |
+| ------------ | --------------------------- | -------- | ------------------------------------------------------- |
+| `client`     | `Replane`                   | No       | Pre-created client (alternative to connection)          |
+| `connection` | `ConnectOptions \| null`    | Yes*     | Connection options (see below), or `null` to skip connection |
+| `defaults`   | `Record<string, unknown>`   | No       | Default values if server is unavailable                 |
+| `context`    | `Record<string, unknown>`   | No       | Default context for override evaluations                |
+| `snapshot`   | `ReplaneSnapshot`           | No       | Snapshot for SSR hydration                              |
+| `logger`     | `ReplaneLogger`             | No       | Custom logger (default: console)                        |
+| `loader`     | `Snippet`                   | No       | Snippet to show while loading                           |
+| `async`      | `boolean`                   | No       | Connect asynchronously (renders immediately with defaults) |
+
+*Required when not using the `client` prop. Pass `null` to explicitly skip connection (client will use defaults/snapshot only).
+
+## Connection Options
+
+The `connection` prop accepts the following options:
 
 | Option                | Type                  | Required | Description                              |
 | --------------------- | --------------------- | -------- | ---------------------------------------- |
 | `baseUrl`             | `string`              | Yes      | Replane server URL                       |
 | `sdkKey`              | `string`              | Yes      | SDK key for authentication               |
-| `context`             | `Record<string, any>` | No       | Default context for override evaluations |
-| `defaults`            | `Record<string, any>` | No       | Default values if server is unavailable  |
 | `connectTimeoutMs`    | `number`              | No       | SDK connection timeout (default: 5000)   |
 | `requestTimeoutMs`    | `number`              | No       | Timeout for SSE requests (default: 2000) |
 | `retryDelayMs`        | `number`              | No       | Base delay between retries (default: 200)|
 | `inactivityTimeoutMs` | `number`              | No       | SSE inactivity timeout (default: 30000)  |
 | `fetchFn`             | `typeof fetch`        | No       | Custom fetch implementation              |
-| `logger`              | `ReplaneLogger`       | No       | Custom logger (default: console)         |
 
 See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
 
@@ -148,20 +160,20 @@ Context component that provides the Replane client to your component tree.
 </ReplaneContext>
 ```
 
-#### With options (client managed internally)
+#### With connection (client managed internally)
 
 ```svelte
 <script>
   import { ReplaneContext } from '@replanejs/svelte'
 
-  const options = {
+  const connection = {
     baseUrl: 'https://replane.example.com',
     sdkKey: 'your-sdk-key'
   }
 </script>
 
 <svelte:boundary onerror={(e) => console.error(e)}>
-  <ReplaneContext {options}>
+  <ReplaneContext {connection}>
     <App />
 
     {#snippet loader()}
@@ -175,6 +187,29 @@ Context component that provides the Replane client to your component tree.
 </svelte:boundary>
 ```
 
+#### With async mode
+
+Connect in the background while rendering immediately with defaults:
+
+```svelte
+<script>
+  import { ReplaneContext } from '@replanejs/svelte'
+
+  const connection = {
+    baseUrl: 'https://replane.example.com',
+    sdkKey: 'your-sdk-key'
+  }
+
+  const defaults = {
+    featureEnabled: false
+  }
+</script>
+
+<ReplaneContext {connection} {defaults} async>
+  <App />
+</ReplaneContext>
+```
+
 #### With snapshot (SSR/hydration)
 
 ```svelte
@@ -183,13 +218,13 @@ Context component that provides the Replane client to your component tree.
 
   let { data, children } = $props();
 
-  const options = {
+  const connection = {
     baseUrl: import.meta.env.VITE_REPLANE_BASE_URL,
     sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY,
   };
 </script>
 
-<ReplaneContext {options} snapshot={data.replaneSnapshot}>
+<ReplaneContext {connection} snapshot={data.replaneSnapshot}>
   {@render children()}
 </ReplaneContext>
 ```
@@ -199,7 +234,9 @@ You can use the `getReplaneSnapshot` function to get the snapshot on the server 
 ```ts
 import { Replane, getReplaneSnapshot } from '@replanejs/svelte'
 
-const snapshot = await getReplaneSnapshot({ baseUrl: '...', sdkKey: '...' })
+const snapshot = await getReplaneSnapshot({
+  connection: { baseUrl: '...', sdkKey: '...' }
+})
 
 // or if you have a client already created
 
@@ -249,8 +286,10 @@ import { getReplaneSnapshot } from '@replanejs/svelte'
 
 export async function load() {
   const snapshot = await getReplaneSnapshot({
-    baseUrl: import.meta.env.REPLANE_BASE_URL,
-    sdkKey: import.meta.env.REPLANE_SDK_KEY
+    connection: {
+      baseUrl: import.meta.env.REPLANE_BASE_URL,
+      sdkKey: import.meta.env.REPLANE_SDK_KEY
+    }
   })
 
   return { replaneSnapshot: snapshot }
@@ -264,13 +303,13 @@ export async function load() {
 
   let { data, children } = $props()
 
-  const options = {
+  const connection = {
     baseUrl: import.meta.env.VITE_REPLANE_BASE_URL,
     sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY
   }
 </script>
 
-<ReplaneContext {options} snapshot={data.replaneSnapshot}>
+<ReplaneContext {connection} snapshot={data.replaneSnapshot}>
   {@render children()}
 </ReplaneContext>
 ```
@@ -340,7 +379,7 @@ export async function load() {
 
 ```svelte
 <svelte:boundary onerror={(e) => reportError(e)}>
-  <ReplaneContext {options}>
+  <ReplaneContext {connection}>
     <App />
   </ReplaneContext>
 

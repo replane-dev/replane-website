@@ -33,7 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang='en'>
       <body>
         <ReplaneRoot<AppConfigs>
-          options={{
+          connection={{
             baseUrl: process.env.NEXT_PUBLIC_REPLANE_BASE_URL!,
             sdkKey: process.env.NEXT_PUBLIC_REPLANE_SDK_KEY!
           }}
@@ -83,7 +83,7 @@ export default function MyApp({ Component, pageProps, replaneSnapshot }: AppProp
   return (
     <ReplaneProvider
       snapshot={replaneSnapshot}
-      options={{
+      connection={{
         baseUrl: process.env.NEXT_PUBLIC_REPLANE_BASE_URL!,
         sdkKey: process.env.NEXT_PUBLIC_REPLANE_SDK_KEY!
       }}
@@ -97,8 +97,10 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext)
 
   const replaneSnapshot = await getReplaneSnapshot<AppConfigs>({
-    baseUrl: process.env.REPLANE_BASE_URL!,
-    sdkKey: process.env.REPLANE_SDK_KEY!
+    connection: {
+      baseUrl: process.env.REPLANE_BASE_URL!,
+      sdkKey: process.env.REPLANE_SDK_KEY!
+    }
   })
 
   return { ...appProps, replaneSnapshot }
@@ -117,22 +119,29 @@ export function FeatureFlag() {
 }
 ```
 
-## Client Options
+## Provider Props
 
-The `options` prop accepts the following options:
+| Prop         | Type                        | Required | Description                                             |
+| ------------ | --------------------------- | -------- | ------------------------------------------------------- |
+| `connection` | `ConnectOptions \| null`    | Yes      | Connection options (see below), or `null` to skip connection |
+| `defaults`   | `Record<string, unknown>`   | No       | Default values if server is unavailable                 |
+| `context`    | `Record<string, unknown>`   | No       | Default context for override evaluations                |
+| `snapshot`   | `ReplaneSnapshot`           | No       | Snapshot for SSR hydration                              |
+| `logger`     | `ReplaneLogger`             | No       | Custom logger (default: console)                        |
+
+## Connection Options
+
+The `connection` prop accepts the following options:
 
 | Option                | Type                  | Required | Description                              |
 | --------------------- | --------------------- | -------- | ---------------------------------------- |
 | `baseUrl`             | `string`              | Yes      | Replane server URL                       |
 | `sdkKey`              | `string`              | Yes      | SDK key for authentication               |
-| `context`             | `Record<string, any>` | No       | Default context for override evaluations |
-| `defaults`            | `Record<string, any>` | No       | Default values if server is unavailable  |
 | `connectTimeoutMs`    | `number`              | No       | SDK connection timeout (default: 5000)   |
 | `requestTimeoutMs`    | `number`              | No       | Timeout for SSE requests (default: 2000) |
 | `retryDelayMs`        | `number`              | No       | Base delay between retries (default: 200)|
 | `inactivityTimeoutMs` | `number`              | No       | SSE inactivity timeout (default: 30000)  |
 | `fetchFn`             | `typeof fetch`        | No       | Custom fetch implementation              |
-| `logger`              | `ReplaneLogger`       | No       | Custom logger (default: console)         |
 
 See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
 
@@ -146,7 +155,7 @@ Server component for App Router. Fetches configs on the server and provides them
 
 ```tsx
 <ReplaneRoot<AppConfigs>
-  options={{
+  connection={{
     baseUrl: string;
     sdkKey: string;
   }}
@@ -162,7 +171,7 @@ Client-side provider for Pages Router or custom setups.
 ```tsx
 <ReplaneProvider
   snapshot={replaneSnapshot}
-  options={{
+  connection={{
     baseUrl: string;
     sdkKey: string;
   }}
@@ -217,8 +226,10 @@ Fetches a snapshot of all configs. Use in `getServerSideProps`, `getStaticProps`
 
 ```tsx
 const snapshot = await getReplaneSnapshot<AppConfigs>({
-  baseUrl: process.env.REPLANE_BASE_URL!,
-  sdkKey: process.env.REPLANE_SDK_KEY!,
+  connection: {
+    baseUrl: process.env.REPLANE_BASE_URL!,
+    sdkKey: process.env.REPLANE_SDK_KEY!
+  },
   // by default, getReplaneSnapshot will reuse the created client for 60 seconds for fast subsequent calls, the client will be syncing with the server in the background during this time
   keepAliveMs: 60_000
 })
@@ -290,7 +301,7 @@ export default async function RootLayout({ children }) {
   return (
     <html>
       <body>
-        <ReplaneRoot options={options}>{children}</ReplaneRoot>
+        <ReplaneRoot connection={connection}>{children}</ReplaneRoot>
       </body>
     </html>
   )
