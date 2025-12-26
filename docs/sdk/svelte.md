@@ -17,9 +17,10 @@ npm install @replanejs/svelte
 
 ```svelte
 <script>
-  import { ReplaneContext, createReplaneClient } from '@replanejs/svelte';
+  import { ReplaneContext, Replane } from '@replanejs/svelte';
 
-  const client = await createReplaneClient({
+  const client = new Replane();
+  await client.connect({
     baseUrl: 'https://replane.example.com',
     sdkKey: 'your-sdk-key',
   });
@@ -47,21 +48,22 @@ npm install @replanejs/svelte
 
 ## Client Options
 
-The `options` prop and `createReplaneClient` accept all options from `@replanejs/sdk`:
+The `options` prop accepts the following options:
 
-| Option                    | Type                   | Required | Description                                |
-| ------------------------- | ---------------------- | -------- | ------------------------------------------ |
-| `baseUrl`                 | `string`               | Yes      | Replane server URL                         |
-| `sdkKey`                  | `string`               | Yes      | SDK key for authentication                 |
-| `context`                 | `Record<string, any>`  | No       | Default context for override evaluations   |
-| `defaults`                | `Record<string, any>`  | No       | Default values if server is unavailable    |
-| `required`                | `string[]` or `object` | No       | Configs that must exist for initialization |
-| `requestTimeoutMs`        | `number`               | No       | SSE request timeout (default: 2000)        |
-| `initializationTimeoutMs` | `number`               | No       | SDK initialization timeout (default: 5000) |
-| `onConnectionError`       | `(error) => void`      | No       | Callback for SSE connection errors         |
-| `onConnected`             | `() => void`           | No       | Callback when SSE connection established   |
+| Option                | Type                  | Required | Description                              |
+| --------------------- | --------------------- | -------- | ---------------------------------------- |
+| `baseUrl`             | `string`              | Yes      | Replane server URL                       |
+| `sdkKey`              | `string`              | Yes      | SDK key for authentication               |
+| `context`             | `Record<string, any>` | No       | Default context for override evaluations |
+| `defaults`            | `Record<string, any>` | No       | Default values if server is unavailable  |
+| `connectTimeoutMs`    | `number`              | No       | SDK connection timeout (default: 5000)   |
+| `requestTimeoutMs`    | `number`              | No       | Timeout for SSE requests (default: 2000) |
+| `retryDelayMs`        | `number`              | No       | Base delay between retries (default: 200)|
+| `inactivityTimeoutMs` | `number`              | No       | SSE inactivity timeout (default: 30000)  |
+| `fetchFn`             | `typeof fetch`        | No       | Custom fetch implementation              |
+| `logger`              | `ReplaneLogger`       | No       | Custom logger (default: console)         |
 
-See the [JavaScript SDK documentation](/docs/sdk/javascript#options) for the complete list of options.
+See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
 
 ## API Reference
 
@@ -132,9 +134,10 @@ Context component that provides the Replane client to your component tree.
 
 ```svelte
 <script>
-  import { ReplaneContext, createReplaneClient } from '@replanejs/svelte';
+  import { ReplaneContext, Replane } from '@replanejs/svelte';
 
-  const client = await createReplaneClient({
+  const client = new Replane();
+  await client.connect({
     baseUrl: 'https://replane.example.com',
     sdkKey: 'your-sdk-key',
   });
@@ -194,13 +197,14 @@ Context component that provides the Replane client to your component tree.
 You can use the `getReplaneSnapshot` function to get the snapshot on the server and pass it to the client or obtain it directly from your client via `getSnapshot()` function:
 
 ```ts
-import { createReplaneClient, getReplaneSnapshot } from '@replanejs/svelte'
+import { Replane, getReplaneSnapshot } from '@replanejs/svelte'
 
 const snapshot = await getReplaneSnapshot({ baseUrl: '...', sdkKey: '...' })
 
 // or if you have a client already created
 
-const client = await createReplaneClient({ baseUrl: '...', sdkKey: '...' })
+const client = new Replane()
+await client.connect({ baseUrl: '...', sdkKey: '...' })
 const snapshot = client.getSnapshot()
 ```
 

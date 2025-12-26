@@ -56,21 +56,22 @@ Provider component that makes the Replane client available to your component tre
 
 #### Client options
 
-The `options` prop accepts all options from `@replanejs/sdk`:
+The `options` prop accepts the following options:
 
-| Option                    | Type                   | Required | Description                                |
-| ------------------------- | ---------------------- | -------- | ------------------------------------------ |
-| `baseUrl`                 | `string`               | Yes      | Replane server URL                         |
-| `sdkKey`                  | `string`               | Yes      | SDK key for authentication                 |
-| `context`                 | `Record<string, any>`  | No       | Default context for override evaluations   |
-| `defaults`                | `Record<string, any>`  | No       | Default values if server is unavailable    |
-| `required`                | `string[]` or `object` | No       | Configs that must exist for initialization |
-| `requestTimeoutMs`        | `number`               | No       | SSE request timeout (default: 2000)        |
-| `initializationTimeoutMs` | `number`               | No       | SDK initialization timeout (default: 5000) |
-| `onConnectionError`       | `(error) => void`      | No       | Callback for SSE connection errors         |
-| `onConnected`             | `() => void`           | No       | Callback when SSE connection established   |
+| Option               | Type                  | Required | Description                              |
+| -------------------- | --------------------- | -------- | ---------------------------------------- |
+| `baseUrl`            | `string`              | Yes      | Replane server URL                       |
+| `sdkKey`             | `string`              | Yes      | SDK key for authentication               |
+| `context`            | `Record<string, any>` | No       | Default context for override evaluations |
+| `defaults`           | `Record<string, any>` | No       | Default values if server is unavailable  |
+| `connectTimeoutMs`   | `number`              | No       | SDK connection timeout (default: 5000)   |
+| `requestTimeoutMs`   | `number`              | No       | Timeout for SSE requests (default: 2000) |
+| `retryDelayMs`       | `number`              | No       | Base delay between retries (default: 200)|
+| `inactivityTimeoutMs`| `number`              | No       | SSE inactivity timeout (default: 30000)  |
+| `fetchFn`            | `typeof fetch`        | No       | Custom fetch implementation              |
+| `logger`             | `ReplaneLogger`       | No       | Custom logger (default: console)         |
 
-See the [JavaScript SDK documentation](/docs/sdk/javascript#options) for the complete list of options.
+See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
 
 #### With options (recommended)
 
@@ -93,9 +94,10 @@ import { ErrorBoundary } from 'react-error-boundary';
 #### With pre-created client
 
 ```tsx
-import { createReplaneClient } from '@replanejs/sdk';
+import { Replane } from '@replanejs/sdk';
 
-const client = await createReplaneClient({
+const client = new Replane();
+await client.connect({
   baseUrl: 'https://replane.example.com',
   sdkKey: process.env.REPLANE_SDK_KEY,
 });
@@ -127,18 +129,17 @@ const client = await createReplaneClient({
 
 ```tsx
 // On the server
-const serverClient = await createReplaneClient({ baseUrl: '...', sdkKey: '...' });
+const serverClient = new Replane();
+await serverClient.connect({ baseUrl: '...', sdkKey: '...' });
 const snapshot = serverClient.getSnapshot();
 
 // On the client
 <ReplaneProvider
-  restoreOptions={{
-    snapshot,
-    connection: {
-      baseUrl: 'https://replane.example.com',
-      sdkKey: process.env.REPLANE_SDK_KEY,
-    },
+  options={{
+    baseUrl: 'https://replane.example.com',
+    sdkKey: process.env.REPLANE_SDK_KEY,
   }}
+  snapshot={snapshot}
 >
   <App />
 </ReplaneProvider>

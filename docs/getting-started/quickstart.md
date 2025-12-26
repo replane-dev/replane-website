@@ -88,9 +88,10 @@ npm install @replanejs/sdk
 ## Step 6: Read the config
 
 ```typescript title="app.ts"
-import { createReplaneClient } from '@replanejs/sdk';
+import { Replane } from '@replanejs/sdk';
 
-const replane = await createReplaneClient({
+const replane = new Replane();
+await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'http://localhost:8080',
 });
@@ -129,7 +130,8 @@ Feature flag changed: true
 Don't want to self-host? [Replane Cloud](https://app.replane.dev) provides a managed service. Sign up and skip to Step 2.
 
 ```typescript
-const replane = await createReplaneClient({
+const replane = new Replane();
+await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://app.replane.dev',
 });
