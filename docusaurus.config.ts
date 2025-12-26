@@ -9,9 +9,9 @@ const config: Config = {
     {
       tagName: 'script',
       attributes: {
-        defer: 'true',
+        'defer': 'true',
         'data-domain': 'replane.dev',
-        src: 'https://plausible.tilyupo.com/js/script.js'
+        'src': 'https://plausible.tilyupo.com/js/script.js'
       }
     }
   ],
