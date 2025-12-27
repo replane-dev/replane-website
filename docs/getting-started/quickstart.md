@@ -24,24 +24,23 @@ This guide walks you through getting started with Replane, creating your first c
 
 ---
 
-## Option A: Replane Cloud (Fastest)
+## Option A: Replane Cloud
 
 1. **Sign up** at [cloud.replane.dev](https://cloud.replane.dev)
-2. **Create a workspace** and project
-3. **Create your first config** (e.g., `feature-new-checkout` with value `false`)
-4. **Generate an SDK key** from the project settings
-5. **Connect your app** — skip to [Step 5: Install the SDK](#step-5-install-the-sdk)
+2. **Create your first config** (e.g., `feature-new-checkout` with value `false`)
+3. **Create an SDK key** in the SDK Keys page
+4. **Connect your app** — skip to [Step 4: Install the SDK](#step-4-install-the-sdk)
 
 ```typescript title="app.ts"
-import { Replane } from '@replanejs/sdk';
+import { Replane } from '@replanejs/sdk'
 
-const replane = new Replane();
+const replane = new Replane()
 await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://cloud.replane.dev',
-});
+  baseUrl: 'https://cloud.replane.dev'
+})
 
-const newCheckoutEnabled = replane.get('feature-new-checkout');
+const newCheckoutEnabled = replane.get('feature-new-checkout')
 ```
 
 ---
@@ -98,15 +97,9 @@ docker compose up -d
 
 Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-## Step 2: Create your account
+## Step 2: Create a config
 
-1. Click **Sign up** and create an account with email/password
-2. Create a new **workspace** (e.g., "My Company")
-3. Create a new **project** (e.g., "Backend API")
-
-## Step 3: Create a config
-
-1. Navigate to your project
+1. Navigate to configs page in your project
 2. Click **New Config**
 3. Enter the config details:
    - **Name**: `feature-new-checkout`
@@ -115,7 +108,7 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 You've created your first feature flag.
 
-## Step 4: Create an SDK key
+## Step 3: Create an SDK key
 
 1. Go to **SDK Keys** in the project sidebar
 2. Click **Create SDK Key**
@@ -126,34 +119,34 @@ You've created your first feature flag.
 SDK keys are shown only once. Store them securely.
 :::
 
-## Step 5: Install the SDK
+## Step 4: Install the SDK
 
 ```bash
 npm install @replanejs/sdk
 ```
 
-## Step 6: Read the config
+## Step 5: Read the config
 
 ```typescript title="app.ts"
-import { Replane } from '@replanejs/sdk';
+import { Replane } from '@replanejs/sdk'
 
-const replane = new Replane();
+const replane = new Replane()
 await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'http://localhost:8080',
-});
+  baseUrl: 'http://localhost:8080'
+})
 
 // Read the feature flag
-const newCheckoutEnabled = replane.get('feature-new-checkout');
-console.log('New checkout enabled:', newCheckoutEnabled); // false
+const newCheckoutEnabled = replane.get('feature-new-checkout')
+console.log('New checkout enabled:', newCheckoutEnabled) // false
 
 // Subscribe to changes
 replane.subscribe('feature-new-checkout', (config) => {
-  console.log('Feature flag changed:', config.value);
-});
+  console.log('Feature flag changed:', config.value)
+})
 ```
 
-## Step 7: Update the config
+## Step 6: Update the config
 
 1. Go back to the Replane dashboard
 2. Click on `feature-new-checkout`

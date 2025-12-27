@@ -130,8 +130,8 @@ The development server runs at [http://localhost:3000](http://localhost:3000).
 
 | Component  | Minimum | Recommended |
 | ---------- | ------- | ----------- |
-| CPU        | 1 core  | 2+ cores    |
-| Memory     | 1 GB    | 2+ GB       |
+| CPU        | 1 core  | 2 cores     |
+| Memory     | 1 GB    | 4 GB        |
 | Storage    | 1 GB    | 10+ GB      |
 | PostgreSQL | 14+     | 16+         |
 
