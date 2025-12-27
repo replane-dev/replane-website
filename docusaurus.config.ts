@@ -153,8 +153,32 @@ const config: Config = {
           title: 'SDKs',
           items: [
             {
-              label: 'JavaScript/TypeScript',
-              href: 'https://github.com/replane-dev/replane-javascript'
+              label: 'JavaScript',
+              to: '/docs/sdk/javascript'
+            },
+            {
+              label: 'TypeScript',
+              to: '/docs/sdk/javascript'
+            },
+            {
+              label: 'React',
+              to: '/docs/sdk/react'
+            },
+            {
+              label: 'Next.js',
+              to: '/docs/sdk/nextjs'
+            },
+            {
+              label: 'Svelte',
+              to: '/docs/sdk/svelte'
+            },
+            {
+              label: 'Python',
+              to: '/docs/sdk/python'
+            },
+            {
+              label: '.NET',
+              to: '/docs/sdk/dotnet'
             }
           ]
         },
