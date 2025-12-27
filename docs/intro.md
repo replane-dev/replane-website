@@ -11,9 +11,14 @@ Replane is a dynamic configuration platform that lets you change application set
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 mb-8">
 
+<a href="https://cloud.replane.dev" className="block p-4 border-2 border-blue-500 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors no-underline">
+  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">☁️ Try Replane Cloud</h3>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Start instantly with our managed service. Free tier available.</p>
+</a>
+
 <a href="/docs/getting-started/quickstart" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
   <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Quickstart</h3>
-  <p className="text-gray-600 dark:text-gray-400 text-sm">Deploy Replane and read your first config in under 5 minutes.</p>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Get started with cloud or self-hosted in under 5 minutes.</p>
 </a>
 
 <a href="/docs/concepts/overview" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
@@ -24,11 +29,6 @@ Replane is a dynamic configuration platform that lets you change application set
 <a href="/docs/sdk/javascript" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
   <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">JavaScript SDK</h3>
   <p className="text-gray-600 dark:text-gray-400 text-sm">Integrate Replane into Node.js, browsers, Deno, or Bun.</p>
-</a>
-
-<a href="/docs/self-hosting/docker" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
-  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Self-Hosting</h3>
-  <p className="text-gray-600 dark:text-gray-400 text-sm">Deploy Replane on your own infrastructure with Docker.</p>
 </a>
 
 </div>
@@ -90,7 +90,7 @@ Replane Cloud runs edge servers in multiple regions worldwide. Your SDK automati
 - **Instant rollback** — Revert to any previous version with one click
 - **JSON Schema validation** — Prevent invalid configurations before they're saved
 - **Type-safe SDK** — Full TypeScript support with automatic type inference
-- **Self-hosted** — Run on your infrastructure with complete data ownership
+- **Cloud or self-hosted** — Use our managed cloud or run on your own infrastructure
 
 ## Example
 
@@ -99,7 +99,7 @@ import { createReplaneClient } from '@replanejs/sdk';
 
 const replane = await createReplaneClient({
   sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
+  baseUrl: 'https://cloud.replane.dev', // or your self-hosted URL
 });
 
 // Get a feature flag

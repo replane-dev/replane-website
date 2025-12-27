@@ -9,33 +9,33 @@ export default function FinalCTA() {
           Ready to Stop Deploying for Config Changes?
         </h2>
         <p className='mb-8 text-lg text-blue-100 sm:text-xl'>
-          Get Replane running in 5 minutes. Self-hosted, open source, and free forever.
+          Start with our managed cloud or self-host on your infrastructure. Open source and free forever.
         </p>
 
         <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
           <Link
-            to='/docs/getting-started/quickstart'
+            href='https://cloud.replane.dev'
             className='inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-base font-semibold text-blue-600 transition-all hover:bg-gray-100 hover:no-underline hover:text-blue-700'
           >
-            Get Started
+            Try Cloud Free
           </Link>
           <Link
-            href='https://github.com/replane-dev/replane'
+            to='/docs/getting-started/quickstart'
             className='inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-3 text-base font-semibold text-white transition-all hover:bg-white hover:text-blue-600 hover:no-underline'
           >
-            View on GitHub
+            Self-Host
           </Link>
         </div>
 
         <div className='mt-8 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-8'>
           <div className='text-center'>
-            <div className='text-3xl font-bold text-white'>5 min</div>
-            <div className='text-sm text-blue-100'>to deploy</div>
+            <div className='text-3xl font-bold text-white'>Instant</div>
+            <div className='text-sm text-blue-100'>cloud start</div>
           </div>
           <div className='hidden h-12 w-px bg-blue-300 sm:block'></div>
           <div className='text-center'>
-            <div className='text-3xl font-bold text-white'>100%</div>
-            <div className='text-sm text-blue-100'>self-hosted</div>
+            <div className='text-3xl font-bold text-white'>5 min</div>
+            <div className='text-sm text-blue-100'>self-host deploy</div>
           </div>
           <div className='hidden h-12 w-px bg-blue-300 sm:block'></div>
           <div className='text-center'>

@@ -23,7 +23,7 @@ export default function HeroBanner() {
                 }}
               />
               <AnimatedGradientText className='text-sm font-medium'>
-                Open Source • Self-Hosted • MIT License
+                Open Source • Cloud or Self-Hosted • MIT License
               </AnimatedGradientText>
             </div>
 
@@ -38,22 +38,22 @@ export default function HeroBanner() {
 
             <p className='mx-auto mb-8 max-w-3xl text-base leading-relaxed text-gray-600 sm:mb-10 sm:text-xl dark:text-gray-300'>
               Stop deploying code to change a setting. Manage feature flags, rate limits, and config
-              values with instant rollback, realtime updates, and complete audit trails—all on your
-              infrastructure.
+              values with instant rollback, realtime updates, and complete audit trails—on our cloud
+              or your infrastructure.
             </p>
 
             <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
               <Link
-                to='/docs/getting-started/quickstart'
+                href='https://cloud.replane.dev'
                 className='inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white transition-all hover:bg-blue-700 hover:text-white hover:no-underline dark:bg-blue-500 dark:hover:bg-blue-600'
               >
-                Get Started
+                Try Cloud Free
               </Link>
               <Link
-                href='https://github.com/replane-dev/replane'
+                to='/docs/getting-started/quickstart'
                 className='inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-8 py-3 text-base font-semibold text-gray-900 transition-all hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900 hover:no-underline dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-white'
               >
-                View on GitHub
+                Self-Host
               </Link>
             </div>
 

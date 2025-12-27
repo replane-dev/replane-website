@@ -17,7 +17,7 @@ const config: Config = {
   ],
 
   title: 'Replane',
-  tagline: 'Dynamic configuration for apps and services. Self-hosted.',
+  tagline: 'Dynamic configuration for apps and services.',
   favicon: '/img/favicon.ico',
 
   // Set the production url of your site here
@@ -101,6 +101,11 @@ const config: Config = {
         //   label: 'Blog',
         //   position: 'left'
         // },
+        {
+          href: 'https://cloud.replane.dev',
+          label: 'Cloud',
+          position: 'right'
+        },
         {
           'href': 'https://github.com/replane-dev/replane',
           'position': 'right',

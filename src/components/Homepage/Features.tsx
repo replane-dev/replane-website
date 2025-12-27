@@ -54,15 +54,15 @@ const FeatureList: Feature[] = [
     link: '/docs/concepts/overview#workspaces'
   },
   {
-    title: 'Self-Hosted',
-    icon: '🏠',
+    title: 'Cloud or Self-Hosted',
+    icon: '☁️',
     description: (
       <>
-        Run on your infrastructure with full data ownership. Simple Docker deployment with
-        PostgreSQL. No external dependencies or vendor lock-in.
+        Start instantly with our managed cloud, or run on your infrastructure with Docker. Same
+        API, same features. Your choice, no lock-in.
       </>
     ),
-    link: '/docs/self-hosting/docker'
+    link: '/docs/getting-started/quickstart'
   },
   {
     title: 'Developer-Friendly',

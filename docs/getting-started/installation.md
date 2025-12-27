@@ -5,9 +5,22 @@ description: Different ways to install and deploy Replane
 
 # Installation
 
-Replane can be deployed using Docker (recommended) or run from source for development.
+Replane can be deployed using our managed cloud or self-hosted with Docker.
 
-## Docker (Recommended)
+## Replane Cloud (Recommended)
+
+The fastest way to get started. No infrastructure to manage, automatic updates, and a free tier.
+
+1. Sign up at [cloud.replane.dev](https://cloud.replane.dev)
+2. Create a workspace and project
+3. Generate an SDK key
+4. Connect your application using `baseUrl: 'https://cloud.replane.dev'`
+
+That's it! No Docker, no PostgreSQL, no maintenance.
+
+---
+
+## Self-Hosted with Docker
 
 The easiest way to deploy Replane is with Docker Compose.
 
@@ -83,17 +96,6 @@ Generate a secure `SECRET_KEY`:
 ```bash
 openssl rand -base64 48
 ```
-
-## Replane Cloud
-
-For a managed solution, use [Replane Cloud](https://app.replane.dev):
-
-1. Sign up at [app.replane.dev](https://app.replane.dev)
-2. Create a workspace and project
-3. Generate an SDK key
-4. Connect your application
-
-No infrastructure management required.
 
 ## From source (Development)
 

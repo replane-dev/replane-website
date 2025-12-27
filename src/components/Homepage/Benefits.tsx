@@ -23,8 +23,8 @@ const benefits: Benefit[] = [
   },
   {
     number: '3',
-    title: 'Own Your Data',
-    description: 'Self-hosted on your infrastructure. No vendor lock-in, no data sharing, full control over your configuration.',
+    title: 'Your Choice',
+    description: 'Use our managed cloud or self-host on your infrastructure. Same features, same API. No vendor lock-in.',
     icon: '🔒'
   },
   {
@@ -44,7 +44,7 @@ export default function Benefits() {
             Why Teams Choose Replane
           </h2>
           <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300'>
-            Simple, focused, and self-hosted. Everything you need, nothing you don't.
+            Simple, focused, and flexible. Everything you need, nothing you don't.
           </p>
         </div>
 

@@ -1,18 +1,59 @@
 ---
 title: Quickstart
-description: Deploy Replane and read your first config in under 5 minutes
+description: Get started with Replane in under 5 minutes
 ---
 
 # Quickstart
 
-This guide walks you through deploying Replane, creating your first config, and reading it from your application.
+This guide walks you through getting started with Replane, creating your first config, and reading it from your application.
 
-## Prerequisites
+## Choose your deployment
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose mb-8">
+  <a href="https://cloud.replane.dev" className="block p-6 border rounded-lg hover:border-blue-500 transition-colors no-underline">
+    <div className="text-2xl mb-2">☁️</div>
+    <h3 className="text-lg font-semibold mb-2">Replane Cloud</h3>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Start instantly. No infrastructure to manage. Free tier available.</p>
+  </a>
+  <a href="#self-hosted" className="block p-6 border rounded-lg hover:border-blue-500 transition-colors no-underline">
+    <div className="text-2xl mb-2">🏠</div>
+    <h3 className="text-lg font-semibold mb-2">Self-Hosted</h3>
+    <p className="text-sm text-gray-600 dark:text-gray-400">Run on your infrastructure with Docker. Full control over your data.</p>
+  </a>
+</div>
+
+---
+
+## Option A: Replane Cloud (Fastest)
+
+1. **Sign up** at [cloud.replane.dev](https://cloud.replane.dev)
+2. **Create a workspace** and project
+3. **Create your first config** (e.g., `feature-new-checkout` with value `false`)
+4. **Generate an SDK key** from the project settings
+5. **Connect your app** — skip to [Step 5: Install the SDK](#step-5-install-the-sdk)
+
+```typescript title="app.ts"
+import { Replane } from '@replanejs/sdk';
+
+const replane = new Replane();
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY,
+  baseUrl: 'https://cloud.replane.dev',
+});
+
+const newCheckoutEnabled = replane.get('feature-new-checkout');
+```
+
+---
+
+## Option B: Self-Hosted {#self-hosted}
+
+### Prerequisites
 
 - Docker and Docker Compose installed
 - Node.js 18+ (for the SDK)
 
-## Step 1: Deploy Replane
+### Step 1: Deploy Replane
 
 Create a `docker-compose.yml` file:
 
@@ -129,16 +170,4 @@ Feature flag changed: true
 
 - [Add override rules](/docs/guides/override-rules) to return different values based on user context
 - [Learn about gradual rollouts](/docs/guides/gradual-rollouts) to release features to a percentage of users
-- [Configure authentication](/docs/self-hosting/environment-variables) for production deployments
-
-## Using Replane Cloud
-
-Don't want to self-host? [Replane Cloud](https://app.replane.dev) provides a managed service. Sign up and skip to Step 2.
-
-```typescript
-const replane = new Replane();
-await replane.connect({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://app.replane.dev',
-});
-```
+- [Configure authentication](/docs/self-hosting/environment-variables) for self-hosted production deployments
