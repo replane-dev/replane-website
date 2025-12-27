@@ -88,15 +88,15 @@ await replane.ConnectAsync(new ConnectOptions
 
 Connection options passed to `ConnectAsync`.
 
-| Option                    | Type     | Default  | Description                |
-| ------------------------- | -------- | -------- | -------------------------- |
-| `BaseUrl`                 | `string` | required | Replane server URL         |
-| `SdkKey`                  | `string` | required | SDK key for authentication |
-| `RequestTimeoutMs`        | `int`    | `2000`   | HTTP request timeout       |
-| `InitializationTimeoutMs` | `int`    | `5000`   | Initial connection timeout |
-| `RetryDelayMs`            | `int`    | `200`    | Initial retry delay        |
-| `InactivityTimeoutMs`     | `int`    | `30000`  | SSE inactivity timeout     |
-| `Agent`                   | `string` | `null`   | Agent identifier           |
+| Option               | Type     | Default  | Description                |
+| -------------------- | -------- | -------- | -------------------------- |
+| `BaseUrl`            | `string` | required | Replane server URL         |
+| `SdkKey`             | `string` | required | SDK key for authentication |
+| `RequestTimeoutMs`   | `int`    | `2000`   | HTTP request timeout       |
+| `ConnectionTimeoutMs`| `int`    | `5000`   | Initial connection timeout |
+| `RetryDelayMs`       | `int`    | `200`    | Initial retry delay        |
+| `InactivityTimeoutMs`| `int`    | `30000`  | SSE inactivity timeout     |
+| `Agent`              | `string` | `null`   | Agent identifier           |
 
 ### Get&lt;T&gt;
 
