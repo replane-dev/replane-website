@@ -179,14 +179,18 @@ Drag and drop overrides in the dashboard to reorder them.
 Configure context at the client level:
 
 ```typescript
-const replane = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
+import { Replane } from '@replanejs/sdk'
+
+const replane = new Replane({
   context: {
     region: 'us-east',
     userId: 'user-123'
   }
-});
+})
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY!,
+  baseUrl: 'https://replane.example.com'
+})
 
 // Every get() call includes env and region
 const value = replane.get('config-name');

@@ -24,10 +24,11 @@ Feature flags let you enable or disable functionality without deploying code. Us
 ## Read the flag in your app
 
 ```typescript
-import { createReplaneClient } from '@replanejs/sdk'
+import { Replane } from '@replanejs/sdk'
 
-const replane = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY,
+const replane = new Replane()
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY!,
   baseUrl: 'https://replane.example.com'
 })
 
@@ -102,15 +103,17 @@ interface Flags {
   'feature-ai-assistant': boolean
 }
 
-const replane = await createReplaneClient<Flags>({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
+const replane = new Replane<Flags>({
   // Default values to use if the initial request to fetch configs fails.
   defaults: {
     'feature-dark-mode': false,
     'feature-new-checkout': true,
     'feature-ai-assistant': false
   }
+})
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY!,
+  baseUrl: 'https://replane.example.com'
 })
 
 // TypeScript knows this is a boolean

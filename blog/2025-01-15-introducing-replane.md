@@ -156,14 +156,15 @@ npm install @replanejs/sdk
 ```
 
 ```javascript
-import { createReplaneClient } from '@replanejs/sdk'
+import { Replane } from '@replanejs/sdk'
 
-const client = await createReplaneClient({
+const replane = new Replane()
+await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY,
   baseUrl: 'https://config.company.com'
 })
 
-const flags = client.get('feature-flags')
+const flags = replane.get('feature-flags')
 ```
 
 ## Status & Roadmap

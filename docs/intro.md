@@ -95,10 +95,11 @@ Replane Cloud runs edge servers in multiple regions worldwide. Your SDK automati
 ## Example
 
 ```typescript
-import { createReplaneClient } from '@replanejs/sdk';
+import { Replane } from '@replanejs/sdk';
 
-const replane = await createReplaneClient({
-  sdkKey: process.env.REPLANE_SDK_KEY,
+const replane = new Replane();
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY!,
   baseUrl: 'https://cloud.replane.dev', // or your self-hosted URL
 });
 

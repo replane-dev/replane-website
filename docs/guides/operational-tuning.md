@@ -38,14 +38,17 @@ const batchSize = replane.get('batch-size');
 Adjust API rate limits per plan:
 
 ```typescript
+import { Replane } from '@replanejs/sdk'
+
 interface Configs {
   'rate-limit-requests-per-minute': number;
 }
 
-const replane = await createReplaneClient<Configs>({
-  sdkKey: process.env.REPLANE_SDK_KEY,
-  baseUrl: 'https://replane.example.com',
-});
+const replane = new Replane<Configs>()
+await replane.connect({
+  sdkKey: process.env.REPLANE_SDK_KEY!,
+  baseUrl: 'https://replane.example.com'
+})
 
 function checkRateLimit(user: User) {
   const limit = replane.get('rate-limit-requests-per-minute', {
