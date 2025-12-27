@@ -33,6 +33,12 @@ SECRET_KEY=your-very-long-random-secret-key-here
 PASSWORD_AUTH_ENABLED=true
 ```
 
+Generate a secure `SECRET_KEY`:
+
+```bash
+openssl rand -base64 48
+```
+
 ```yaml title="docker-compose.yml"
 services:
   postgres:

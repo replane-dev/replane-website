@@ -43,6 +43,12 @@ volumes:
   replane-data:
 ```
 
+Generate a secure `SECRET_KEY`:
+
+```bash
+openssl rand -base64 48
+```
+
 Start Replane:
 
 ```bash

@@ -96,6 +96,7 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
       BASE_URL: http://localhost:8080
+      # Generate a secure key with: openssl rand -base64 48
       SECRET_KEY: your-secret-key
       GITHUB_CLIENT_ID: your-github-client-id
       GITHUB_CLIENT_SECRET: your-github-client-secret

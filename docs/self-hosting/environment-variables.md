@@ -34,7 +34,7 @@ SECRET_KEY=your-very-long-random-secret-key-minimum-32-chars
 Generate a secure key:
 
 ```bash
-openssl rand -base64 32
+openssl rand -base64 48
 ```
 
 :::caution

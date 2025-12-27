@@ -52,6 +52,12 @@ volumes:
   replane-data:
 ```
 
+Generate a secure `SECRET_KEY`:
+
+```bash
+openssl rand -base64 48
+```
+
 Start the services:
 
 ```bash
@@ -70,6 +76,12 @@ docker run -d \
   -e SECRET_KEY="your-secret-key" \
   -e PASSWORD_AUTH_ENABLED="true" \
   replane/replane/replane:latest
+```
+
+Generate a secure `SECRET_KEY`:
+
+```bash
+openssl rand -base64 48
 ```
 
 ## Replane Cloud
