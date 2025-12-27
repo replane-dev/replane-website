@@ -190,6 +190,10 @@ const config: Config = {
               href: 'https://github.com/replane-dev/replane'
             },
             {
+              label: 'Discussions',
+              href: 'https://github.com/orgs/replane-dev/discussions'
+            },
+            {
               label: 'Issues',
               href: 'https://github.com/replane-dev/replane/issues'
             }
