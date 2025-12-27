@@ -102,8 +102,13 @@ const config: Config = {
         //   position: 'left'
         // },
         {
-          href: 'https://cloud.replane.dev',
-          label: 'Cloud',
+          href: 'https://cloud.replane.dev/auth/signin',
+          label: 'Log in',
+          position: 'right'
+        },
+        {
+          href: 'https://cloud.replane.dev/auth/signin',
+          label: 'Sign up',
           position: 'right'
         },
         {
