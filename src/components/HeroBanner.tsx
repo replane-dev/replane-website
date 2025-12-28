@@ -72,7 +72,7 @@ export default function HeroBanner() {
           <div className='mt-16 flex flex-wrap items-center justify-center gap-8 sm:gap-12'>
             <div className='text-center'>
               <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>99.99%</div>
-              <div className='mt-1 text-sm text-stone-500'>uptime SLA</div>
+              <div className='mt-1 text-sm text-stone-500'>uptime</div>
             </div>
             <div className='hidden h-10 w-px bg-stone-700 sm:block' />
             <div className='text-center'>

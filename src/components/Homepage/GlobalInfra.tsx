@@ -97,7 +97,7 @@ export default function GlobalInfra() {
         {/* Bottom note */}
         <div className='mt-8 flex items-center justify-center gap-2 text-sm text-stone-500'>
           <Zap className='h-4 w-4 text-amber-400' />
-          <span>Automatic routing to nearest region • 99.99% uptime SLA</span>
+          <span>Automatic routing to nearest region • 99.99% uptime</span>
         </div>
       </div>
     </section>

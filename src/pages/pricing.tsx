@@ -77,7 +77,7 @@ const tiers: PricingTier[] = [
       'Unlimited team members',
       'Automatic backups',
       'Priority email support',
-      '99.99% uptime SLA',
+      '99.99% uptime',
       'No infrastructure to manage'
     ],
     cta: {
