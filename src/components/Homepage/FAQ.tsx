@@ -36,6 +36,11 @@ const faqs: FAQItem[] = [
     question: 'How do real-time updates work?',
     answer:
       'Replane uses Server-Sent Events (SSE) to push configuration changes to your applications instantly. When you update a config value in the dashboard, all connected clients receive the update within milliseconds—no polling required.'
+  },
+  {
+    question: 'Will this slow down my app?',
+    answer:
+      'No. When you read a config value, the SDK returns it instantly from a local cache—no HTTP request, no network latency. The SDKs sync configs in the background over a persistent SSE connection, so your app always has the latest values ready in memory. This means config lookups are as fast as reading a variable.'
   }
 ]
 
