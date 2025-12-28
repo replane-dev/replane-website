@@ -44,12 +44,17 @@ export default function FinalCTA() {
               <span className='ml-2 text-xs text-stone-500'>terminal</span>
             </div>
             {/* Terminal content */}
-            <div className='p-4 font-mono text-sm'>
-              <div className='flex items-center gap-2'>
+            <div className='p-4 text-left font-mono text-sm'>
+              <div className='flex items-start gap-2'>
                 <span className='text-stone-500'>$</span>
-                <span className='text-stone-300'>docker run -d replane/replane</span>
+                <span className='text-stone-300'>
+                  docker run -p 8080:8080 \ <br />
+                  &nbsp;&nbsp;-e BASE_URL=https://your-domain.com \ <br />
+                  &nbsp;&nbsp;-e SECRET_KEY=your-secret-key \ <br />
+                  &nbsp;&nbsp;replane/replane
+                </span>
               </div>
-              <div className='mt-2 text-stone-500'>✓ Replane is running at localhost:3000</div>
+              <div className='mt-2 text-stone-500'>✓ Replane is running at localhost:8080</div>
             </div>
           </div>
 

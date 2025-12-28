@@ -348,7 +348,7 @@ const config: Config = {
         searchResultContextMaxLength: 50,
         searchResultLimits: 8,
         searchBarShortcut: true,
-        searchBarShortcutHint: true
+        searchBarShortcutHint: false
       }
     ],
     'docusaurus-theme-openapi-docs'

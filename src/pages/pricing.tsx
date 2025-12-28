@@ -1,19 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
-import { useColorMode } from '@docusaurus/theme-common'
 import { Check, X, Github, ArrowRight, Building2, Rocket, Server, Plus, Minus } from 'lucide-react'
-
-// Force dark mode on the pricing page
-function ForceDarkMode() {
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode('dark')
-  }, [setColorMode])
-
-  return null
-}
 
 interface Feature {
   name: string
@@ -236,12 +224,11 @@ export default function Pricing() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0)
 
   return (
-    <div className='pricing-dark-only'>
+    <div className='pricing-dark-only' data-theme='dark'>
       <Layout
         title='Pricing'
         description='Simple, transparent pricing for Replane. Self-host for free or let us manage it for you.'
       >
-        <ForceDarkMode />
         <main className='background-grid background-grid--fade-out'>
           {/* Hero Section */}
           <section className='relative overflow-hidden pt-24 pb-16'>

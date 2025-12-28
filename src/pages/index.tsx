@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
 import Layout from '@theme/Layout'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
-import { useColorMode } from '@docusaurus/theme-common'
 
 import HeroBanner from '@/components/HeroBanner'
 import TrustedBy from '@/components/Homepage/TrustedBy'
@@ -15,17 +13,6 @@ import SupportedTech from '@/components/Homepage/SupportedTech'
 import FinalCTA from '@/components/Homepage/FinalCTA'
 import FAQ from '@/components/Homepage/FAQ'
 import LatestNews from '@/components/LatestNews'
-
-// Force dark mode on the landing page
-function ForceDarkMode() {
-  const { setColorMode } = useColorMode()
-
-  useEffect(() => {
-    setColorMode('dark')
-  }, [setColorMode])
-
-  return null
-}
 
 interface HomePageBlogMetadata {
   blogTitle?: string
@@ -66,12 +53,11 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
   const { siteConfig } = useDocusaurusContext()
 
   return (
-    <div className='homepage-dark-only'>
+    <div className='homepage-dark-only' data-theme='dark'>
       <Layout
         title={`${siteConfig.title}`}
         description='Stop deploying code to change settings. Self-hosted config management with version history, instant rollback, and realtime updates.'
       >
-        <ForceDarkMode />
         <main className='background-grid background-grid--fade-out'>
           <HeroBanner />
           <TrustedBy />
