@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Link from '@docusaurus/Link'
-import { ArrowRight, Github, Terminal } from 'lucide-react'
+import { ArrowRight, Github, Terminal, Copy, Check } from 'lucide-react'
+
+const DOCKER_COMMAND = `docker run -p 8080:8080 -e BASE_URL=http://localhost:8080 -e SECRET_KEY=xxx replane/replane`
 
 export default function FinalCTA() {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(DOCKER_COMMAND)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <section className='relative overflow-hidden py-32'>
       {/* Dark background */}
@@ -35,22 +45,45 @@ export default function FinalCTA() {
           </p>
 
           {/* Terminal preview */}
-          <div className='mx-auto mb-12 max-w-lg overflow-hidden rounded-xl border border-stone-800 bg-stone-900/80 shadow-2xl'>
+          <div className='mx-auto mb-12 max-w-lg overflow-hidden rounded-xl border border-stone-800 bg-stone-900/80 shadow-2xl lg:max-w-4xl'>
             {/* Terminal header */}
             <div className='flex items-center gap-2 border-b border-stone-800 bg-stone-900 px-4 py-3'>
               <div className='h-3 w-3 rounded-full bg-stone-700' />
               <div className='h-3 w-3 rounded-full bg-stone-700' />
               <div className='h-3 w-3 rounded-full bg-stone-700' />
               <span className='ml-2 text-xs text-stone-500'>self-hosted</span>
+              <button
+                onClick={handleCopy}
+                className='ml-auto flex items-center gap-1.5 rounded-md bg-transparent px-2 py-1 text-xs text-stone-200 transition-colors hover:bg-stone-800 hover:text-stone-100'
+                aria-label='Copy command'
+              >
+                {copied ? (
+                  <>
+                    <Check className='h-3.5 w-3.5 text-emerald-500' />
+                    <span className='text-emerald-500'>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className='h-3.5 w-3.5' />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
             </div>
             {/* Terminal content */}
             <div className='p-4 text-left font-mono text-sm'>
               <div className='flex items-start gap-2'>
                 <span className='text-stone-500'>$</span>
-                <span className='text-stone-300'>
+                {/* Single line for large screens (works in PowerShell/cmd.exe) */}
+                <span className='hidden text-stone-300 lg:inline'>
+                  docker run -p 8080:8080 -e BASE_URL=http://localhost:8080 -e SECRET_KEY=xxx
+                  replane/replane
+                </span>
+                {/* Multi-line for smaller screens */}
+                <span className='text-stone-300 lg:hidden'>
                   docker run -p 8080:8080 \ <br />
-                  &nbsp;&nbsp;-e BASE_URL=https://your-domain.com \ <br />
-                  &nbsp;&nbsp;-e SECRET_KEY=your-secret-key \ <br />
+                  &nbsp;&nbsp;-e BASE_URL=http://localhost:8080 \ <br />
+                  &nbsp;&nbsp;-e SECRET_KEY=xxx \ <br />
                   &nbsp;&nbsp;replane/replane
                 </span>
               </div>
@@ -69,7 +102,7 @@ export default function FinalCTA() {
             </Link>
 
             <Link
-              to='/docs/getting-started/quickstart'
+              to='https://github.com/replane-dev/replane'
               className='group inline-flex items-center gap-2 rounded-xl border border-stone-700 bg-stone-800/50 px-8 py-4 text-base font-semibold text-stone-200 transition-all duration-200 hover:border-stone-600 hover:bg-stone-800 hover:text-white hover:no-underline'
             >
               <Github className='h-4 w-4' />
