@@ -10,6 +10,7 @@ import UseCases from '@/components/Homepage/UseCases'
 import Testimonials from '@/components/Homepage/Testimonials'
 import Authentication from '@/components/Homepage/Integrations'
 import SupportedTech from '@/components/Homepage/SupportedTech'
+import GlobalInfra from '@/components/Homepage/GlobalInfra'
 import FinalCTA from '@/components/Homepage/FinalCTA'
 import FAQ from '@/components/Homepage/FAQ'
 import CreatorWord from '@/components/Homepage/CreatorWord'
@@ -68,6 +69,7 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
           <UseCases />
           <SupportedTech />
           <Authentication />
+          <GlobalInfra />
           {/* <Testimonials /> */}
           <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
           <CreatorWord />

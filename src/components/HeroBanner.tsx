@@ -80,6 +80,11 @@ export default function HeroBanner() {
               <div className='mt-1 text-sm text-stone-500'>update latency</div>
             </div>
             <div className='hidden h-10 w-px bg-stone-700 sm:block' />
+            <div className='text-center'>
+              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>{'<'}100ms</div>
+              <div className='mt-1 text-sm text-stone-500'>SDK init (p90)</div>
+            </div>
+            <div className='hidden h-10 w-px bg-stone-700 sm:block' />
             <Link
               href='https://github.com/replane-dev/replane'
               className='group text-center transition-opacity hover:no-underline hover:opacity-80'

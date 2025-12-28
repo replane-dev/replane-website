@@ -30,8 +30,8 @@ export default function FinalCTA() {
           </h2>
 
           <p className='mx-auto mb-12 max-w-xl text-lg leading-relaxed text-stone-400'>
-            Deploy once, configure forever. Start with our managed cloud or self-host on your own
-            infrastructure.
+            Update configs without deploying code. Start with our managed cloud or self-host on your
+            own infrastructure.
           </p>
 
           {/* Terminal preview */}
@@ -41,7 +41,7 @@ export default function FinalCTA() {
               <div className='h-3 w-3 rounded-full bg-stone-700' />
               <div className='h-3 w-3 rounded-full bg-stone-700' />
               <div className='h-3 w-3 rounded-full bg-stone-700' />
-              <span className='ml-2 text-xs text-stone-500'>terminal</span>
+              <span className='ml-2 text-xs text-stone-500'>self-hosted</span>
             </div>
             {/* Terminal content */}
             <div className='p-4 text-left font-mono text-sm'>
@@ -64,7 +64,7 @@ export default function FinalCTA() {
               href='https://cloud.replane.dev'
               className='group inline-flex items-center gap-2 rounded-xl bg-blue-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-200 hover:bg-blue-600 hover:text-white hover:no-underline hover:shadow-blue-500/30'
             >
-              Start Free — No Credit Card
+              Try Replane Cloud — Free forever
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
 
