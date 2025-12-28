@@ -45,23 +45,79 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --animate-gradient: gradient 8s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.6s ease-out forwards;
+  --animate-slide-down: slide-down 0.5s ease-out forwards;
 
   @keyframes gradient {
     to {
       background-position: var(--bg-size, 300%) 0;
     }
   }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
-  /*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
   *,
   ::after,
   ::before,
@@ -111,37 +167,38 @@
   }
 
   html[data-theme='dark'] {
-    --background: oklch(20.8% 0.042 265.755);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(20.8% 0.042 265.755);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(20.8% 0.042 265.755);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.606 0.25 292.717);
-    --primary-foreground: oklch(0.969 0.016 293.756);
-    --secondary: oklch(27.9% 0.041 260.031);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(27.9% 0.041 260.031);
-    --muted-foreground: oklch(0.705 0.015 286.067);
-    --accent: oklch(27.9% 0.041 260.031);
-    --accent-foreground: oklch(0.985 0 0);
+    /* Matching replane app stone color palette */
+    --background: oklch(0.147 0.004 49.25);
+    --foreground: oklch(0.985 0.001 106.423);
+    --card: oklch(0.216 0.006 56.043);
+    --card-foreground: oklch(0.985 0.001 106.423);
+    --popover: oklch(0.216 0.006 56.043);
+    --popover-foreground: oklch(0.985 0.001 106.423);
+    --primary: oklch(0.923 0.003 48.717);
+    --primary-foreground: oklch(0.216 0.006 56.043);
+    --secondary: oklch(0.268 0.007 34.298);
+    --secondary-foreground: oklch(0.985 0.001 106.423);
+    --muted: oklch(0.268 0.007 34.298);
+    --muted-foreground: oklch(0.709 0.01 56.259);
+    --accent: oklch(0.268 0.007 34.298);
+    --accent-foreground: oklch(0.985 0.001 106.423);
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.38 0.189 293.745);
-    --chart-1: oklch(0.811 0.111 293.571);
-    --chart-2: oklch(0.606 0.25 292.717);
-    --chart-3: oklch(0.541 0.281 293.009);
-    --chart-4: oklch(0.491 0.27 292.581);
-    --chart-5: oklch(0.432 0.232 292.759);
-    --sidebar: oklch(20.8% 0.042 265.755);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.606 0.25 292.717);
-    --sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-    --sidebar-accent: oklch(27.9% 0.041 260.031);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.553 0.013 58.071);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: oklch(0.216 0.006 56.043);
+    --sidebar-foreground: oklch(0.985 0.001 106.423);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+    --sidebar-accent: oklch(0.268 0.007 34.298);
+    --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
     --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.38 0.189 293.745);
+    --sidebar-ring: oklch(0.553 0.013 58.071);
   }
 
   html {
@@ -150,56 +207,45 @@
 }
 
 :root {
-  /* Docusaurus vars */
-  --prism-background-color: #edefff;
-  --ifm-footer-background-color: #fff;
-  --ifm-footer-link-color: #333;
+  /* Docusaurus vars - using stone palette */
+  --prism-background-color: #fafaf9;
+  --ifm-footer-background-color: #fafaf9;
+  --ifm-footer-link-color: #1c1917;
   --ifm-code-font-size: 95%;
-  --ifm-color-primary: #044cc1;
+  --ifm-color-primary: #1c1917;
   --ifm-h1-font-size: 2.5rem;
   --docusaurus-highlighted-code-line-bg: #0000001a;
   --ifm-global-shadow-tl: 2px 3px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-  --ifm-font-family-base:
-    Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, system-ui, -apple-system, sans-serif,
-    BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol';
-  --menu-link-active: rgba(0, 0, 0, 0.1);
+  --ifm-font-family-base: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --menu-link-active: rgba(0, 0, 0, 0.08);
   --ifm-menu-link-padding-vertical: 0.5rem;
-  --docs-fg-base: #030712;
+  --docs-fg-base: #0c0a09;
   --ifm-menu-color-active: var(--docs-fg-base);
 
   /* Docsearch color */
-  --docsearch-key-gradient: linear-gradient(-225deg, #d5dbe4, #f8f8f8);
-  --docsearch-key-shadow: inset 0 -2px 0 0 #cdcde6, inset 0 0 1px 1px #fff, 0 1px 2px 1px #1e235a66;
-  --docsearch-muted-color: #969faf;
+  --docsearch-key-gradient: linear-gradient(-225deg, #d6d3d1, #fafaf9);
+  --docsearch-key-shadow: inset 0 -2px 0 0 #d6d3d1, inset 0 0 1px 1px #fff, 0 1px 2px 1px #1c191766;
+  --docsearch-muted-color: #78716c;
 }
 
 html[data-theme='dark'] {
-  /* Docusaurus color */
-  --prism-background-color: #1d2144;
-  --ifm-background-color: #14102c;
-  --ifm-background-surface-color: #14102c;
-  --ifm-footer-link-color: #dadde1;
-  --ifm-color-primary: #16ad8d;
-  --ifm-menu-color-background-active: #ffffff1a;
-  --menu-link-active: rgba(255, 255, 255, 0.1);
+  /* Docusaurus color - stone dark palette */
+  --prism-background-color: #1c1917;
+  --ifm-background-color: #0c0a09;
+  --ifm-background-surface-color: #1c1917;
+  --ifm-footer-background-color: #0c0a09;
+  --ifm-footer-link-color: #a8a29e;
+  --ifm-color-primary: #e7e5e4;
+  --ifm-menu-color-background-active: #ffffff0d;
+  --menu-link-active: rgba(255, 255, 255, 0.06);
   --ifm-menu-color-active: var(--ifm-color-primary);
 
   /* Docsearch color */
-  --table-of-contents-color: #e8e8e8;
+  --table-of-contents-color: #e7e5e4;
   --docusaurus-highlighted-code-line-bg: #0000004d;
-  --docsearch-muted-color: #7f8497;
-  --docsearch-key-gradient: linear-gradient(-26.5deg, #565872, #31355b);
-  --docsearch-key-shadow:
-    inset 0 -2px 0 0 #282d55, inset 0 0 1px 1px #51577d, 0 2px 2px 0 #0304094d;
-
-  /* Custom css */
-  .background-grid {
-    &::before {
-      opacity: 0.03;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(248 250 252)' stroke-dasharray='5 3' transform='scale(1, -1)' %3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
-    }
-  }
+  --docsearch-muted-color: #78716c;
+  --docsearch-key-gradient: linear-gradient(-26.5deg, #292524, #1c1917);
+  --docsearch-key-shadow: inset 0 -2px 0 0 #292524, inset 0 0 1px 1px #44403c, 0 2px 2px 0 #0c0a094d;
 }
 
 @utility blog-tags {
@@ -209,9 +255,9 @@ html[data-theme='dark'] {
 }
 
 @layer components {
+  /* Light mode section backgrounds - stone palette */
   .background-grid {
-    @apply relative z-0 bg-slate-100;
-    @apply dark:bg-[#0c1222];
+    @apply relative z-0 bg-stone-50;
 
     &::before {
       position: absolute;
@@ -219,36 +265,52 @@ html[data-theme='dark'] {
       z-index: -1;
       content: '';
       opacity: 0.65;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(226 232 240)' stroke-dasharray='5 3' transform='scale(1, -1)' %3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(214 211 209)' stroke-dasharray='5 3' transform='scale(1, -1)' %3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
       mask-image: linear-gradient(transparent, black, transparent);
     }
   }
 
   .background-grid--fade-in {
-    @apply bg-transparent bg-linear-to-t from-slate-100 via-slate-100;
-    @apply dark:bg-transparent dark:from-[#0c1222] dark:via-[#0c1222];
+    @apply bg-transparent bg-linear-to-t from-stone-50 via-stone-50;
 
     &::before {
       @apply bg-bottom-left;
-
       mask-image: linear-gradient(transparent, black, black);
     }
   }
 
   .background-grid--fade-out {
-    @apply bg-transparent bg-linear-to-b from-slate-100 via-slate-100;
-    @apply dark:bg-transparent dark:from-[#0c1222] dark:via-[#0c1222];
+    @apply bg-transparent bg-linear-to-b from-stone-50 via-stone-50;
 
     &::before {
       mask-image: linear-gradient(black, black, transparent);
     }
   }
+}
 
-  .background-image {
-    &--fade-out {
-      mask-image: linear-gradient(black, black, transparent);
+html[data-theme='dark'] {
+  .background-grid {
+    /* Stone dark background: #0c0a09 (stone-950) to #1c1917 (stone-900) */
+    background: linear-gradient(to bottom, #0c0a09, #1c1917);
+
+    &::before {
+      opacity: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgba(255,255,255,0.03)' stroke-dasharray='0' %3E%3Cpath d='M0 .5H31.5V32'/%3E%3C/svg%3E");
     }
   }
+
+  .background-grid--fade-out {
+    /* Subtle warm glow for hero */
+    background: 
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(231, 229, 228, 0.06), transparent),
+      linear-gradient(to bottom, #0c0a09, #1c1917);
+  }
+}
+
+/* Hide theme toggle on homepage (landing is dark-only) */
+.homepage-dark-only [class*='colorModeToggle'],
+.homepage-dark-only [class*='toggle_'] {
+  display: none !important;
 }
 
 .markdown h1:first-child {

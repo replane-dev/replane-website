@@ -1,78 +1,97 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
+import { Rocket, Shield, Server, Users, ArrowRight } from 'lucide-react'
 
 interface Benefit {
-  number: string
   title: string
   description: string
-  icon: string
+  icon: React.ReactNode
 }
 
 const benefits: Benefit[] = [
   {
-    number: '1',
     title: 'Ship Faster',
-    description: 'Deploy features behind flags, roll them out gradually, and toggle them instantly without waiting for CI/CD pipelines.',
-    icon: '🚀'
+    description:
+      'Deploy features behind flags, roll them out gradually, and toggle them instantly without waiting for CI/CD pipelines.',
+    icon: <Rocket className='h-7 w-7' />
   },
   {
-    number: '2',
     title: 'Sleep Better',
-    description: 'Instant rollback means mistakes are fixable in seconds. Version history shows exactly who changed what and when.',
-    icon: '😴'
+    description:
+      'Instant rollback means mistakes are fixable in seconds. Version history shows exactly who changed what and when.',
+    icon: <Shield className='h-7 w-7' />
   },
   {
-    number: '3',
-    title: 'Your Choice',
-    description: 'Use our managed cloud or self-host on your infrastructure. Same features, same API. No vendor lock-in.',
-    icon: '🔒'
+    title: 'Your Infrastructure',
+    description:
+      'Use our managed cloud or self-host on your infrastructure. Same features, same API. No vendor lock-in.',
+    icon: <Server className='h-7 w-7' />
   },
   {
-    number: '4',
-    title: 'Empower Your Team',
-    description: 'Product managers can toggle features. Ops can adjust rate limits. All safely, with validation and audit logs.',
-    icon: '⚡'
+    title: 'Empower Teams',
+    description:
+      'Product managers can toggle features. Ops can adjust rate limits. All safely, with validation and audit logs.',
+    icon: <Users className='h-7 w-7' />
   }
 ]
 
 export default function Benefits() {
   return (
-    <section className='bg-white py-20 px-4 dark:bg-gray-800'>
-      <div className='mx-auto max-w-7xl'>
-        <div className='mb-16 text-center'>
-          <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white'>
-            Why Teams Choose Replane
+    <section className='relative overflow-hidden py-24'>
+      {/* Background - stone dark */}
+      <div className='pointer-events-none absolute inset-0 bg-[#0c0a09]' />
+
+      {/* Subtle decorative glow */}
+      <div className='pointer-events-none absolute top-0 left-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-stone-400/5 blur-[100px]' />
+
+      <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        {/* Section header */}
+        <div className='mb-16'>
+          <div className='mb-4 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-1.5 text-sm font-medium text-stone-300'>
+            Why Replane
+          </div>
+          <h2 className='mb-4 text-3xl font-bold tracking-tight text-stone-100 sm:text-4xl lg:text-5xl'>
+            Why teams choose Replane
           </h2>
-          <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300'>
+          <p className='max-w-2xl text-lg text-stone-400'>
             Simple, focused, and flexible. Everything you need, nothing you don't.
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'>
+        {/* Benefits grid */}
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
           {benefits.map((benefit, idx) => (
-            <div key={idx} className='group relative rounded-xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-8 shadow-sm transition-all hover:border-blue-400 hover:shadow-xl dark:border-gray-700 dark:from-gray-800 dark:to-gray-900 dark:hover:border-blue-500'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-2xl shadow-lg'>
+            <div
+              key={idx}
+              className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-6 transition-all duration-300 hover:border-stone-600 hover:shadow-xl'
+            >
+              {/* Number indicator */}
+              <div className='absolute top-4 right-4 text-6xl font-bold text-stone-600/50'>
+                {idx + 1}
+              </div>
+
+              <div className='relative z-10'>
+                {/* Icon */}
+                <div className='mb-5 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400'>
                   {benefit.icon}
                 </div>
-                <span className='text-5xl font-bold text-gray-200 dark:text-gray-700'>
-                  {benefit.number}
-                </span>
+
+                {/* Content */}
+                <h3 className='mb-3 text-xl font-bold text-stone-100'>{benefit.title}</h3>
+                <p className='text-sm leading-relaxed text-stone-400'>{benefit.description}</p>
               </div>
-              <h3 className='mb-3 text-xl font-bold text-gray-900 dark:text-white'>
-                {benefit.title}
-              </h3>
-              <p className='leading-relaxed text-gray-600 dark:text-gray-300'>{benefit.description}</p>
             </div>
           ))}
         </div>
 
-        <div className='mt-16 text-center'>
+        {/* CTA */}
+        <div className='mt-12 text-center'>
           <Link
             to='/docs/getting-started/quickstart'
-            className='inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-10 py-4 text-base font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-xl hover:no-underline hover:text-white dark:from-blue-500 dark:to-purple-500 dark:hover:from-blue-600 dark:hover:to-purple-600'
+            className='group inline-flex items-center gap-2 rounded-lg bg-stone-100 px-8 py-3.5 text-base font-semibold text-stone-900 transition-all duration-200 hover:bg-stone-200 hover:text-stone-900 hover:no-underline hover:shadow-lg'
           >
-            Get Started in 5 Minutes →
+            Get Started in 5 Minutes
+            <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
           </Link>
         </div>
       </div>

@@ -1,70 +1,110 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
-import { cn } from '@/lib/utils'
-import { AnimatedGradientText } from '@/components/ui/animated-gradient-text'
+import { ArrowRight, Sparkles, Github } from 'lucide-react'
 
 export default function HeroBanner() {
   return (
-    <div>
-      <div className='px-4 py-12 sm:py-20'>
-        <div className='mx-auto max-w-5xl'>
-          <div className='text-center'>
-            <div className='group relative mx-auto flex w-max items-center justify-center rounded-full bg-white px-4 py-1.5 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] dark:bg-transparent'>
-              <span
-                className={cn(
-                  'animate-gradient absolute inset-0 block h-full w-full rounded-[inherit] bg-linear-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-size-[300%_100%] p-px'
-                )}
-                style={{
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'destination-out',
-                  mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  maskComposite: 'subtract',
-                  WebkitClipPath: 'padding-box'
-                }}
+    <section className='relative min-h-[90vh] overflow-hidden'>
+      {/* Background effects - subtle stone gradient */}
+      <div className='pointer-events-none absolute inset-0'>
+        {/* Subtle ambient glow */}
+        <div className='absolute top-0 left-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-stone-300/5 blur-[120px]' />
+        <div className='absolute top-1/4 right-0 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-stone-400/5 blur-[100px]' />
+      </div>
+
+      <div className='relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 sm:pt-32 lg:px-8 lg:pt-40'>
+        <div className='flex flex-col items-center text-center'>
+          {/* Badge */}
+          <div
+            className='animate-slide-down mb-8 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-2 text-sm font-medium text-stone-300'
+            style={{ animationDelay: '0.1s' }}
+          >
+            <Sparkles className='h-4 w-4' />
+            <span>Open Source • MIT License • Self-Hosted</span>
+          </div>
+
+          {/* Main heading */}
+          <h1
+            className='animate-slide-up mb-6 max-w-4xl text-4xl font-bold tracking-tight text-stone-100 sm:text-5xl md:text-6xl lg:text-7xl'
+            style={{ animationDelay: '0.2s' }}
+          >
+            <span className='block'>Stop deploying for</span>
+            <span className='mt-2 block leading-20 text-blue-500'>config changes</span>
+          </h1>
+
+          {/* Subheading */}
+          <p
+            className='animate-slide-up mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-stone-400 sm:text-xl'
+            style={{ animationDelay: '0.3s' }}
+          >
+            Dynamic configuration for apps and services. Feature flags, rate limits, and settings
+            with instant rollback, realtime updates, and complete audit trails.
+          </p>
+
+          {/* CTA buttons */}
+          <div
+            className='animate-slide-up flex flex-col items-center gap-4 sm:flex-row'
+            style={{ animationDelay: '0.4s' }}
+          >
+            <Link
+              href='https://cloud.replane.dev'
+              className='group inline-flex items-center gap-2 rounded-lg bg-stone-100 px-8 py-3.5 text-base font-semibold text-stone-900 transition-all duration-200 hover:bg-stone-200 hover:text-stone-900 hover:no-underline hover:shadow-lg'
+            >
+              Get Started Free
+              <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
+            </Link>
+
+            <Link
+              to='/docs/getting-started/quickstart'
+              className='inline-flex items-center gap-2 rounded-lg border border-stone-700 bg-stone-800 px-8 py-3.5 text-base font-semibold text-stone-100 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 hover:text-stone-100 hover:no-underline'
+            >
+              <Github className='h-4 w-4' />
+              Self-Host
+            </Link>
+          </div>
+
+          {/* Product screenshot */}
+          <div
+            className='animate-slide-up relative mt-20 w-full max-w-5xl'
+            style={{ animationDelay: '0.7s' }}
+          >
+            {/* Subtle glow effect behind screenshot */}
+            <div className='absolute -inset-4 rounded-2xl bg-stone-300/5 opacity-30 blur-2xl' />
+
+            {/* Screenshot container */}
+            <div className='relative overflow-hidden rounded-xl shadow-2xl ring-1 ring-stone-700'>
+              {/* Dark mode screenshot only */}
+              <img
+                src='/img/screenshots/replane-window-screenshot-dark-v1.png'
+                alt='Replane configuration management interface'
+                className='w-full'
+                loading='lazy'
               />
-              <AnimatedGradientText className='text-sm font-medium'>
-                Open Source • Cloud or Self-Hosted • MIT License
-              </AnimatedGradientText>
             </div>
+          </div>
 
-            <h1 className='mt-6 mb-6 text-[32px] leading-tight font-bold text-gray-900 sm:mt-8 sm:mb-8 sm:text-4xl md:text-5xl lg:text-6xl dark:text-white'>
-              <span className='bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400'>
-                Dynamic Configuration
-              </span>
-              <br className='hidden sm:block' />
-              <span className='sm:hidden'> </span>
-              for apps and services
-            </h1>
-
-            <p className='mx-auto mb-8 max-w-3xl text-base leading-relaxed text-gray-600 sm:mb-10 sm:text-xl dark:text-gray-300'>
-              Stop deploying code to change a setting. Manage feature flags, rate limits, and config
-              values with instant rollback, realtime updates, and complete audit trails—on our cloud
-              or your infrastructure.
-            </p>
-
-            <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
-              <Link
-                href='https://cloud.replane.dev'
-                className='inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white transition-all hover:bg-blue-700 hover:text-white hover:no-underline dark:bg-blue-500 dark:hover:bg-blue-600'
-              >
-                Try Cloud Free
-              </Link>
-              <Link
-                to='/docs/getting-started/quickstart'
-                className='inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-8 py-3 text-base font-semibold text-gray-900 transition-all hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900 hover:no-underline dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-white'
-              >
-                Self-Host
-              </Link>
+          {/* Stats */}
+          <div
+            className='animate-slide-up mt-16 flex flex-wrap items-center justify-center gap-8 sm:gap-12'
+            style={{ animationDelay: '0.6s' }}
+          >
+            <div className='text-center'>
+              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>{'<'}5min</div>
+              <div className='mt-1 text-sm text-stone-500'>setup time</div>
             </div>
-
-            {/* <div className='mt-8 text-sm text-gray-500 dark:text-gray-400'>
-              <code className='rounded bg-gray-100 px-2 py-1 dark:bg-gray-800'>
-                npm install @replanejs/sdk
-              </code>
-            </div> */}
+            <div className='hidden h-10 w-px bg-stone-700 sm:block' />
+            <div className='text-center'>
+              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>Realtime</div>
+              <div className='mt-1 text-sm text-stone-500'>SSE updates</div>
+            </div>
+            <div className='hidden h-10 w-px bg-stone-700 sm:block' />
+            <div className='text-center'>
+              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>100%</div>
+              <div className='mt-1 text-sm text-stone-500'>open source</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

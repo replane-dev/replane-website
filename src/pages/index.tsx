@@ -1,15 +1,31 @@
+import { useEffect } from 'react'
 import Layout from '@theme/Layout'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import { useColorMode } from '@docusaurus/theme-common'
 
 import HeroBanner from '@/components/HeroBanner'
+import TrustedBy from '@/components/Homepage/TrustedBy'
 import PainPoints from '@/components/Homepage/PainPoints'
 import Benefits from '@/components/Homepage/Benefits'
 import HomepageFeatures from '@/components/Homepage/Features'
 import UseCases from '@/components/Homepage/UseCases'
 import Testimonials from '@/components/Homepage/Testimonials'
 import Authentication from '@/components/Homepage/Integrations'
+import SupportedTech from '@/components/Homepage/SupportedTech'
 import FinalCTA from '@/components/Homepage/FinalCTA'
+import FAQ from '@/components/Homepage/FAQ'
 import LatestNews from '@/components/LatestNews'
+
+// Force dark mode on the landing page
+function ForceDarkMode() {
+  const { setColorMode } = useColorMode()
+
+  useEffect(() => {
+    setColorMode('dark')
+  }, [setColorMode])
+
+  return null
+}
 
 interface HomePageBlogMetadata {
   blogTitle?: string
@@ -50,21 +66,27 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
   const { siteConfig } = useDocusaurusContext()
 
   return (
-    <Layout
-      title={`${siteConfig.title}`}
-      description='Stop deploying code to change settings. Self-hosted config management with version history, instant rollback, and realtime updates.'
-    >
-      <main className='background-grid background-grid--fade-out'>
-        <HeroBanner />
-        <PainPoints />
-        <Benefits />
-        <HomepageFeatures />
-        <UseCases />
-        <Authentication />
-        {/* <Testimonials /> */}
-        <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
-        <FinalCTA />
-      </main>
-    </Layout>
+    <div className='homepage-dark-only'>
+      <Layout
+        title={`${siteConfig.title}`}
+        description='Stop deploying code to change settings. Self-hosted config management with version history, instant rollback, and realtime updates.'
+      >
+        <ForceDarkMode />
+        <main className='background-grid background-grid--fade-out'>
+          <HeroBanner />
+          <TrustedBy />
+          <PainPoints />
+          <Benefits />
+          <HomepageFeatures />
+          <UseCases />
+          <SupportedTech />
+          <Authentication />
+          {/* <Testimonials /> */}
+          <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
+          <FinalCTA />
+          <FAQ />
+        </main>
+      </Layout>
+    </div>
   )
 }

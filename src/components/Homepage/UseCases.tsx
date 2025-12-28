@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
+import { Flag, Settings, RotateCcw, BarChart3, ArrowRight } from 'lucide-react'
 
 interface UseCase {
   title: string
@@ -11,95 +12,77 @@ interface UseCase {
 const useCases: UseCase[] = [
   {
     title: 'Feature Flags',
-    description: 'Ship code with features off. Enable gradually for 1% → 10% → 100% of users. Kill switch ready if things go wrong.',
-    icon: (
-      <svg className='h-8 w-8' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9' />
-      </svg>
-    ),
+    description:
+      'Ship code with features off. Enable gradually for 1% → 10% → 100% of users. Kill switch ready if things go wrong.',
+    icon: <Flag className='h-6 w-6' />,
     link: '/docs/guides/feature-flags'
   },
   {
     title: 'Operational Tuning',
-    description: 'Adjust rate limits, cache TTLs, and batch sizes instantly. No deploy, no restart, no downtime.',
-    icon: (
-      <svg className='h-8 w-8' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' />
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
-      </svg>
-    ),
+    description:
+      'Adjust rate limits, cache TTLs, and batch sizes instantly. No deploy, no restart, no downtime.',
+    icon: <Settings className='h-6 w-6' />,
     link: '/docs/guides/operational-tuning'
   },
   {
     title: 'Instant Rollback',
-    description: 'Version history tracks every change. When production breaks, revert to safety in seconds.',
-    icon: (
-      <svg className='h-8 w-8' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6' />
-      </svg>
-    ),
+    description:
+      'Version history tracks every change. When production breaks, revert to safety in seconds.',
+    icon: <RotateCcw className='h-6 w-6' />,
     link: '/docs/concepts/overview#versions'
   },
   {
     title: 'A/B Testing',
-    description: 'Store variant percentages in config. Product team adjusts splits, engineering ships features.',
-    icon: (
-      <svg className='h-8 w-8' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' />
-      </svg>
-    ),
+    description:
+      'Store variant percentages in config. Product team adjusts splits, engineering ships features.',
+    icon: <BarChart3 className='h-6 w-6' />,
     link: '/docs/guides/gradual-rollouts#ab-testing'
   }
 ]
 
 export default function UseCases() {
   return (
-    <section className='bg-gradient-to-b from-white to-gray-50 py-20 px-4 dark:from-gray-800 dark:to-gray-900'>
-      <div className='mx-auto max-w-7xl'>
+    <section className='relative overflow-hidden py-24'>
+      {/* Background - stone dark */}
+      <div className='pointer-events-none absolute inset-0 bg-gradient-to-b from-[#1c1917] to-[#0c0a09]' />
+
+      <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+        {/* Section header */}
         <div className='mb-16 text-center'>
-          <h2 className='mb-4 text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white'>
-            Built for Real Teams
+          <div className='mb-4 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-1.5 text-sm font-medium text-stone-300'>
+            Use Cases
+          </div>
+          <h2 className='mb-4 text-3xl font-bold tracking-tight text-stone-100 sm:text-4xl lg:text-5xl'>
+            Built for real teams
           </h2>
-          <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-300'>
+          <p className='mx-auto max-w-2xl text-lg text-stone-400'>
             Ship faster, respond to incidents instantly, and give your team control
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-8 sm:grid-cols-2'>
+        {/* Use cases grid */}
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
           {useCases.map((useCase, idx) => (
-            <div
+            <Link
               key={idx}
-              className='group relative rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-blue-400 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-500'
+              to={useCase.link}
+              className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-8 transition-all duration-300 hover:border-stone-600 hover:shadow-xl hover:no-underline'
             >
-              <div className='mb-4 inline-flex rounded-lg bg-blue-50 p-3 text-blue-600 transition-colors group-hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:group-hover:bg-blue-900/50'>
+              {/* Icon */}
+              <div className='mb-5 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400'>
                 {useCase.icon}
               </div>
-              <h3 className='mb-3 text-xl font-bold text-gray-900 dark:text-white'>
-                {useCase.title}
-              </h3>
-              <p className='mb-6 leading-relaxed text-gray-600 dark:text-gray-300'>
-                {useCase.description}
-              </p>
-              <Link
-                to={useCase.link}
-                className='inline-flex items-center gap-2 text-sm font-semibold text-blue-600 transition-all hover:gap-3 hover:text-blue-700 hover:no-underline dark:text-blue-400 dark:hover:text-blue-300'
-              >
-                Learn more
-                <svg
-                  className='h-4 w-4 transition-transform group-hover:translate-x-1'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M9 5l7 7-7 7'
-                  />
-                </svg>
-              </Link>
-            </div>
+
+              {/* Content */}
+              <h3 className='mb-3 text-xl font-bold text-stone-100'>{useCase.title}</h3>
+              <p className='mb-6 leading-relaxed text-stone-400'>{useCase.description}</p>
+
+              {/* Link */}
+              <div className='flex items-center gap-2 text-sm font-medium text-stone-300'>
+                <span>Learn more</span>
+                <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
+              </div>
+            </Link>
           ))}
         </div>
       </div>
