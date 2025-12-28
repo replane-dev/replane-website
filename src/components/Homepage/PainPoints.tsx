@@ -9,25 +9,25 @@ interface Problem {
 
 const problems: Problem[] = [
   {
-    icon: <AlertTriangle className='h-6 w-6' />,
+    icon: <AlertTriangle className='h-6 w-6 text-orange-400' />,
     title: 'Deploying for Every Config Change',
     description:
       'Want to adjust a rate limit? Need a full deployment. Want to disable a feature? Wait for CI/CD. Every config change requires code deployment.'
   },
   {
-    icon: <RotateCcw className='h-6 w-6' />,
+    icon: <RotateCcw className='h-6 w-6 text-red-400' />,
     title: 'No History or Rollback',
     description:
       "Changed a setting that broke production? Good luck remembering what it was. No version history means no easy way to undo mistakes."
   },
   {
-    icon: <FolderOpen className='h-6 w-6' />,
+    icon: <FolderOpen className='h-6 w-6 text-amber-400' />,
     title: 'Scattered Config Everywhere',
     description:
       'Feature flags in LaunchDarkly. Env vars in AWS. Settings in a database. Google Sheet for operational values. Where is the source of truth?'
   },
   {
-    icon: <FileSearch className='h-6 w-6' />,
+    icon: <FileSearch className='h-6 w-6 text-yellow-400' />,
     title: 'No Audit Trail',
     description:
       "Who changed that critical setting? When? Why? Without audit logs, you're flying blind during incidents and compliance reviews."
@@ -62,7 +62,7 @@ export default function PainPoints() {
               className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-6 transition-all duration-300 hover:border-stone-600'
             >
               {/* Icon */}
-              <div className='mb-4 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400'>
+              <div className='mb-4 inline-flex rounded-xl bg-stone-800/80 p-3'>
                 {problem.icon}
               </div>
 

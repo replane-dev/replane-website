@@ -68,7 +68,7 @@ export default function Authentication() {
             >
               <div className='flex items-start gap-6'>
                 {/* Icon */}
-                <div className='flex-shrink-0 text-stone-400 transition-colors group-hover:text-stone-200'>
+                <div className='shrink-0 text-stone-300 transition-colors group-hover:text-white'>
                   {integration.icon}
                 </div>
 
@@ -81,7 +81,7 @@ export default function Authentication() {
                   <ul className='mb-6 space-y-2'>
                     {integration.features.map((feature, featureIdx) => (
                       <li key={featureIdx} className='flex items-center gap-2 text-sm'>
-                        <Check className='h-4 w-4 flex-shrink-0 text-stone-400' />
+                        <Check className='h-4 w-4 shrink-0 text-emerald-500' />
                         <span className='text-stone-400'>{feature}</span>
                       </li>
                     ))}

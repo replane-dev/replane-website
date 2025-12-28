@@ -50,7 +50,7 @@ const tiers: PricingTier[] = [
     description: 'Deploy on your own infrastructure. Full control, no limits.',
     price: 'Free',
     priceDetail: 'forever',
-    icon: <Server className='h-6 w-6' />,
+    icon: <Server className='h-6 w-6 text-violet-400' />,
     features: [
       'Unlimited configs & workspaces',
       'Unlimited team members',
@@ -70,7 +70,7 @@ const tiers: PricingTier[] = [
     description: 'Managed cloud for growing teams. Zero maintenance.',
     price: 'Free',
     priceDetail: 'forever',
-    icon: <Rocket className='h-6 w-6' />,
+    icon: <Rocket className='h-6 w-6 text-blue-400' />,
     features: [
       'Everything in Self-Hosted',
       'Managed cloud hosting',
@@ -92,7 +92,7 @@ const tiers: PricingTier[] = [
     description: 'For organizations with advanced security & compliance needs.',
     price: 'Custom',
     priceDetail: 'contact us',
-    icon: <Building2 className='h-6 w-6' />,
+    icon: <Building2 className='h-6 w-6 text-amber-400' />,
     features: [
       'Everything in Startup',
       'Unlimited team members',
@@ -180,7 +180,7 @@ function FAQItemComponent({
         aria-expanded={isOpen}
       >
         <div className='flex items-start gap-4'>
-          <span className='mt-0.5 font-mono text-sm text-stone-600'>
+          <span className='mt-0.5 font-mono text-sm text-blue-400/70'>
             {String(index + 1).padStart(2, '0')}
           </span>
           <span className='text-lg font-medium text-stone-100'>{item.question}</span>
@@ -188,7 +188,7 @@ function FAQItemComponent({
         <div
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
             isOpen
-              ? 'bg-stone-600 text-white'
+              ? 'bg-blue-500 text-white'
               : 'bg-stone-800 text-stone-400 group-hover:bg-stone-700'
           }`}
         >
@@ -259,7 +259,7 @@ export default function Pricing() {
                   >
                     {/* Gradient border effect for popular */}
                     {tier.popular && (
-                      <div className='absolute -inset-px rounded-3xl bg-linear-to-b from-stone-400 via-stone-600 to-stone-800' />
+                      <div className='absolute -inset-px rounded-3xl bg-linear-to-b from-blue-400 via-blue-600 to-blue-900' />
                     )}
 
                     {/* Card content */}
@@ -274,7 +274,7 @@ export default function Pricing() {
                       {tier.popular && (
                         <div className='absolute -top-px right-6 left-6'>
                           <div className='flex justify-center'>
-                            <span className='rounded-b-lg bg-linear-to-r from-stone-400 to-stone-500 px-4 py-1 text-xs font-semibold tracking-wider text-stone-900 uppercase'>
+                            <span className='rounded-b-lg bg-linear-to-r from-blue-400 to-blue-500 px-4 py-1 text-xs font-semibold tracking-wider text-white uppercase'>
                               Most Popular
                             </span>
                           </div>
@@ -305,7 +305,7 @@ export default function Pricing() {
                           href={tier.cta.href}
                           className={`mb-8 flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-base font-semibold transition-all duration-200 hover:no-underline ${
                             tier.cta.primary
-                              ? 'bg-white text-stone-900 shadow-lg shadow-white/10 hover:bg-stone-100 hover:text-stone-900 hover:shadow-white/20'
+                              ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-600 hover:text-white hover:shadow-blue-500/30'
                               : 'border border-stone-700 bg-stone-800 text-white hover:border-stone-600 hover:bg-stone-700'
                           }`}
                         >

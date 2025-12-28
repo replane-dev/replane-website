@@ -15,7 +15,7 @@ const features: Feature[] = [
     title: 'Version History & Rollback',
     description:
       'Every change creates an immutable snapshot. Roll back to any previous version instantly when things go wrong. Full audit trail included.',
-    icon: <History className='h-6 w-6' />,
+    icon: <History className='h-6 w-6 text-blue-400' />,
     link: '/docs/concepts/overview#versions',
     size: 'large'
   },
@@ -23,7 +23,7 @@ const features: Feature[] = [
     title: 'Realtime Updates',
     description:
       'Changes propagate instantly via Server-Sent Events. No polling, no delays. Your apps stay in sync automatically.',
-    icon: <Zap className='h-6 w-6' />,
+    icon: <Zap className='h-6 w-6 text-amber-400' />,
     link: '/docs/concepts/architecture#realtime-updates',
     size: 'small'
   },
@@ -31,7 +31,7 @@ const features: Feature[] = [
     title: 'JSON Schema Validation',
     description:
       'Attach schemas to prevent invalid configs. Block out-of-range values before they reach production.',
-    icon: <Shield className='h-6 w-6' />,
+    icon: <Shield className='h-6 w-6 text-emerald-400' />,
     link: '/docs/guides/operational-tuning#json-schema-validation',
     size: 'small'
   },
@@ -39,7 +39,7 @@ const features: Feature[] = [
     title: 'Role-Based Access',
     description:
       'Granular permissions with owner, editor, and viewer roles. Control who can view, modify, or manage configs. SDK keys for programmatic access.',
-    icon: <Users className='h-6 w-6' />,
+    icon: <Users className='h-6 w-6 text-violet-400' />,
     link: '/docs/concepts/overview#workspaces',
     size: 'small'
   },
@@ -47,7 +47,7 @@ const features: Feature[] = [
     title: 'Cloud or Self-Hosted',
     description:
       "Start instantly with managed cloud, or deploy on your infrastructure with Docker. Same API, same features. Your choice, no lock-in.",
-    icon: <Cloud className='h-6 w-6' />,
+    icon: <Cloud className='h-6 w-6 text-sky-400' />,
     link: '/docs/getting-started/quickstart',
     size: 'small'
   },
@@ -55,7 +55,7 @@ const features: Feature[] = [
     title: 'Developer-Friendly',
     description:
       'Simple REST API and lightweight SDKs for JavaScript/TypeScript. Works in Node.js, browsers, and edge runtimes. Zero dependencies.',
-    icon: <Code2 className='h-6 w-6' />,
+    icon: <Code2 className='h-6 w-6 text-rose-400' />,
     link: '/docs/sdk/javascript',
     size: 'large'
   }
@@ -74,7 +74,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
       <div className='relative z-10'>
         {/* Icon */}
-        <div className='mb-4 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400 transition-colors group-hover:bg-stone-700 group-hover:text-stone-200'>
+        <div className='mb-4 inline-flex rounded-xl bg-stone-800/80 p-3 transition-colors group-hover:bg-stone-700'>
           {feature.icon}
         </div>
 

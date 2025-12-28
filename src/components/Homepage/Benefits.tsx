@@ -13,25 +13,25 @@ const benefits: Benefit[] = [
     title: 'Ship Faster',
     description:
       'Deploy features behind flags, roll them out gradually, and toggle them instantly without waiting for CI/CD pipelines.',
-    icon: <Rocket className='h-7 w-7' />
+    icon: <Rocket className='h-7 w-7 text-blue-400' />
   },
   {
     title: 'Sleep Better',
     description:
       'Instant rollback means mistakes are fixable in seconds. Version history shows exactly who changed what and when.',
-    icon: <Shield className='h-7 w-7' />
+    icon: <Shield className='h-7 w-7 text-emerald-400' />
   },
   {
     title: 'Your Infrastructure',
     description:
       'Use our managed cloud or self-host on your infrastructure. Same features, same API. No vendor lock-in.',
-    icon: <Server className='h-7 w-7' />
+    icon: <Server className='h-7 w-7 text-violet-400' />
   },
   {
     title: 'Empower Teams',
     description:
       'Product managers can toggle features. Ops can adjust rate limits. All safely, with validation and audit logs.',
-    icon: <Users className='h-7 w-7' />
+    icon: <Users className='h-7 w-7 text-amber-400' />
   }
 ]
 
@@ -72,7 +72,7 @@ export default function Benefits() {
 
               <div className='relative z-10'>
                 {/* Icon */}
-                <div className='mb-5 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400'>
+                <div className='mb-5 inline-flex rounded-xl bg-stone-800/80 p-3'>
                   {benefit.icon}
                 </div>
 

@@ -207,6 +207,23 @@ const config: Config = {
             //   to: '/blog'
             // }
           ]
+        },
+        {
+          title: 'Resources',
+          items: [
+            {
+              label: 'Pricing',
+              to: '/pricing'
+            },
+            {
+              label: 'Changelog',
+              href: 'https://github.com/replane-dev/replane/releases'
+            },
+            {
+              label: 'Contact',
+              href: 'mailto:tilyupo@gmail.com'
+            }
+          ]
         }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Replane. Released under the MIT License.`

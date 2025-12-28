@@ -14,28 +14,28 @@ const useCases: UseCase[] = [
     title: 'Feature Flags',
     description:
       'Ship code with features off. Enable gradually for 1% → 10% → 100% of users. Kill switch ready if things go wrong.',
-    icon: <Flag className='h-6 w-6' />,
+    icon: <Flag className='h-6 w-6 text-blue-400' />,
     link: '/docs/guides/feature-flags'
   },
   {
     title: 'Operational Tuning',
     description:
       'Adjust rate limits, cache TTLs, and batch sizes instantly. No deploy, no restart, no downtime.',
-    icon: <Settings className='h-6 w-6' />,
+    icon: <Settings className='h-6 w-6 text-violet-400' />,
     link: '/docs/guides/operational-tuning'
   },
   {
     title: 'Instant Rollback',
     description:
       'Version history tracks every change. When production breaks, revert to safety in seconds.',
-    icon: <RotateCcw className='h-6 w-6' />,
-    link: '/docs/concepts/overview#versions'
+    icon: <RotateCcw className='h-6 w-6 text-emerald-400' />,
+    link: '/docs/guides/gradual-rollouts#ab-testing'
   },
   {
     title: 'A/B Testing',
     description:
       'Store variant percentages in config. Product team adjusts splits, engineering ships features.',
-    icon: <BarChart3 className='h-6 w-6' />,
+    icon: <BarChart3 className='h-6 w-6 text-amber-400' />,
     link: '/docs/guides/gradual-rollouts#ab-testing'
   }
 ]
@@ -69,7 +69,7 @@ export default function UseCases() {
               className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-8 transition-all duration-300 hover:border-stone-600 hover:shadow-xl hover:no-underline'
             >
               {/* Icon */}
-              <div className='mb-5 inline-flex rounded-xl bg-stone-800 p-3 text-stone-400'>
+              <div className='mb-5 inline-flex rounded-xl bg-stone-800/80 p-3'>
                 {useCase.icon}
               </div>
 

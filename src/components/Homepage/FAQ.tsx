@@ -64,7 +64,7 @@ function FAQItemComponent({
         aria-expanded={isOpen}
       >
         <div className='flex items-start gap-4'>
-          <span className='mt-0.5 font-mono text-sm text-stone-600'>
+          <span className='mt-0.5 font-mono text-sm text-blue-400/70'>
             {String(index + 1).padStart(2, '0')}
           </span>
           <span className='text-lg font-medium text-stone-100'>{item.question}</span>
@@ -72,7 +72,7 @@ function FAQItemComponent({
         <div
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
             isOpen
-              ? 'bg-stone-600 text-white'
+              ? 'bg-blue-500 text-white'
               : 'bg-stone-800 text-stone-400 group-hover:bg-stone-700'
           }`}
         >

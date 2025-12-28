@@ -8,9 +8,9 @@ export default function FinalCTA() {
       {/* Dark background */}
       <div className='pointer-events-none absolute inset-0 bg-[#0c0a09]' />
 
-      {/* Radial gradient glow from center */}
+      {/* Radial gradient glow from center with blue accent */}
       <div className='pointer-events-none absolute inset-0'>
-        <div className='absolute top-1/2 left-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-stone-400/[0.07] blur-[100px]' />
+        <div className='absolute top-1/2 left-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/8 blur-[100px]' />
       </div>
 
       {/* Animated gradient border at top */}
@@ -20,7 +20,7 @@ export default function FinalCTA() {
         <div className='text-center'>
           {/* Badge */}
           <div className='mb-8 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800/50 px-4 py-1.5 text-sm font-medium text-stone-400'>
-            <Terminal className='h-4 w-4' />
+            <Terminal className='h-4 w-4 text-blue-400' />
             Get started in minutes
           </div>
 
@@ -54,7 +54,7 @@ export default function FinalCTA() {
                   &nbsp;&nbsp;replane/replane
                 </span>
               </div>
-              <div className='mt-2 text-stone-500'>✓ Replane is running at localhost:8080</div>
+              <div className='mt-2 text-emerald-500'>✓ Replane is running at localhost:8080</div>
             </div>
           </div>
 
@@ -62,7 +62,7 @@ export default function FinalCTA() {
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <Link
               href='https://cloud.replane.dev'
-              className='group inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-stone-900 shadow-lg shadow-white/10 transition-all duration-200 hover:bg-stone-100 hover:text-stone-900 hover:no-underline hover:shadow-white/20'
+              className='group inline-flex items-center gap-2 rounded-xl bg-blue-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-200 hover:bg-blue-600 hover:text-white hover:no-underline hover:shadow-blue-500/30'
             >
               Start Free — No Credit Card
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
