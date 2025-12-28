@@ -12,6 +12,7 @@ import Authentication from '@/components/Homepage/Integrations'
 import SupportedTech from '@/components/Homepage/SupportedTech'
 import FinalCTA from '@/components/Homepage/FinalCTA'
 import FAQ from '@/components/Homepage/FAQ'
+import CreatorWord from '@/components/Homepage/CreatorWord'
 import LatestNews from '@/components/LatestNews'
 
 interface HomePageBlogMetadata {
@@ -69,6 +70,7 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
           <Authentication />
           {/* <Testimonials /> */}
           <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
+          <CreatorWord />
           <FinalCTA />
           <FAQ />
         </main>

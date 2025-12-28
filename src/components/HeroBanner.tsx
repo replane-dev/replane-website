@@ -94,8 +94,8 @@ export default function HeroBanner() {
             </div>
             <div className='hidden h-10 w-px bg-stone-700 sm:block' />
             <div className='text-center'>
-              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>Realtime</div>
-              <div className='mt-1 text-sm text-stone-500'>SSE updates</div>
+              <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>{'<'}1s</div>
+              <div className='mt-1 text-sm text-stone-500'>update latency</div>
             </div>
             <div className='hidden h-10 w-px bg-stone-700 sm:block' />
             <Link
