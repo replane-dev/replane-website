@@ -15,37 +15,25 @@ export default function HeroBanner() {
       <div className='relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 sm:pt-32 lg:px-8 lg:pt-40'>
         <div className='flex flex-col items-center text-center'>
           {/* Badge */}
-          <div
-            className='animate-slide-down mb-8 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-2 text-sm font-medium text-stone-300'
-            style={{ animationDelay: '0.1s' }}
-          >
+          <div className='mb-8 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-2 text-sm font-medium text-stone-300'>
             <Sparkles className='h-4 w-4 text-blue-400' />
             <span>Open Source • MIT License • Self-Hosted</span>
           </div>
 
           {/* Main heading */}
-          <h1
-            className='animate-slide-up mb-6 max-w-4xl text-4xl font-bold tracking-tight text-stone-100 sm:text-5xl md:text-6xl lg:text-7xl'
-            style={{ animationDelay: '0.2s' }}
-          >
+          <h1 className='mb-6 max-w-4xl text-4xl font-bold tracking-tight text-stone-100 sm:text-5xl md:text-6xl lg:text-7xl'>
             <span className='block'>Stop deploying for</span>
             <span className='mt-2 block leading-20 text-blue-500'>config changes</span>
           </h1>
 
           {/* Subheading */}
-          <p
-            className='animate-slide-up mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-stone-400 sm:text-xl'
-            style={{ animationDelay: '0.3s' }}
-          >
+          <p className='mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-stone-400 sm:text-xl'>
             Dynamic configuration for apps and services. Feature flags, rate limits, and settings
             with instant rollback, realtime updates, and complete audit trails.
           </p>
 
           {/* CTA buttons */}
-          <div
-            className='animate-slide-up flex flex-col items-center gap-4 sm:flex-row'
-            style={{ animationDelay: '0.4s' }}
-          >
+          <div className='flex flex-col items-center gap-4 sm:flex-row'>
             <Link
               href='https://cloud.replane.dev'
               className='group inline-flex items-center gap-2 rounded-lg bg-blue-500 px-8 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:bg-blue-600 hover:text-white hover:no-underline hover:shadow-lg hover:shadow-blue-500/25'
@@ -64,10 +52,7 @@ export default function HeroBanner() {
           </div>
 
           {/* Product screenshot */}
-          <div
-            className='animate-slide-up relative mt-20 w-full max-w-5xl'
-            style={{ animationDelay: '0.7s' }}
-          >
+          <div className='relative mt-20 w-full max-w-5xl'>
             {/* Subtle glow effect behind screenshot */}
             <div className='absolute -inset-4 rounded-2xl bg-stone-300/5 opacity-30 blur-2xl' />
 
@@ -84,10 +69,7 @@ export default function HeroBanner() {
           </div>
 
           {/* Stats */}
-          <div
-            className='animate-slide-up mt-16 flex flex-wrap items-center justify-center gap-8 sm:gap-12'
-            style={{ animationDelay: '0.6s' }}
-          >
+          <div className='mt-16 flex flex-wrap items-center justify-center gap-8 sm:gap-12'>
             <div className='text-center'>
               <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>99.99%</div>
               <div className='mt-1 text-sm text-stone-500'>uptime SLA</div>
