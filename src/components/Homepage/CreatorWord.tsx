@@ -32,11 +32,11 @@ export default function CreatorWord() {
           <div className='flex flex-col items-center gap-4'>
             <img
               src='/img/dmitry-avatar.jpg'
-              alt='Dmitry Tsiliupa'
+              alt='Dmitry Tilyupo'
               className='h-16 w-16 rounded-full object-cover ring-2 ring-stone-700'
             />
             <div>
-              <div className='text-lg font-semibold text-stone-100'>Dmitry Tsiliupa</div>
+              <div className='text-lg font-semibold text-stone-100'>Dmitry Tilyupo</div>
               <div className='text-sm text-stone-500'>Creator of Replane</div>
             </div>
             <div className='mt-2 flex items-center gap-4'>
