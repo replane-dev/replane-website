@@ -101,6 +101,11 @@ const config: Config = {
           position: 'left',
           to: '/pricing'
         },
+        {
+          label: 'Cloud',
+          position: 'left',
+          href: 'https://cloud.replane.dev/app'
+        },
         // {
         //   to: '/blog',
         //   label: 'Blog',
