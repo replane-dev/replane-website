@@ -71,10 +71,10 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
           <Authentication />
           <GlobalInfra />
           {/* <Testimonials /> */}
-          <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
           <CreatorWord />
-          <FinalCTA />
+          <LatestNews recentPosts={recentPosts} homePageBlogMetadata={homePageBlogMetadata} />
           <FAQ />
+          <FinalCTA />
         </main>
       </Layout>
     </div>

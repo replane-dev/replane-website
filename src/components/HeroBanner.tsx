@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
-import { ArrowRight, Sparkles, Github, Link2, LinkIcon, ExternalLink } from 'lucide-react'
+import { ArrowRight, Sparkles, Github, ExternalLink } from 'lucide-react'
 
 export default function HeroBanner() {
   return (
@@ -90,7 +90,7 @@ export default function HeroBanner() {
               className='group text-center transition-opacity hover:no-underline hover:opacity-80'
             >
               <div className='text-3xl font-bold text-stone-100 sm:text-4xl'>100%</div>
-              <div className='mt-1 text-sm text-stone-500 group-hover:text-stone-400'>
+              <div className='mt-1 inline-flex items-center gap-1 text-sm text-stone-500 group-hover:text-stone-400'>
                 open source <ExternalLink className='h-3 w-3' />
               </div>
             </Link>
