@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from '@docusaurus/Link'
-import { Flag, Settings, RotateCcw, BarChart3, ArrowRight } from 'lucide-react'
+import { Flag, Settings, RotateCcw, BarChart3, ArrowRight, ShieldOff, Users } from 'lucide-react'
 
 interface UseCase {
   title: string
@@ -37,6 +37,20 @@ const useCases: UseCase[] = [
       'Store variant percentages in config. Product team adjusts splits, engineering ships features.',
     icon: <BarChart3 className='h-6 w-6 text-amber-400' />,
     link: '/docs/guides/gradual-rollouts#ab-testing'
+  },
+  {
+    title: 'Kill Switch',
+    description:
+      'Instantly disable problematic features in production. No deploy needed—just flip a toggle and stop the bleeding.',
+    icon: <ShieldOff className='h-6 w-6 text-red-400' />,
+    link: '/docs/guides/feature-flags#kill-switch'
+  },
+  {
+    title: 'Multi-Tenant Settings',
+    description:
+      'Different configs for different customers. Adjust limits, enable features, or customize behavior per tenant.',
+    icon: <Users className='h-6 w-6 text-sky-400' />,
+    link: '/docs/guides/operational-tuning'
   }
 ]
 
@@ -61,7 +75,7 @@ export default function UseCases() {
         </div>
 
         {/* Use cases grid */}
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {useCases.map((useCase, idx) => (
             <Link
               key={idx}

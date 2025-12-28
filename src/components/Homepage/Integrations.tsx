@@ -51,8 +51,18 @@ const integrations: Integration[] = [
     name: 'Magic Links',
     description: 'Passwordless email authentication for easy access',
     icon: (
-      <svg viewBox='0 0 24 24' className='h-10 w-10' fill='none' stroke='currentColor' strokeWidth='2'>
-        <path d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' strokeLinecap='round' strokeLinejoin='round' />
+      <svg
+        viewBox='0 0 24 24'
+        className='h-10 w-10'
+        fill='none'
+        stroke='currentColor'
+        strokeWidth='2'
+      >
+        <path
+          d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
       </svg>
     ),
     features: ['No Password Required', 'Email Verification', 'Secure Tokens'],
@@ -67,7 +77,7 @@ export default function Authentication() {
       <div className='pointer-events-none absolute inset-0 bg-[#0c0a09]' />
 
       {/* Subtle decorative glow */}
-      <div className='pointer-events-none absolute right-0 top-1/4 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-stone-400/5 blur-[100px]' />
+      <div className='pointer-events-none absolute top-1/4 right-0 h-[400px] w-[400px] translate-x-1/2 rounded-full bg-stone-400/5 blur-[100px]' />
 
       <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section header */}
@@ -84,51 +94,54 @@ export default function Authentication() {
           </p>
         </div>
 
-        {/* Integrations grid */}
-        <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+        {/* Integrations grid - single row on large screens */}
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
           {integrations.map((integration, idx) => (
             <div
               key={idx}
-              className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-8 transition-all duration-300 hover:border-stone-600 hover:shadow-xl'
+              className='group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 p-6 transition-all duration-300 hover:border-stone-600 hover:shadow-xl'
             >
-              <div className='flex items-start gap-6'>
-                {/* Icon */}
-                <div className='shrink-0 text-stone-300 transition-colors group-hover:text-white'>
-                  {integration.icon}
-                </div>
-
-                <div className='flex-1'>
-                  {/* Title & description */}
-                  <h3 className='mb-2 text-xl font-bold text-stone-100'>{integration.name}</h3>
-                  <p className='mb-4 text-stone-400'>{integration.description}</p>
-
-                  {/* Features */}
-                  <ul className='mb-6 space-y-2'>
-                    {integration.features.map((feature, featureIdx) => (
-                      <li key={featureIdx} className='flex items-center gap-2 text-sm'>
-                        <Check className='h-4 w-4 shrink-0 text-emerald-500' />
-                        <span className='text-stone-400'>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Link */}
-                  <Link
-                    to={integration.docsLink}
-                    className='inline-flex items-center gap-2 text-sm font-medium text-stone-300 transition-colors hover:text-stone-100 hover:no-underline'
-                  >
-                    Setup Guide
-                    <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
-                  </Link>
-                </div>
+              {/* Icon */}
+              <div className='mb-4 shrink-0 text-stone-300 transition-colors group-hover:text-white'>
+                {integration.icon}
               </div>
+
+              {/* Title & description */}
+              <h3 className='mb-2 text-lg font-bold text-stone-100'>{integration.name}</h3>
+              <p className='mb-4 text-sm text-stone-400'>{integration.description}</p>
+
+              {/* Features */}
+              <ul className='mb-4 space-y-1.5 pl-1'>
+                {integration.features.map((feature, featureIdx) => (
+                  <li key={featureIdx} className='flex items-center gap-2 text-xs'>
+                    <Check className='h-3.5 w-3.5 shrink-0 text-emerald-500' />
+                    <span className='text-stone-400'>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Link */}
+              <Link
+                to={integration.docsLink}
+                className='inline-flex items-center gap-2 text-sm font-medium text-stone-300 transition-colors hover:text-stone-100 hover:no-underline'
+              >
+                Setup Guide
+                <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
+              </Link>
             </div>
           ))}
         </div>
 
         {/* Note */}
         <p className='mt-8 text-center text-sm text-stone-500'>
-          Configure authentication providers through environment variables during deployment
+          Configure authentication providers through{' '}
+          <Link
+            to='/docs/self-hosting/environment-variables'
+            className='text-stone-400 underline decoration-stone-600 underline-offset-2 transition-colors hover:text-white hover:decoration-stone-400'
+          >
+            environment variables
+          </Link>{' '}
+          during deployment
         </p>
       </div>
     </section>

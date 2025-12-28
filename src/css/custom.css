@@ -338,6 +338,17 @@ html[data-theme='dark'] {
   display: none !important;
 }
 
+/* Force dark background on html/body for dark-only pages (prevents white on overscroll) */
+.homepage-dark-only,
+.pricing-dark-only {
+  background-color: #0c0a09 !important;
+}
+
+html:has(.homepage-dark-only),
+html:has(.pricing-dark-only) {
+  background-color: #0c0a09 !important;
+}
+
 /* Force dark mode for navbar and footer on dark-only pages */
 .homepage-dark-only,
 .pricing-dark-only {
