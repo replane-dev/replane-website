@@ -91,10 +91,15 @@ const config: Config = {
           label: 'Docs',
           to: '/docs'
         },
+        // {
+        //   label: 'API',
+        //   position: 'left',
+        //   to: '/docs/api'
+        // },
         {
-          label: 'API',
+          label: 'Pricing',
           position: 'left',
-          to: '/docs/api'
+          to: '/pricing'
         },
         // {
         //   to: '/blog',
