@@ -338,7 +338,7 @@ export default function Pricing() {
               {/* Open Source Note */}
               <div className='mt-16 text-center'>
                 <Link
-                  href='https://github.com/replane/replane'
+                  href='https://github.com/replane-dev/replane'
                   className='group inline-flex items-center gap-3 rounded-full border border-stone-800 bg-stone-900/50 px-6 py-3 text-stone-400 transition-all hover:border-stone-700 hover:bg-stone-900 hover:text-white hover:no-underline'
                 >
                   <Github className='h-5 w-5' />
