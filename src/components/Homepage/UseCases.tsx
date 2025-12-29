@@ -15,42 +15,42 @@ const useCases: UseCase[] = [
     description:
       'Ship code with features off. Enable gradually for 1% → 10% → 100% of users. Kill switch ready if things go wrong.',
     icon: <Flag className='h-6 w-6 text-blue-400' />,
-    link: '/docs/guides/feature-flags'
+    link: '/use-cases/feature-flags'
   },
   {
     title: 'Operational Tuning',
     description:
       'Adjust rate limits, cache TTLs, and batch sizes instantly. No deploy, no restart, no downtime.',
     icon: <Settings className='h-6 w-6 text-violet-400' />,
-    link: '/docs/guides/operational-tuning'
+    link: '/use-cases/operational-tuning'
   },
   {
     title: 'Instant Rollback',
     description:
       'Version history tracks every change. When production breaks, revert to safety in seconds.',
     icon: <RotateCcw className='h-6 w-6 text-emerald-400' />,
-    link: '/docs/guides/gradual-rollouts#ab-testing'
+    link: '/use-cases/instant-rollback'
   },
   {
     title: 'A/B Testing',
     description:
       'Store variant percentages in config. Product team adjusts splits, engineering ships features.',
     icon: <BarChart3 className='h-6 w-6 text-amber-400' />,
-    link: '/docs/guides/gradual-rollouts#ab-testing'
+    link: '/use-cases/ab-testing'
   },
   {
     title: 'Kill Switch',
     description:
       'Instantly disable problematic features in production. No deploy needed—just flip a toggle and stop the bleeding.',
     icon: <ShieldOff className='h-6 w-6 text-red-400' />,
-    link: '/docs/guides/feature-flags#kill-switch'
+    link: '/use-cases/kill-switch'
   },
   {
     title: 'Multi-Tenant Settings',
     description:
       'Different configs for different customers. Adjust limits, enable features, or customize behavior per tenant.',
     icon: <Users className='h-6 w-6 text-sky-400' />,
-    link: '/docs/guides/operational-tuning'
+    link: '/use-cases/multi-tenant'
   }
 ]
 

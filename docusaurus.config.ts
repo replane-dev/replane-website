@@ -167,10 +167,6 @@ const config: Config = {
               to: '/docs/sdk/javascript'
             },
             {
-              label: 'TypeScript',
-              to: '/docs/sdk/javascript'
-            },
-            {
               label: 'React',
               to: '/docs/sdk/react'
             },
@@ -189,6 +185,55 @@ const config: Config = {
             {
               label: '.NET',
               to: '/docs/sdk/dotnet'
+            }
+          ]
+        },
+        {
+          title: 'Use Cases',
+          items: [
+            {
+              label: 'Feature Flags',
+              to: '/use-cases/feature-flags'
+            },
+            {
+              label: 'A/B Testing',
+              to: '/use-cases/ab-testing'
+            },
+            {
+              label: 'Kill Switch',
+              to: '/use-cases/kill-switch'
+            },
+            {
+              label: 'Instant Rollback',
+              to: '/use-cases/instant-rollback'
+            },
+            {
+              label: 'Multi-Tenant',
+              to: '/use-cases/multi-tenant'
+            },
+            {
+              label: 'Operational Tuning',
+              to: '/use-cases/operational-tuning'
+            },
+            {
+              label: 'Performance Tuning',
+              to: '/use-cases/performance-tuning'
+            },
+            {
+              label: 'Content Management',
+              to: '/use-cases/content-management'
+            },
+            {
+              label: 'Environment Config',
+              to: '/use-cases/environment-config'
+            },
+            {
+              label: 'Product Config',
+              to: '/use-cases/product-config'
+            },
+            {
+              label: 'Security Response',
+              to: '/use-cases/security-response'
             }
           ]
         },

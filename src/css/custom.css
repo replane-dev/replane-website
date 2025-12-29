@@ -313,7 +313,8 @@ html[data-theme='dark'] {
 /* Dark-only pages: force dark background-grid styles regardless of global theme */
 [data-theme='dark'] .background-grid,
 .homepage-dark-only .background-grid,
-.pricing-dark-only .background-grid {
+.pricing-dark-only .background-grid,
+.usecase-dark-only .background-grid {
   background: linear-gradient(to bottom, #0c0a09, #1c1917) !important;
 
   &::before {
@@ -324,34 +325,40 @@ html[data-theme='dark'] {
 
 [data-theme='dark'] .background-grid--fade-out,
 .homepage-dark-only .background-grid--fade-out,
-.pricing-dark-only .background-grid--fade-out {
+.pricing-dark-only .background-grid--fade-out,
+.usecase-dark-only .background-grid--fade-out {
   background:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(231, 229, 228, 0.06), transparent),
     linear-gradient(to bottom, #0c0a09, #1c1917) !important;
 }
 
-/* Hide theme toggle on dark-only pages (homepage and pricing) */
+/* Hide theme toggle on dark-only pages (homepage, pricing, and use cases) */
 .homepage-dark-only [class*='colorModeToggle'],
 .homepage-dark-only [class*='toggle_'],
 .pricing-dark-only [class*='colorModeToggle'],
-.pricing-dark-only [class*='toggle_'] {
+.pricing-dark-only [class*='toggle_'],
+.usecase-dark-only [class*='colorModeToggle'],
+.usecase-dark-only [class*='toggle_'] {
   display: none !important;
 }
 
 /* Force dark background on html/body for dark-only pages (prevents white on overscroll) */
 .homepage-dark-only,
-.pricing-dark-only {
+.pricing-dark-only,
+.usecase-dark-only {
   background-color: #0c0a09 !important;
 }
 
 html:has(.homepage-dark-only),
-html:has(.pricing-dark-only) {
+html:has(.pricing-dark-only),
+html:has(.usecase-dark-only) {
   background-color: #0c0a09 !important;
 }
 
 /* Force dark mode for navbar and footer on dark-only pages */
 .homepage-dark-only,
-.pricing-dark-only {
+.pricing-dark-only,
+.usecase-dark-only {
   /* Navbar */
   & .navbar {
     --ifm-navbar-background-color: #0c0a09;
