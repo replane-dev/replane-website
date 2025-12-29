@@ -8,7 +8,6 @@ import Benefits from '@/components/Homepage/Benefits'
 import HomepageFeatures from '@/components/Homepage/Features'
 import UseCases from '@/components/Homepage/UseCases'
 import Testimonials from '@/components/Homepage/Testimonials'
-import Authentication from '@/components/Homepage/Integrations'
 import SupportedTech from '@/components/Homepage/SupportedTech'
 import GlobalInfra from '@/components/Homepage/GlobalInfra'
 import FinalCTA from '@/components/Homepage/FinalCTA'
@@ -65,10 +64,9 @@ export default function Home({ homePageBlogMetadata, recentPosts }: HomeProps) {
           <TrustedBy />
           <PainPoints />
           <Benefits />
+          <SupportedTech />
           <HomepageFeatures />
           <UseCases />
-          <SupportedTech />
-          <Authentication />
           <GlobalInfra />
           {/* <Testimonials /> */}
           <CreatorWord />

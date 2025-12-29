@@ -5,9 +5,9 @@ import {
   Shield,
   GitBranch,
   Eye,
-  Database,
+  Server,
   Zap,
-  MousePointer
+  Layers
 } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
@@ -60,7 +60,7 @@ const content: UseCaseContent = {
     {
       title: 'Unlimited Versions',
       description: 'Complete history preserved for every config',
-      icon: <Database className='h-6 w-6' />
+      icon: <Server className='h-6 w-6' />
     },
     {
       title: 'Instant Recovery',
@@ -75,7 +75,7 @@ const content: UseCaseContent = {
     {
       title: 'One-Click Restore',
       description: 'Restore any previous version instantly',
-      icon: <MousePointer className='h-6 w-6' />
+      icon: <Layers className='h-6 w-6' />
     }
   ],
 

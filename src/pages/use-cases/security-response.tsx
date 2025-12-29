@@ -1,4 +1,4 @@
-import { Shield, AlertTriangle, Lock, Zap, History, Eye, Rocket, MousePointer } from 'lucide-react'
+import { Shield, AlertTriangle, Lock, Zap, History, Eye, Layers, Clock } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -49,8 +49,8 @@ const content: UseCaseContent = {
   features: [
     { title: 'Instant Response', description: 'Block threats in under a second', icon: <Zap className='h-6 w-6' /> },
     { title: 'Full Audit Trail', description: 'Complete history of all security changes', icon: <History className='h-6 w-6' /> },
-    { title: 'No Deploys', description: 'Respond to threats without code changes', icon: <Rocket className='h-6 w-6' /> },
-    { title: 'One-Click Lockdown', description: 'Activate security mode instantly', icon: <MousePointer className='h-6 w-6' /> }
+    { title: 'No Deploys', description: 'Respond to threats without code changes', icon: <Layers className='h-6 w-6' /> },
+    { title: 'One-Click Lockdown', description: 'Activate security mode instantly', icon: <Clock className='h-6 w-6' /> }
   ],
 
   steps: [
