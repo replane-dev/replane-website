@@ -43,12 +43,42 @@ const sidebars: SidebarsConfig = {
         id: 'sdk/index'
       },
       items: [
-        'sdk/javascript',
-        'sdk/react',
-        'sdk/nextjs',
-        'sdk/svelte',
-        'sdk/python',
-        'sdk/dotnet',
+        {
+          type: 'category',
+          label: 'JavaScript',
+          link: { type: 'doc', id: 'sdk/javascript/index' },
+          items: ['sdk/javascript/guide', 'sdk/javascript/api']
+        },
+        {
+          type: 'category',
+          label: 'React',
+          link: { type: 'doc', id: 'sdk/react/index' },
+          items: ['sdk/react/guide', 'sdk/react/api']
+        },
+        {
+          type: 'category',
+          label: 'Next.js',
+          link: { type: 'doc', id: 'sdk/nextjs/index' },
+          items: ['sdk/nextjs/guide', 'sdk/nextjs/api']
+        },
+        {
+          type: 'category',
+          label: 'Svelte',
+          link: { type: 'doc', id: 'sdk/svelte/index' },
+          items: ['sdk/svelte/guide', 'sdk/svelte/api']
+        },
+        {
+          type: 'category',
+          label: 'Python',
+          link: { type: 'doc', id: 'sdk/python/index' },
+          items: ['sdk/python/guide', 'sdk/python/api']
+        },
+        {
+          type: 'category',
+          label: '.NET',
+          link: { type: 'doc', id: 'sdk/dotnet/index' },
+          items: ['sdk/dotnet/guide', 'sdk/dotnet/api']
+        },
         'sdk/building-an-sdk'
       ]
     }

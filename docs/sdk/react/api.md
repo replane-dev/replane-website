@@ -1,60 +1,18 @@
 ---
-title: React SDK
-description: Integrate Replane into React applications with hooks and context
+title: API Reference
+description: React SDK API documentation
+sidebar_label: API Reference
 ---
 
-# React SDK
+# API Reference
 
-The official React SDK for Replane. Provides hooks and context for seamless React integration with realtime updates.
+Complete API documentation for the React SDK.
 
-## Installation
-
-```bash npm2yarn
-npm install @replanejs/react
-```
-
-## Requirements
-
-- React 18.0.0 or higher
-- Node.js 18.0.0 or higher
-
-## Quick start
-
-```tsx
-import { ReplaneProvider, useConfig } from '@replanejs/react';
-
-function App() {
-  return (
-    <ReplaneProvider
-      connection={{
-        baseUrl: 'https://replane.example.com',
-        sdkKey: process.env.REPLANE_SDK_KEY,
-      }}
-      loader={<div>Loading...</div>}
-    >
-      <MyComponent />
-    </ReplaneProvider>
-  );
-}
-
-function MyComponent() {
-  const isFeatureEnabled = useConfig<boolean>('feature-flag');
-
-  return (
-    <div>
-      {isFeatureEnabled ? 'Feature is enabled!' : 'Feature is disabled'}
-    </div>
-  );
-}
-```
-
-## API Reference
-
-### ReplaneProvider
+## ReplaneProvider
 
 Provider component that makes the Replane client available to your component tree.
 
-#### Provider props
+### Props
 
 | Prop         | Type                        | Required | Description                                             |
 | ------------ | --------------------------- | -------- | ------------------------------------------------------- |
@@ -67,9 +25,7 @@ Provider component that makes the Replane client available to your component tre
 | `suspense`   | `boolean`                   | No       | Use React Suspense for loading state                    |
 | `async`      | `boolean`                   | No       | Connect asynchronously (renders immediately with defaults) |
 
-#### Connection options
-
-The `connection` prop accepts the following options:
+### Connection options
 
 | Option               | Type                  | Required | Description                              |
 | -------------------- | --------------------- | -------- | ---------------------------------------- |
@@ -81,9 +37,9 @@ The `connection` prop accepts the following options:
 | `inactivityTimeoutMs`| `number`              | No       | SSE inactivity timeout (default: 30000)  |
 | `fetchFn`            | `typeof fetch`        | No       | Custom fetch implementation              |
 
-See the [JavaScript SDK documentation](/docs/sdk/javascript#api-reference) for more details.
+See the [JavaScript SDK documentation](/docs/sdk/javascript/api) for more details.
 
-#### With connection (recommended)
+### With connection (recommended)
 
 ```tsx
 import { ErrorBoundary } from 'react-error-boundary';
@@ -101,7 +57,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 </ErrorBoundary>
 ```
 
-#### With pre-created client
+### With pre-created client
 
 ```tsx
 import { Replane } from '@replanejs/sdk';
@@ -117,7 +73,7 @@ await client.connect({
 </ReplaneProvider>
 ```
 
-#### With Suspense
+### With Suspense
 
 ```tsx
 <ErrorBoundary fallback={<div>Failed to load configuration</div>}>
@@ -135,7 +91,7 @@ await client.connect({
 </ErrorBoundary>
 ```
 
-#### With async mode
+### With async mode
 
 Connect in the background while rendering immediately with defaults:
 
@@ -152,7 +108,7 @@ Connect in the background while rendering immediately with defaults:
 </ReplaneProvider>
 ```
 
-#### With snapshot (SSR/hydration)
+### With snapshot (SSR/hydration)
 
 ```tsx
 // On the server
@@ -172,7 +128,7 @@ const snapshot = serverClient.getSnapshot();
 </ReplaneProvider>
 ```
 
-### useConfig
+## useConfig
 
 Hook to retrieve a configuration value. Automatically subscribes to updates and re-renders when the value changes.
 
@@ -193,7 +149,7 @@ function MyComponent() {
 }
 ```
 
-### useReplane
+## useReplane
 
 Hook to access the underlying Replane client directly.
 
@@ -210,7 +166,7 @@ function MyComponent() {
 }
 ```
 
-### createConfigHook
+## createConfigHook
 
 Factory function to create a typed version of `useConfig` with autocomplete for config names.
 
@@ -241,7 +197,7 @@ function MyComponent() {
 }
 ```
 
-### createReplaneHook
+## createReplaneHook
 
 Factory function to create a typed version of `useReplane`.
 
@@ -258,115 +214,22 @@ function MyComponent() {
 }
 ```
 
-## Type safety
+## clearSuspenseCache
 
-Define your config types for full TypeScript support:
-
-```tsx
-interface AppConfigs {
-  'theme-config': {
-    darkMode: boolean;
-    primaryColor: string;
-  };
-  'feature-flags': {
-    newUI: boolean;
-    beta: boolean;
-  };
-  'max-items': number;
-}
-
-const useAppConfig = createConfigHook<AppConfigs>();
-const useAppReplane = createReplaneHook<AppConfigs>();
-
-function Settings() {
-  const theme = useAppConfig('theme-config');
-  //    ^? { darkMode: boolean; primaryColor: string }
-
-  return (
-    <div style={{ color: theme.primaryColor }}>
-      Dark mode: {theme.darkMode ? 'enabled' : 'disabled'}
-    </div>
-  );
-}
-```
-
-## Context and overrides
-
-Pass context for override evaluation:
+Clears the suspense cache. Useful for retrying after errors.
 
 ```tsx
-function UserFeature({ userId, plan }: { userId: string; plan: string }) {
-  const premiumFeature = useConfig<boolean>('premium-feature', {
-    context: { userId, plan },
-  });
-
-  if (!premiumFeature) return null;
-
-  return <PremiumContent />;
-}
-```
-
-## Error handling
-
-Use React Error Boundaries to handle initialization errors:
-
-```tsx
-import { ErrorBoundary } from 'react-error-boundary';
 import { clearSuspenseCache } from '@replanejs/react';
 
 <ErrorBoundary
-  fallbackRender={({ error, resetErrorBoundary }) => (
-    <div>
-      <p>Error: {error.message}</p>
-      <button onClick={resetErrorBoundary}>Retry</button>
-    </div>
+  fallbackRender={({ resetErrorBoundary }) => (
+    <button onClick={resetErrorBoundary}>Retry</button>
   )}
   onReset={() => clearSuspenseCache()}
 >
-  <ReplaneProvider connection={connection} loader={<Loading />}>
+  <ReplaneProvider connection={connection} suspense>
     <App />
   </ReplaneProvider>
 </ErrorBoundary>
 ```
 
-## Best practices
-
-### Create typed hooks once
-
-```tsx
-// lib/replane.ts
-import { createConfigHook, createReplaneHook } from '@replanejs/react';
-import type { AppConfigs } from './types';
-
-export const useAppConfig = createConfigHook<AppConfigs>();
-export const useAppReplane = createReplaneHook<AppConfigs>();
-
-// components/Feature.tsx
-import { useAppConfig } from '@/lib/replane';
-
-function Feature() {
-  const flags = useAppConfig('feature-flags');
-  // ...
-}
-```
-
-### Wrap app at the root
-
-```tsx
-// App.tsx
-import { ReplaneProvider } from '@replanejs/react';
-
-function App() {
-  return (
-    <ReplaneProvider connection={connection} loader={<Splash />}>
-      <Router />
-    </ReplaneProvider>
-  );
-}
-```
-
-## Next steps
-
-- [Next.js SDK](/docs/sdk/nextjs) — Server-side rendering support
-- [Feature Flags](/docs/guides/feature-flags) — Toggle features
-- [Override Rules](/docs/guides/override-rules) — Target specific users
