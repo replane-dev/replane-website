@@ -63,9 +63,12 @@ export default function UseCases() {
       <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section header */}
         <div className='mb-16 text-center'>
-          <div className='mb-4 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-1.5 text-sm font-medium text-stone-300'>
+          <Link
+            to='/use-cases'
+            className='mb-4 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800 px-4 py-1.5 text-sm font-medium text-stone-300 transition-colors hover:border-stone-600 hover:bg-stone-700 hover:no-underline'
+          >
             Use Cases
-          </div>
+          </Link>
           <h2 className='mb-4 text-3xl font-bold tracking-tight text-stone-100 sm:text-4xl lg:text-5xl'>
             Built for real teams
           </h2>
