@@ -1,5 +1,5 @@
 import { X, Check, ArrowRight } from 'lucide-react'
-import { accentColorClasses, type AccentColor, type PainPoint, type Solution } from './types'
+import type { AccentColor, PainPoint, Solution } from './types'
 
 interface PainVsSolutionProps {
   painPoints: PainPoint[]
@@ -9,11 +9,8 @@ interface PainVsSolutionProps {
 
 export default function PainVsSolution({
   painPoints,
-  solutions,
-  accentColor
+  solutions
 }: PainVsSolutionProps) {
-  const colors = accentColorClasses[accentColor]
-
   return (
     <section className='relative overflow-hidden py-24'>
       {/* Background */}
@@ -35,18 +32,18 @@ export default function PainVsSolution({
 
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
           {/* Pain Points - Before */}
-          <div className='rounded-2xl border border-red-500/20 bg-red-500/5 p-8'>
+          <div className='rounded-2xl border border-stone-800 bg-stone-900/50 p-8'>
             <div className='mb-6 flex items-center gap-3'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-red-500/20'>
-                <X className='h-5 w-5 text-red-400' />
+              <div className='flex h-10 w-10 items-center justify-center rounded-full border border-stone-700 bg-stone-800'>
+                <X className='h-5 w-5 text-stone-400' />
               </div>
-              <h3 className='text-xl font-bold text-red-400'>Without Replane</h3>
+              <h3 className='text-xl font-bold text-stone-300'>Without Replane</h3>
             </div>
             <ul className='space-y-4'>
               {painPoints.map((point, idx) => (
                 <li key={idx} className='flex items-start gap-3'>
-                  <div className='mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500/20'>
-                    <X className='h-3 w-3 text-red-400' />
+                  <div className='mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-stone-700 bg-stone-800'>
+                    <X className='h-3 w-3 text-stone-500' />
                   </div>
                   <div>
                     <p className='font-medium text-stone-200'>{point.title}</p>
@@ -58,21 +55,21 @@ export default function PainVsSolution({
           </div>
 
           {/* Solutions - After */}
-          <div className={`rounded-2xl border ${colors.border} ${colors.bgSubtle} p-8`}>
+          <div className='rounded-2xl border border-stone-700 bg-stone-800/50 p-8'>
             <div className='mb-6 flex items-center gap-3'>
-              <div className={`flex h-10 w-10 items-center justify-center rounded-full ${colors.bgSubtle}`}>
-                <Check className={`h-5 w-5 ${colors.text}`} />
+              <div className='flex h-10 w-10 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10'>
+                <Check className='h-5 w-5 text-emerald-400' />
               </div>
-              <h3 className={`text-xl font-bold ${colors.text}`}>With Replane</h3>
+              <h3 className='text-xl font-bold text-stone-100'>With Replane</h3>
             </div>
             <ul className='space-y-4'>
               {solutions.map((solution, idx) => (
                 <li key={idx} className='flex items-start gap-3'>
-                  <div className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${colors.bgSubtle}`}>
-                    <Check className={`h-3 w-3 ${colors.text}`} />
+                  <div className='mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10'>
+                    <Check className='h-3 w-3 text-emerald-400' />
                   </div>
                   <div>
-                    <p className='font-medium text-stone-200'>{solution.title}</p>
+                    <p className='font-medium text-stone-100'>{solution.title}</p>
                     <p className='text-sm text-stone-400'>{solution.description}</p>
                   </div>
                 </li>
@@ -83,12 +80,11 @@ export default function PainVsSolution({
 
         {/* Arrow indicator for mobile */}
         <div className='mt-8 flex justify-center lg:hidden'>
-          <div className={`flex h-12 w-12 items-center justify-center rounded-full ${colors.bg}`}>
-            <ArrowRight className='h-6 w-6 text-white' />
+          <div className='flex h-12 w-12 items-center justify-center rounded-full border border-stone-700 bg-stone-800'>
+            <ArrowRight className='h-6 w-6 text-stone-400' />
           </div>
         </div>
       </div>
     </section>
   )
 }
-
