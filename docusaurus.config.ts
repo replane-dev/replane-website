@@ -160,7 +160,7 @@ const config: Config = {
           ]
         },
         {
-          title: 'SDKs',
+          title: 'SDK',
           items: [
             {
               label: 'JavaScript',
