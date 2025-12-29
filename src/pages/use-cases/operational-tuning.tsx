@@ -108,7 +108,7 @@ const content: UseCaseContent = {
     {
       question: 'Can I set different values for different environments?',
       answer:
-        'Yes! Use different Replane projects (via SDK key) for dev, staging, and production. Or use override rules to set environment-specific values within the same project.'
+        'Yes! Replane natively supports multiple environments within a single project. Each environment (dev, staging, production) has its own SDK key and can have different config values. No need for separate projects.'
     },
     {
       question: 'What about parameters that need coordination across instances?',

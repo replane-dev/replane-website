@@ -34,7 +34,7 @@ const content: UseCaseContent = {
     },
     {
       title: 'Environment isolation',
-      description: 'Separate projects or override rules per environment.'
+      description: 'Native multi-environment support with per-environment values and access control.'
     },
     {
       title: 'Full audit trail',
@@ -113,7 +113,7 @@ const content: UseCaseContent = {
     {
       question: 'How do I prevent accidental production changes?',
       answer:
-        'Use role-based access control to restrict who can modify production configs. Require approval workflows for production changes. Separate projects for prod add an extra layer of safety.'
+        'Use role-based access control to restrict who can modify production configs. Each environment has its own SDK key and access controls. Require approval workflows for production changes.'
     },
     {
       question: 'What about configs that require a restart?',

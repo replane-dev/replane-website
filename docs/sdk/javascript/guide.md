@@ -240,7 +240,7 @@ await replane.connect({
 
 ## Multiple projects
 
-Each SDK key is tied to one project. For multiple projects, create separate clients:
+Each SDK key is tied to one project and environment. For multiple projects, create separate clients:
 
 ```typescript
 const projectA = new Replane<ProjectAConfigs>()
