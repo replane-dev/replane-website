@@ -1,4 +1,4 @@
-import { ShieldOff, Zap, AlertTriangle, Clock, Shield, Activity } from 'lucide-react'
+import { ShieldOff, Zap, AlertTriangle, Clock, Shield, Activity, Server, Rocket, Layers } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '<1s', label: 'Response time', description: 'Disable features instantly' },
-    { value: '100%', label: 'Uptime', description: 'No service restart needed' },
-    { value: '0', label: 'Deploys', description: 'No code changes required' },
-    { value: '∞', label: 'Kill switches', description: 'Protect every risky feature' }
+  features: [
+    { title: 'Instant Response', description: 'Disable features in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'Zero Downtime', description: 'No service restart needed', icon: <Server className='h-6 w-6' /> },
+    { title: 'No Deploys', description: 'No code changes required', icon: <Rocket className='h-6 w-6' /> },
+    { title: 'Unlimited Switches', description: 'Protect every risky feature', icon: <Layers className='h-6 w-6' /> }
   ],
 
   steps: [

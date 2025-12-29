@@ -2,7 +2,7 @@ import Layout from '@theme/Layout'
 import UseCaseHero from './UseCaseHero'
 import HowItWorks from './HowItWorks'
 import PainVsSolution from './PainVsSolution'
-import UseCaseStats from './UseCaseStats'
+import UseCaseFeatures from './UseCaseFeatures'
 import Benefits from './Benefits'
 import CodeExamples from './CodeExamples'
 import UseCaseFAQ from './UseCaseFAQ'
@@ -26,14 +26,14 @@ export default function UseCaseLayout({
   codeExamples,
   painPoints,
   solutions,
-  stats,
+  features,
   faq,
   relatedUseCases,
   pageTitle,
   pageDescription
 }: UseCaseLayoutProps) {
   const hasPainVsSolution = painPoints && painPoints.length > 0 && solutions && solutions.length > 0
-  const hasStats = stats && stats.length > 0
+  const hasFeatures = features && features.length > 0
   const hasFAQ = faq && faq.length > 0
   const hasRelatedUseCases = relatedUseCases && relatedUseCases.length > 0
 
@@ -58,7 +58,7 @@ export default function UseCaseLayout({
               accentColor={accentColor}
             />
           )}
-          {hasStats && <UseCaseStats stats={stats} accentColor={accentColor} />}
+          {hasFeatures && <UseCaseFeatures features={features} accentColor={accentColor} />}
           <HowItWorks steps={steps} accentColor={accentColor} />
           <Benefits benefits={benefits} accentColor={accentColor} />
           <CodeExamples codeExamples={codeExamples} accentColor={accentColor} />

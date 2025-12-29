@@ -1,4 +1,4 @@
-import { FileText, Edit3, Users, Zap, History, Eye } from 'lucide-react'
+import { FileText, Edit3, Users, Zap, History, Eye, Rocket, Database } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '<1s', label: 'Publish time', description: 'Content goes live instantly' },
-    { value: '0', label: 'Deploys', description: 'No code changes needed' },
-    { value: '∞', label: 'Revisions', description: 'Full version history' },
-    { value: '100%', label: 'Self-service', description: 'No dev involvement' }
+  features: [
+    { title: 'Instant Publish', description: 'Content goes live in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'No Deploys', description: 'Update content without code changes', icon: <Rocket className='h-6 w-6' /> },
+    { title: 'Full Version History', description: 'Every revision saved and restorable', icon: <Database className='h-6 w-6' /> },
+    { title: 'Self-Service', description: 'Non-technical teams can update content', icon: <Users className='h-6 w-6' /> }
   ],
 
   steps: [

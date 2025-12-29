@@ -1,4 +1,4 @@
-import { Flag, Code, Zap, Shield, Users, Clock } from 'lucide-react'
+import { Flag, Code, Zap, Shield, Users, Clock, Gauge, Server, Layers } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -47,12 +47,12 @@ const content: UseCaseContent = {
     }
   ],
 
-  // Key stats
-  stats: [
-    { value: '<1s', label: 'Update latency', description: 'Changes propagate instantly' },
-    { value: '99.99%', label: 'Uptime', description: 'Enterprise-grade reliability' },
-    { value: '0', label: 'Deploys needed', description: 'Toggle features without code' },
-    { value: '6', label: 'SDKs', description: 'All major languages supported' }
+  // Key features
+  features: [
+    { title: 'Instant Updates', description: 'Changes propagate in under a second via SSE', icon: <Zap className='h-6 w-6' /> },
+    { title: 'High Availability', description: 'Enterprise-grade reliability with 99.99% uptime', icon: <Server className='h-6 w-6' /> },
+    { title: 'No Deploys Needed', description: 'Toggle features from the dashboard without code changes', icon: <Gauge className='h-6 w-6' /> },
+    { title: 'All Major SDKs', description: 'JavaScript, React, Next.js, Svelte, Python, .NET', icon: <Layers className='h-6 w-6' /> }
   ],
 
   steps: [

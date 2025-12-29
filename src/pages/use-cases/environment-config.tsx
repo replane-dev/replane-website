@@ -1,4 +1,4 @@
-import { Server, Layers, Lock, RefreshCw, GitBranch, Eye } from 'lucide-react'
+import { Server, Layers, Lock, RefreshCw, GitBranch, Eye, Zap, History } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '1', label: 'Dashboard', description: 'For all environments' },
-    { value: '0', label: 'Restarts', description: 'Live config updates' },
-    { value: '100%', label: 'Visibility', description: 'Full change history' },
-    { value: '∞', label: 'Environments', description: 'Dev, staging, prod, and more' }
+  features: [
+    { title: 'Unified Dashboard', description: 'Manage all environments from one place', icon: <Layers className='h-6 w-6' /> },
+    { title: 'Live Updates', description: 'No restarts needed for config changes', icon: <Zap className='h-6 w-6' /> },
+    { title: 'Full History', description: 'Complete change history with audit trail', icon: <History className='h-6 w-6' /> },
+    { title: 'Unlimited Environments', description: 'Dev, staging, prod, and any custom env', icon: <Server className='h-6 w-6' /> }
   ],
 
   steps: [

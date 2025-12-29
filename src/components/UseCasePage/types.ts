@@ -42,10 +42,10 @@ export interface Solution {
   description: string
 }
 
-export interface Stat {
-  value: string
-  label: string
-  description?: string
+export interface Feature {
+  title: string
+  description: string
+  icon: ReactNode
 }
 
 export interface FAQItem {
@@ -72,7 +72,7 @@ export interface UseCaseContent {
   // Optional new sections
   painPoints?: PainPoint[]
   solutions?: Solution[]
-  stats?: Stat[]
+  features?: Feature[]
   faq?: FAQItem[]
   relatedUseCases?: RelatedUseCase[]
 }

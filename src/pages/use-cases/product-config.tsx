@@ -1,4 +1,4 @@
-import { Sliders, Target, TrendingUp, Zap, RefreshCw, BarChart3 } from 'lucide-react'
+import { Sliders, Target, TrendingUp, Zap, RefreshCw, BarChart3, Rocket, RotateCcw } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '<1s', label: 'Apply time', description: 'Changes take effect instantly' },
-    { value: '0', label: 'Deploys', description: 'No code changes needed' },
-    { value: '∞', label: 'Iterations', description: 'Tune as often as needed' },
-    { value: '100%', label: 'Rollback', description: 'Revert any change instantly' }
+  features: [
+    { title: 'Instant Apply', description: 'Changes take effect in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'No Deploys', description: 'Update product config without code changes', icon: <Rocket className='h-6 w-6' /> },
+    { title: 'Unlimited Iterations', description: 'Tune parameters as often as needed', icon: <RefreshCw className='h-6 w-6' /> },
+    { title: 'Instant Rollback', description: 'Revert any change with one click', icon: <RotateCcw className='h-6 w-6' /> }
   ],
 
   steps: [

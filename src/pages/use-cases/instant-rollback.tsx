@@ -1,4 +1,14 @@
-import { RotateCcw, History, Clock, Shield, GitBranch, Eye } from 'lucide-react'
+import {
+  RotateCcw,
+  History,
+  Clock,
+  Shield,
+  GitBranch,
+  Eye,
+  Database,
+  Zap,
+  MousePointer
+} from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +56,27 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '∞', label: 'Versions', description: 'Complete history preserved' },
-    { value: '<1s', label: 'Recovery', description: 'Rollback takes effect instantly' },
-    { value: '100%', label: 'Auditability', description: 'Full change history' },
-    { value: '1', label: 'Click', description: 'To restore any version' }
+  features: [
+    {
+      title: 'Unlimited Versions',
+      description: 'Complete history preserved for every config',
+      icon: <Database className='h-6 w-6' />
+    },
+    {
+      title: 'Instant Recovery',
+      description: 'Rollback takes effect in under a second',
+      icon: <Zap className='h-6 w-6' />
+    },
+    {
+      title: 'Full Auditability',
+      description: 'Track every change with complete history',
+      icon: <History className='h-6 w-6' />
+    },
+    {
+      title: 'One-Click Restore',
+      description: 'Restore any previous version instantly',
+      icon: <MousePointer className='h-6 w-6' />
+    }
   ],
 
   steps: [

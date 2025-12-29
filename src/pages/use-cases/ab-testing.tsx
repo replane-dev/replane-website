@@ -1,4 +1,4 @@
-import { BarChart3, Percent, Target, TrendingUp, Shuffle, LineChart } from 'lucide-react'
+import { BarChart3, Percent, Target, TrendingUp, Shuffle, LineChart, Zap, Rocket, Layers } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -50,11 +50,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '100%', label: 'Consistent', description: 'Same variant across sessions' },
-    { value: '<1s', label: 'Traffic shifts', description: 'Changes propagate instantly' },
-    { value: '0', label: 'Deploys', description: 'Adjust splits without code' },
-    { value: '∞', label: 'Variants', description: 'No limit on experiment variants' }
+  features: [
+    { title: 'Consistent Assignment', description: 'Same variant across sessions for each user', icon: <Target className='h-6 w-6' /> },
+    { title: 'Instant Traffic Shifts', description: 'Changes propagate in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'No Deploys', description: 'Adjust experiment splits without code', icon: <Rocket className='h-6 w-6' /> },
+    { title: 'Unlimited Variants', description: 'No limit on experiment variants', icon: <Layers className='h-6 w-6' /> }
   ],
 
   steps: [

@@ -1,4 +1,4 @@
-import { Users, Building2, Layers, Settings, Shield, Gauge } from 'lucide-react'
+import { Users, Building2, Layers, Settings, Shield, Gauge, Zap, Eye, Rocket } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '∞', label: 'Tenants', description: 'No limit on customers' },
-    { value: '<1s', label: 'Updates', description: 'Changes apply instantly' },
-    { value: '100%', label: 'Visibility', description: 'All configs in one dashboard' },
-    { value: '0', label: 'Deploys', description: 'No code changes needed' }
+  features: [
+    { title: 'Unlimited Tenants', description: 'No limit on customers or accounts', icon: <Users className='h-6 w-6' /> },
+    { title: 'Instant Updates', description: 'Changes apply in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'Full Visibility', description: 'All configs in one dashboard', icon: <Eye className='h-6 w-6' /> },
+    { title: 'No Deploys', description: 'No code changes needed', icon: <Rocket className='h-6 w-6' /> }
   ],
 
   steps: [

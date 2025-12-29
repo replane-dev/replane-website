@@ -1,4 +1,4 @@
-import { Settings, Gauge, Sliders, Zap, Server, RefreshCw } from 'lucide-react'
+import { Settings, Gauge, Sliders, Zap, Server, RefreshCw, Eye, RotateCcw } from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -46,11 +46,11 @@ const content: UseCaseContent = {
     }
   ],
 
-  stats: [
-    { value: '<1s', label: 'Apply time', description: 'Changes take effect instantly' },
-    { value: '0', label: 'Downtime', description: 'No restarts required' },
-    { value: '100%', label: 'Visibility', description: 'All params in one dashboard' },
-    { value: '∞', label: 'Iterations', description: 'Tune as often as needed' }
+  features: [
+    { title: 'Instant Apply', description: 'Changes take effect in under a second', icon: <Zap className='h-6 w-6' /> },
+    { title: 'Zero Downtime', description: 'No restarts or deploys required', icon: <Server className='h-6 w-6' /> },
+    { title: 'Full Visibility', description: 'All parameters in one dashboard', icon: <Eye className='h-6 w-6' /> },
+    { title: 'Unlimited Iterations', description: 'Tune as often as needed', icon: <RefreshCw className='h-6 w-6' /> }
   ],
 
   steps: [
