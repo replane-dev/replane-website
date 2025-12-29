@@ -38,6 +38,10 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'SDK',
       collapsed: false,
+      link: {
+        type: 'doc',
+        id: 'sdk/index'
+      },
       items: [
         'sdk/javascript',
         'sdk/react',

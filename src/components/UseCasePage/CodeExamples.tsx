@@ -37,7 +37,7 @@ export default function CodeExamples({ codeExamples, accentColor }: CodeExamples
   return (
     <section className='relative overflow-hidden py-24'>
       {/* Background */}
-      <div className='pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c0a09] to-[#1c1917]' />
+      <div className='pointer-events-none absolute inset-0 bg-linear-to-b from-[#0c0a09] to-[#1c1917]' />
 
       <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         {/* Section header */}
@@ -84,7 +84,7 @@ export default function CodeExamples({ codeExamples, accentColor }: CodeExamples
                 >
                   {tokens.map((line, i) => (
                     <div key={i} {...getLineProps({ line })}>
-                      <span className='mr-4 inline-block w-8 select-none text-right text-stone-600'>
+                      <span className='mr-4 inline-block w-8 text-right text-stone-600 select-none'>
                         {i + 1}
                       </span>
                       {line.map((token, key) => (
@@ -100,7 +100,7 @@ export default function CodeExamples({ codeExamples, accentColor }: CodeExamples
             <div className='absolute top-4 right-4'>
               <Link
                 href={activeExample.docsLink}
-                className={`inline-flex items-center gap-1.5 rounded-lg border ${colors.border} ${colors.bgSubtle} px-3 py-1.5 text-xs font-medium ${colors.text} transition-all hover:opacity-80 hover:no-underline`}
+                className={`inline-flex items-center gap-1.5 rounded-lg border ${colors.border} ${colors.bgSubtle} px-3 py-1.5 text-xs font-medium ${colors.text} transition-all hover:no-underline hover:opacity-80`}
               >
                 View {activeExample.label} SDK Docs
                 <ExternalLink className='h-3 w-3' />
@@ -112,7 +112,7 @@ export default function CodeExamples({ codeExamples, accentColor }: CodeExamples
         {/* All SDKs link */}
         <div className='mt-8 text-center'>
           <Link
-            href='/docs/sdks'
+            href='/docs/sdk'
             className='inline-flex items-center gap-2 text-stone-400 transition-colors hover:text-stone-200 hover:no-underline'
           >
             <span>View all SDKs and installation guides</span>
