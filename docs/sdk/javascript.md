@@ -136,19 +136,9 @@ const limit = replane.get('api-rate-limit', {
 const timeout = replane.get('timeout-ms', { default: 5000 }) // number
 ```
 
-### `replane.subscribe(callback)` or `replane.subscribe(name, callback)`
+### `replane.subscribe(name, callback)`
 
-Subscribes to config changes. Returns an unsubscribe function.
-
-#### All configs
-
-```typescript
-const unsubscribe = replane.subscribe((config) => {
-  console.log(`${config.name} changed to:`, config.value)
-})
-```
-
-#### Specific config
+Subscribes to a specific config's changes. Returns an unsubscribe function.
 
 ```typescript
 const unsubscribe = replane.subscribe('feature-flag', (config) => {
@@ -287,11 +277,6 @@ The SDK maintains a persistent SSE connection for realtime updates.
 ### Subscribing to changes
 
 ```typescript
-// Subscribe to all changes
-const unsubAll = replane.subscribe((config) => {
-  console.log(`${config.name} updated:`, config.value)
-})
-
 // Subscribe to specific config
 const unsubFeature = replane.subscribe('feature-flag', (config) => {
   // React to change
@@ -299,7 +284,6 @@ const unsubFeature = replane.subscribe('feature-flag', (config) => {
 })
 
 // Unsubscribe when done
-unsubAll()
 unsubFeature()
 ```
 
