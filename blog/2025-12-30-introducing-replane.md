@@ -4,7 +4,6 @@ title: 'Introducing Replane: Stop Deploying Code to Change Settings'
 authors: replane
 tags: [announcement, release, config-management, feature-flags]
 description: Self-hosted config management with version history, instant rollback, and realtime updates. Deploy once, change behavior forever.
-image: /img/blog/introducing-replane-og.png
 ---
 
 **Every developer knows the pain**: you need to change a rate limit, toggle a feature, or adjust a timeout. But it's hardcoded. So you open a PR, wait for review, merge, wait for CI, deploy, and pray nothing breaks.
