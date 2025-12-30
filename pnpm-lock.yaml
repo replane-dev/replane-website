@@ -107,8 +107,8 @@ importers:
         version: 5.9.3
     optionalDependencies:
       postman-code-generators:
-        specifier: ^1.14.1
-        version: 1.14.2
+        specifier: ^2.1.0
+        version: 2.1.0
 
 packages:
 
@@ -4780,6 +4780,9 @@ packages:
   mime-format@2.0.1:
     resolution: {integrity: sha512-XxU3ngPbEnrYnNbIX+lYSaYg0M01v6p2ntd2YaFksTu0vayaw5OJvbdRyWs07EYRlLED5qadUZ+xo+XhOvFhwg==}
 
+  mime-format@2.0.2:
+    resolution: {integrity: sha512-Y5ERWVcyh3sby9Fx2U5F1yatiTFjNsqF5NltihTWI9QgNtr5o3dbCZdcKa1l2wyfhnwwoP9HGNxga7LqZLA6gw==}
+
   mime-types@2.1.18:
     resolution: {integrity: sha512-lc/aahn+t4/SWV/qcmumYjymLsWfN3ELhpmVuUFjgsORruuZPVSwAQryq+HHGvO/SI2KVX26bx+En+zhM8g8hQ==}
     engines: {node: '>= 0.6'}
@@ -4795,6 +4798,11 @@ packages:
   mime@1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
     engines: {node: '>=4'}
+    hasBin: true
+
+  mime@3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
     hasBin: true
 
   mimic-fn@2.1.0:
@@ -5567,12 +5575,24 @@ packages:
     resolution: {integrity: sha512-qZAyyowfQAFE4MSCu2KtMGGQE/+oG1JhMZMJNMdZHYCSfQiVVeKxgk3oI4+KJ3d1y5rrm2D6C6x+Z+7iyqm+fA==}
     engines: {node: '>=12'}
 
+  postman-code-generators@2.1.0:
+    resolution: {integrity: sha512-PCptfRoq6pyyqeB9qw87MfjpIZEZIykIna7Api9euhYftyrad/kCkIyXfWF6GrkcHv0nYid05xoRPWPX9JHkZg==}
+    engines: {node: '>=18'}
+
   postman-collection@4.5.0:
     resolution: {integrity: sha512-152JSW9pdbaoJihwjc7Q8lc3nPg/PC9lPTHdMk7SHnHhu/GBJB7b2yb9zG7Qua578+3PxkQ/HYBuXpDSvsf7GQ==}
     engines: {node: '>=10'}
 
+  postman-collection@5.2.0:
+    resolution: {integrity: sha512-ktjlchtpoCw+FZRg+WwnGWH1w9oQDNUBLSRh+9ETPqFAz3SupqHqRuMh74xjQ+PvTWY/WH2JR4ZW+1sH58Ul1g==}
+    engines: {node: '>=18'}
+
   postman-url-encoder@3.0.5:
     resolution: {integrity: sha512-jOrdVvzUXBC7C+9gkIkpDJ3HIxOHTIqjpQ4C1EMt1ZGeMvSEpbFCKq23DEfgsj46vMnDgyQf+1ZLp2Wm+bKSsA==}
+    engines: {node: '>=10'}
+
+  postman-url-encoder@3.0.8:
+    resolution: {integrity: sha512-EOgUMBazo7JNP4TDrd64TsooCiWzzo4143Ws8E8WYGEpn2PKpq+S4XRTDhuRTYHm3VKOpUZs7ZYZq7zSDuesqA==}
     engines: {node: '>=10'}
 
   prebuild-install@7.1.3:
@@ -6084,6 +6104,11 @@ packages:
 
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
+    engines: {node: '>=10'}
+    hasBin: true
+
+  semver@7.7.1:
+    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -6790,6 +6815,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -13076,6 +13102,11 @@ snapshots:
     dependencies:
       charset: 1.0.1
 
+  mime-format@2.0.2:
+    dependencies:
+      charset: 1.0.1
+    optional: true
+
   mime-types@2.1.18:
     dependencies:
       mime-db: 1.33.0
@@ -13089,6 +13120,9 @@ snapshots:
       mime-db: 1.54.0
 
   mime@1.6.0: {}
+
+  mime@3.0.0:
+    optional: true
 
   mimic-fn@2.1.0: {}
 
@@ -13908,6 +13942,16 @@ snapshots:
       postman-collection: 4.5.0
       shelljs: 0.8.5
 
+  postman-code-generators@2.1.0:
+    dependencies:
+      async: 3.2.2
+      detect-package-manager: 3.0.2
+      lodash: 4.17.21
+      path: 0.12.7
+      postman-collection: 5.2.0
+      shelljs: 0.8.5
+    optional: true
+
   postman-collection@4.5.0:
     dependencies:
       '@faker-js/faker': 5.5.3
@@ -13922,9 +13966,29 @@ snapshots:
       semver: 7.6.3
       uuid: 8.3.2
 
+  postman-collection@5.2.0:
+    dependencies:
+      '@faker-js/faker': 5.5.3
+      file-type: 3.9.0
+      http-reasons: 0.1.0
+      iconv-lite: 0.6.3
+      liquid-json: 0.3.1
+      lodash: 4.17.21
+      mime: 3.0.0
+      mime-format: 2.0.2
+      postman-url-encoder: 3.0.8
+      semver: 7.7.1
+      uuid: 8.3.2
+    optional: true
+
   postman-url-encoder@3.0.5:
     dependencies:
       punycode: 2.3.1
+
+  postman-url-encoder@3.0.8:
+    dependencies:
+      punycode: 2.3.1
+    optional: true
 
   prebuild-install@7.1.3:
     dependencies:
@@ -14475,6 +14539,9 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.6.3: {}
+
+  semver@7.7.1:
+    optional: true
 
   semver@7.7.3: {}
 
