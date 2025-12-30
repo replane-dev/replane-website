@@ -3,122 +3,122 @@ import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
   badge: 'Environment Config',
-  title: 'Centralized environment settings',
-  subtitle: 'Replace scattered .env files with live configuration',
+  title: 'Dynamic runtime configuration',
+  subtitle: 'Manage application settings that change across environments',
   description:
-    'Stop managing dozens of .env files across environments. Centralize configuration in Replane with instant updates, version history, and role-based access control.',
+    'Centralize runtime configuration like API endpoints, feature flags, rate limits, and operational parameters. Update settings instantly without deployments. For secrets, use a dedicated secrets manager.',
   accentColor: 'indigo',
 
   painPoints: [
     {
-      title: 'Scattered .env files',
-      description: 'Config files on every server. Hard to track what is where.'
+      title: 'Hardcoded settings',
+      description: 'Timeouts, limits, and URLs baked into code. Changes need deploys.'
     },
     {
-      title: 'Sync problems',
-      description: 'Dev, staging, and prod configs drift. Bugs from config mismatches.'
+      title: 'Environment drift',
+      description: 'Dev and prod configs diverge. Bugs from config mismatches.'
     },
     {
-      title: 'No version history',
-      description: "Who changed what? When? No way to know or rollback."
+      title: 'No visibility',
+      description: "What config is running where? No central view or history."
     },
     {
-      title: 'Restart required',
-      description: 'Config changes need a restart. Downtime for every update.'
+      title: 'Slow changes',
+      description: 'Tuning a rate limit means a new release. Too slow for operations.'
     }
   ],
   solutions: [
     {
-      title: 'Centralized configs',
-      description: 'All environments in one dashboard. Clear visibility.'
+      title: 'Centralized dashboard',
+      description: 'All environments visible in one place. Clear and organized.'
     },
     {
-      title: 'Environment isolation',
-      description: 'Native multi-environment support with per-environment values and access control.'
+      title: 'Instant updates',
+      description: 'Change config values in seconds. No restart or deploy needed.'
     },
     {
       title: 'Full audit trail',
       description: 'Every change logged with author and timestamp.'
     },
     {
-      title: 'Live updates',
-      description: 'Config changes apply immediately. No restart needed.'
+      title: 'Environment isolation',
+      description: 'Per-environment values with separate access controls.'
     }
   ],
 
   features: [
-    { title: 'Unified Dashboard', description: 'Manage all environments from one place', icon: <Layers className='h-6 w-6' /> },
-    { title: 'Live Updates', description: 'No restarts needed for config changes', icon: <Zap className='h-6 w-6' /> },
-    { title: 'Full History', description: 'Complete change history with audit trail', icon: <History className='h-6 w-6' /> },
-    { title: 'Unlimited Environments', description: 'Dev, staging, prod, and any custom env', icon: <Server className='h-6 w-6' /> }
+    { title: 'Live Updates', description: 'Config changes apply in seconds', icon: <Zap className='h-6 w-6' /> },
+    { title: 'Full History', description: 'Complete audit trail for every change', icon: <History className='h-6 w-6' /> },
+    { title: 'Multi-Environment', description: 'Dev, staging, prod with one config', icon: <Server className='h-6 w-6' /> },
+    { title: 'Access Control', description: 'Role-based permissions per environment', icon: <Lock className='h-6 w-6' /> }
   ],
 
   steps: [
     {
-      title: 'Migrate from .env',
+      title: 'Identify runtime configs',
       description:
-        'Import your existing environment variables into Replane. Keep the same names for easy migration.',
+        'Find settings that vary by environment: API URLs, timeouts, rate limits, feature flags, log levels.',
       icon: <Layers className='h-8 w-8' />
     },
     {
-      title: 'Configure per environment',
+      title: 'Create configs per environment',
       description:
-        'Use separate SDK keys or override rules to serve different values per environment.',
+        'Define base values with environment-specific overrides. Each environment gets its own SDK key.',
       icon: <Server className='h-8 w-8' />
     },
     {
-      title: 'Deploy once, configure anywhere',
+      title: 'Deploy once, tune anywhere',
       description:
-        'Same code runs everywhere. Replane provides the right config for each environment.',
+        'Same code runs everywhere. Adjust operational parameters from the dashboard.',
       icon: <GitBranch className='h-8 w-8' />
     }
   ],
   benefits: [
     {
-      title: 'Single source of truth',
+      title: 'Operational agility',
       description:
-        'All config in one place. No more hunting through servers for .env files.',
+        'Tune rate limits, timeouts, and thresholds without code changes or deploys.',
+      icon: <RefreshCw className='h-6 w-6' />
+    },
+    {
+      title: 'Clear visibility',
+      description:
+        'See exactly what config each environment is running. Compare across envs.',
       icon: <Eye className='h-6 w-6' />
     },
     {
-      title: 'Secure by default',
+      title: 'Safe and audited',
       description:
-        'Role-based access control. Audit logs for compliance. Encrypted at rest.',
+        'Role-based access control. Full history of who changed what and when.',
       icon: <Lock className='h-6 w-6' />
-    },
-    {
-      title: 'Instant rollback',
-      description:
-        'Every change is versioned. Revert to any previous state with one click.',
-      icon: <RefreshCw className='h-6 w-6' />
     }
   ],
 
   faq: [
     {
-      question: 'How do I migrate from .env files?',
+      question: 'What should I store in Replane?',
       answer:
-        'Create matching configs in Replane for each .env variable. Update your code to read from Replane instead of process.env. You can do this gradually—read from Replane with .env as fallback.'
+        'Runtime configuration that varies by environment: API endpoints, feature flags, rate limits, cache TTLs, log levels, retry counts, timeout values, UI settings, and operational parameters. Things you want to change without redeploying.'
     },
     {
-      question: 'How do I handle secrets?',
+      question: 'What about secrets like API keys and passwords?',
       answer:
-        'Replane encrypts all config values at rest. For highly sensitive secrets like database passwords, consider using a dedicated secrets manager and storing only the reference in Replane.'
+        'Don\'t store secrets in Replane. Use a dedicated secrets manager (AWS Secrets Manager, HashiCorp Vault, etc.) for sensitive credentials. Replane is for configuration, not secrets management.'
     },
     {
       question: 'Can different environments share configs?',
       answer:
-        'Yes! Use a base config with environment-specific overrides. Common values are shared, only differences are environment-specific. This prevents config drift.'
+        'Yes! Define a base config with environment-specific overrides. Common values are shared, only differences are per-environment. This prevents config drift while allowing flexibility.'
     },
     {
       question: 'How do I prevent accidental production changes?',
       answer:
-        'Use role-based access control to restrict who can modify production configs. Each environment has its own SDK key and access controls. Require approval workflows for production changes.'
+        'Use role-based access control. Each environment has its own SDK key and access controls. Enable approval workflows for production changes to require review before applying.'
     },
     {
-      question: 'What about configs that require a restart?',
+      question: 'How quickly do config changes take effect?',
       answer:
-        'Most configs can be updated at runtime with our subscribe API. For configs that truly need a restart (like port numbers), trigger a rolling restart after updating. Replane pushes updates; your code decides how to apply them.'
+        'Changes propagate in real-time via Server-Sent Events. Your application receives updates within seconds. Use the subscribe API to react to changes immediately.'
     }
   ],
 
@@ -130,10 +130,10 @@ const content: UseCaseContent = {
       accentColor: 'violet'
     },
     {
-      title: 'Multi-Tenant',
-      description: 'Different configs for different customers.',
-      href: '/use-cases/multi-tenant',
-      accentColor: 'sky'
+      title: 'Feature Flags',
+      description: 'Control features across environments.',
+      href: '/use-cases/feature-flags',
+      accentColor: 'blue'
     },
     {
       title: 'Instant Rollback',
@@ -152,10 +152,11 @@ const content: UseCaseContent = {
 
 interface Configs {
   'api-base-url': string
-  'database-url': string
-  'redis-url': string
+  'request-timeout-ms': number
+  'max-retries': number
+  'rate-limit-per-minute': number
   'log-level': 'debug' | 'info' | 'warn' | 'error'
-  'feature-debug-mode': boolean
+  'cache-ttl-seconds': number
 }
 
 const replane = new Replane<Configs>()
@@ -166,24 +167,26 @@ await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY  // Different key per env
 })
 
-// Same code, different config values per environment
-const config = {
-  apiBaseUrl: replane.get('api-base-url'),
-  databaseUrl: replane.get('database-url'),
-  redisUrl: replane.get('redis-url'),
-  logLevel: replane.get('log-level'),
-  debugMode: replane.get('feature-debug-mode')
-}
+// Runtime config that can be tuned without deploys
+const apiClient = new ApiClient({
+  baseUrl: replane.get('api-base-url'),
+  timeout: replane.get('request-timeout-ms'),
+  maxRetries: replane.get('max-retries')
+})
 
-// Initialize services with config
-const db = new Database(config.databaseUrl)
-const redis = new Redis(config.redisUrl)
-const logger = new Logger({ level: config.logLevel })
+const rateLimiter = new RateLimiter({
+  maxRequests: replane.get('rate-limit-per-minute'),
+  window: 60_000
+})
 
-// React to config changes (e.g., log level)
+// React to config changes in real-time
 replane.subscribe('log-level', (c) => {
   logger.setLevel(c.value)
   logger.info('Log level changed to:', c.value)
+})
+
+replane.subscribe('rate-limit-per-minute', (c) => {
+  rateLimiter.setLimit(c.value)
 })`
     },
     {
@@ -192,35 +195,38 @@ replane.subscribe('log-level', (c) => {
       docsLink: '/docs/sdk/react',
       code: `import { useConfig } from '@replanejs/react'
 
-function ApiClient() {
-  // Environment-specific API URL
+function AppSettings() {
+  // Runtime config values
   const apiBaseUrl = useConfig<string>('api-base-url')
-  const debugMode = useConfig<boolean>('feature-debug-mode')
+  const maxUploadSizeMb = useConfig<number>('max-upload-size-mb')
+  const supportedLocales = useConfig<string[]>('supported-locales')
+  const maintenanceMode = useConfig<boolean>('maintenance-mode')
 
-  const fetchData = async (endpoint: string) => {
-    const url = \`\${apiBaseUrl}\${endpoint}\`
-    
-    if (debugMode) {
-      console.log('Fetching:', url)
-    }
-    
-    const response = await fetch(url)
-    return response.json()
+  if (maintenanceMode) {
+    return <MaintenancePage />
   }
 
-  return { fetchData }
+  return (
+    <AppContext.Provider value={{
+      apiBaseUrl,
+      maxUploadSizeMb,
+      supportedLocales
+    }}>
+      <App />
+    </AppContext.Provider>
+  )
 }
 
-// In your provider, use environment-specific SDK key
-function App() {
+// Provider uses environment-specific SDK key
+function Root() {
   return (
     <ReplaneProvider
       connection={{
-        baseUrl: process.env.REACT_APP_REPLANE_BASE_URL,
-        sdkKey: process.env.REACT_APP_REPLANE_SDK_KEY
+        baseUrl: import.meta.env.VITE_REPLANE_BASE_URL,
+        sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY
       }}
     >
-      <MyApp />
+      <AppSettings />
     </ReplaneProvider>
   )
 }`
@@ -232,8 +238,7 @@ function App() {
       code: `// lib/config.ts
 import { getReplaneSnapshot } from '@replanejs/next'
 
-export async function getEnvConfig() {
-  // SDK key from env determines which config to load
+export async function getRuntimeConfig() {
   const snapshot = await getReplaneSnapshot({
     connection: {
       baseUrl: process.env.REPLANE_BASE_URL!,
@@ -243,27 +248,29 @@ export async function getEnvConfig() {
   
   return {
     apiBaseUrl: snapshot.get('api-base-url'),
-    databaseUrl: snapshot.get('database-url'),
-    logLevel: snapshot.get('log-level'),
-    debugMode: snapshot.get('feature-debug-mode')
+    requestTimeoutMs: snapshot.get('request-timeout-ms'),
+    maxRetries: snapshot.get('max-retries'),
+    cacheTtlSeconds: snapshot.get('cache-ttl-seconds'),
+    maintenanceMode: snapshot.get('maintenance-mode')
   }
 }
 
 // app/api/data/route.ts
-import { getEnvConfig } from '@/lib/config'
+import { getRuntimeConfig } from '@/lib/config'
 
 export async function GET() {
-  const config = await getEnvConfig()
+  const config = await getRuntimeConfig()
   
-  // Use environment-specific database URL
-  const db = new Database(config.databaseUrl)
-  const data = await db.query('SELECT * FROM items')
+  if (config.maintenanceMode) {
+    return Response.json({ error: 'Service unavailable' }, { status: 503 })
+  }
 
-  return Response.json(data)
-}
+  const response = await fetch(config.apiBaseUrl + '/data', {
+    signal: AbortSignal.timeout(config.requestTimeoutMs)
+  })
 
-// Same code deploys to all environments
-// Replane provides correct config based on SDK key`
+  return Response.json(await response.json())
+}`
     },
     {
       sdk: 'svelte',
@@ -272,33 +279,34 @@ export async function GET() {
       code: `<script>
   import { config } from '@replanejs/svelte'
 
-  // Environment-specific values
+  // Runtime config values - update without deploys
   const apiBaseUrl = config<string>('api-base-url')
-  const debugMode = config<boolean>('feature-debug-mode')
+  const requestTimeoutMs = config<number>('request-timeout-ms')
+  const maintenanceMode = config<boolean>('maintenance-mode')
 
   async function fetchData(endpoint: string) {
-    const url = \`\${$apiBaseUrl}\${endpoint}\`
+    const controller = new AbortController()
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      $requestTimeoutMs
+    )
     
-    if ($debugMode) {
-      console.log('Fetching:', url)
+    try {
+      const response = await fetch(\`\${$apiBaseUrl}\${endpoint}\`, {
+        signal: controller.signal
+      })
+      return response.json()
+    } finally {
+      clearTimeout(timeoutId)
     }
-    
-    const response = await fetch(url)
-    return response.json()
   }
 </script>
 
-<!-- Root layout uses env-specific SDK key -->
-<script context="module">
-  import { ReplaneContext } from '@replanejs/svelte'
-</script>
-
-<ReplaneContext connection={{
-  baseUrl: import.meta.env.VITE_REPLANE_BASE_URL,
-  sdkKey: import.meta.env.VITE_REPLANE_SDK_KEY
-}}>
+{#if $maintenanceMode}
+  <MaintenancePage />
+{:else}
   <slot />
-</ReplaneContext>`
+{/if}`
     },
     {
       sdk: 'python',
@@ -308,64 +316,59 @@ export async function GET() {
 import os
 import logging
 
-# SDK key from environment determines which config to load
 replane = Replane(
     base_url=os.environ["REPLANE_BASE_URL"],
-    sdk_key=os.environ["REPLANE_SDK_KEY"]  # Different per env
+    sdk_key=os.environ["REPLANE_SDK_KEY"]
 )
 
-# Get environment-specific config
+# Runtime config - tune without redeploying
 api_base_url = replane.get("api-base-url")
-database_url = replane.get("database-url")
-redis_url = replane.get("redis-url")
+request_timeout = replane.get("request-timeout-seconds")
+max_retries = replane.get("max-retries")
+rate_limit = replane.get("rate-limit-per-minute")
 log_level = replane.get("log-level")
 
-# Initialize with config values
+# Initialize with tunable config
 logging.basicConfig(level=getattr(logging, log_level.upper()))
 logger = logging.getLogger(__name__)
 
-# React to config changes
+http_client = HttpClient(
+    base_url=api_base_url,
+    timeout=request_timeout,
+    max_retries=max_retries
+)
+
+# React to config changes in real-time
 def on_log_level_change(config):
     logging.getLogger().setLevel(
         getattr(logging, config.value.upper())
     )
-    logger.info(f"Log level changed to: {config.value}")
+    logger.info(f"Log level updated to: {config.value}")
 
-replane.subscribe_config("log-level", on_log_level_change)
-
-# Same code runs in dev, staging, prod
-# Replane provides the right config for each`
+replane.subscribe_config("log-level", on_log_level_change)`
     },
     {
       sdk: 'csharp',
       label: '.NET',
       docsLink: '/docs/sdk/dotnet',
       code: `using Replane;
-using Microsoft.Extensions.Logging;
 
-public class ConfigService
+public class RuntimeConfig
 {
     private readonly IReplaneClient _replane;
-    private readonly ILogger _logger;
 
-    public ConfigService(IReplaneClient replane, ILogger<ConfigService> logger)
+    public RuntimeConfig(IReplaneClient replane)
     {
         _replane = replane;
-        _logger = logger;
     }
 
-    public EnvironmentConfig GetConfig()
-    {
-        // SDK key from env determines which config loads
-        return new EnvironmentConfig
-        {
-            ApiBaseUrl = _replane.Get<string>("api-base-url"),
-            DatabaseUrl = _replane.Get<string>("database-url"),
-            RedisUrl = _replane.Get<string>("redis-url"),
-            LogLevel = _replane.Get<string>("log-level"),
-            DebugMode = _replane.Get<bool>("feature-debug-mode")
-        };
-    }
+    // Tunable config - change from dashboard
+    public string ApiBaseUrl => _replane.Get<string>("api-base-url");
+    public int RequestTimeoutMs => _replane.Get<int>("request-timeout-ms");
+    public int MaxRetries => _replane.Get<int>("max-retries");
+    public int RateLimitPerMinute => _replane.Get<int>("rate-limit-per-minute");
+    public int CacheTtlSeconds => _replane.Get<int>("cache-ttl-seconds");
+    public bool MaintenanceMode => _replane.Get<bool>("maintenance-mode");
 }
 
 // In Program.cs
@@ -376,10 +379,10 @@ await replane.ConnectAsync(new ConnectOptions
     SdkKey = Environment.GetEnvironmentVariable("REPLANE_SDK_KEY")
 });
 
-builder.Services.AddSingleton<IReplaneClient>(replane);
+builder.Services.AddSingleton(new RuntimeConfig(replane));
 
-// Same code deploys everywhere
-// SDK key determines which environment config to use`
+// Tune rate limits, timeouts etc. from the dashboard
+// No code changes or deploys needed`
     }
   ]
 }
