@@ -84,6 +84,8 @@ const content: UseCaseContent = {
       icon: <Eye className='h-6 w-6' />
     }
   ],
+  featuresHeading: 'MTTR in seconds, not hours',
+  featuresSubheading: 'Respond, resolve, and learn from every incident',
 
   steps: [
     {

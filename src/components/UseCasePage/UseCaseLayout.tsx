@@ -27,6 +27,8 @@ export default function UseCaseLayout({
   painPoints,
   solutions,
   features,
+  featuresHeading,
+  featuresSubheading,
   faq,
   relatedUseCases,
   pageTitle,
@@ -58,7 +60,14 @@ export default function UseCaseLayout({
               accentColor={accentColor}
             />
           )}
-          {hasFeatures && <UseCaseFeatures features={features} accentColor={accentColor} />}
+          {hasFeatures && (
+            <UseCaseFeatures
+              features={features}
+              accentColor={accentColor}
+              heading={featuresHeading}
+              subheading={featuresSubheading}
+            />
+          )}
           <HowItWorks steps={steps} accentColor={accentColor} />
           <Benefits benefits={benefits} accentColor={accentColor} />
           <CodeExamples codeExamples={codeExamples} accentColor={accentColor} />

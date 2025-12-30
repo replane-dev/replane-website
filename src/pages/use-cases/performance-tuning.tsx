@@ -68,6 +68,8 @@ const content: UseCaseContent = {
       icon: <RotateCcw className='h-6 w-6' />
     }
   ],
+  featuresHeading: 'Optimize without deploying',
+  featuresSubheading: 'Fine-tune performance in real-time',
 
   steps: [
     {

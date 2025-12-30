@@ -52,6 +52,8 @@ const content: UseCaseContent = {
     { title: 'No Deploys', description: 'No code changes required', icon: <Rocket className='h-6 w-6' /> },
     { title: 'Unlimited Switches', description: 'Protect every risky feature', icon: <Layers className='h-6 w-6' /> }
   ],
+  featuresHeading: 'Emergency controls ready',
+  featuresSubheading: 'Stop the damage before it spreads to more users',
 
   steps: [
     {

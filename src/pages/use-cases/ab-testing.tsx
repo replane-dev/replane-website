@@ -78,10 +78,12 @@ const content: UseCaseContent = {
     },
     {
       title: 'Unlimited Variants',
-      description: 'No limit on experiment variants',
+      description: 'Test as many variants as you need',
       icon: <Layers className='h-6 w-6' />
     }
   ],
+  featuresHeading: 'Data-driven decisions',
+  featuresSubheading: 'Run experiments without engineering overhead',
 
   steps: [
     {

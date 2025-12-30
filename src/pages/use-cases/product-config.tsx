@@ -52,6 +52,8 @@ const content: UseCaseContent = {
     { title: 'Unlimited Iterations', description: 'Tune parameters as often as needed', icon: <RefreshCw className='h-6 w-6' /> },
     { title: 'Instant Rollback', description: 'Revert any change with one click', icon: <RotateCcw className='h-6 w-6' /> }
   ],
+  featuresHeading: 'Iterate at the speed of thought',
+  featuresSubheading: 'Empower data teams to tune algorithms directly',
 
   steps: [
     {

@@ -52,6 +52,8 @@ const content: UseCaseContent = {
     { title: 'Full Version History', description: 'Every revision saved and restorable', icon: <Clock className='h-6 w-6' /> },
     { title: 'Self-Service', description: 'Non-technical teams can update content', icon: <Users className='h-6 w-6' /> }
   ],
+  featuresHeading: 'Simple content updates',
+  featuresSubheading: 'No CMS overhead, instant publishing',
 
   steps: [
     {

@@ -20,7 +20,7 @@ const content: UseCaseContent = {
     },
     {
       title: 'No visibility',
-      description: "What config is running where? No central view or history."
+      description: 'What config is running where? No central view or history.'
     },
     {
       title: 'Slow changes',
@@ -47,11 +47,29 @@ const content: UseCaseContent = {
   ],
 
   features: [
-    { title: 'Live Updates', description: 'Config changes apply in seconds', icon: <Zap className='h-6 w-6' /> },
-    { title: 'Full History', description: 'Complete audit trail for every change', icon: <History className='h-6 w-6' /> },
-    { title: 'Multi-Environment', description: 'Dev, staging, prod with one config', icon: <Server className='h-6 w-6' /> },
-    { title: 'Access Control', description: 'Role-based permissions per environment', icon: <Lock className='h-6 w-6' /> }
+    {
+      title: 'Live Updates',
+      description: 'Config changes apply in seconds',
+      icon: <Zap className='h-6 w-6' />
+    },
+    {
+      title: 'Full History',
+      description: 'Complete audit trail for every change',
+      icon: <History className='h-6 w-6' />
+    },
+    {
+      title: 'Multi-Environment',
+      description: 'Dev, staging, prod with one config',
+      icon: <Server className='h-6 w-6' />
+    },
+    {
+      title: 'Access Control',
+      description: 'Role-based permissions per environment',
+      icon: <Lock className='h-6 w-6' />
+    }
   ],
+  featuresHeading: 'One codebase, many environments',
+  featuresSubheading: 'Manage runtime settings across all environments',
 
   steps: [
     {
@@ -68,28 +86,24 @@ const content: UseCaseContent = {
     },
     {
       title: 'Deploy once, tune anywhere',
-      description:
-        'Same code runs everywhere. Adjust operational parameters from the dashboard.',
+      description: 'Same code runs everywhere. Adjust operational parameters from the dashboard.',
       icon: <GitBranch className='h-8 w-8' />
     }
   ],
   benefits: [
     {
       title: 'Operational agility',
-      description:
-        'Tune rate limits, timeouts, and thresholds without code changes or deploys.',
+      description: 'Tune rate limits, timeouts, and thresholds without code changes or deploys.',
       icon: <RefreshCw className='h-6 w-6' />
     },
     {
       title: 'Clear visibility',
-      description:
-        'See exactly what config each environment is running. Compare across envs.',
+      description: 'See exactly what config each environment is running. Compare across envs.',
       icon: <Eye className='h-6 w-6' />
     },
     {
       title: 'Safe and audited',
-      description:
-        'Role-based access control. Full history of who changed what and when.',
+      description: 'Role-based access control. Full history of who changed what and when.',
       icon: <Lock className='h-6 w-6' />
     }
   ],
@@ -103,7 +117,7 @@ const content: UseCaseContent = {
     {
       question: 'What about secrets like API keys and passwords?',
       answer:
-        'Don\'t store secrets in Replane. Use a dedicated secrets manager (AWS Secrets Manager, HashiCorp Vault, etc.) for sensitive credentials. Replane is for configuration, not secrets management.'
+        "Don't store secrets in Replane. Use a dedicated secrets manager (AWS Secrets Manager, HashiCorp Vault, etc.) for sensitive credentials. Replane is for configuration, not secrets management."
     },
     {
       question: 'Can different environments share configs?',

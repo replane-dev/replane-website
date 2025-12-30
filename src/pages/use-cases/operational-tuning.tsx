@@ -68,6 +68,8 @@ const content: UseCaseContent = {
       icon: <RefreshCw className='h-6 w-6' />
     }
   ],
+  featuresHeading: 'Full control, no deploys',
+  featuresSubheading: 'Tune your system like a pro without touching code',
 
   steps: [
     {

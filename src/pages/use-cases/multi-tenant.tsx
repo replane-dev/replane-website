@@ -52,6 +52,8 @@ const content: UseCaseContent = {
     { title: 'Full Visibility', description: 'All configs in one dashboard', icon: <Eye className='h-6 w-6' /> },
     { title: 'No Deploys', description: 'No code changes needed', icon: <Rocket className='h-6 w-6' /> }
   ],
+  featuresHeading: 'Built for SaaS',
+  featuresSubheading: 'Enterprise-ready tenant management at any scale',
 
   steps: [
     {

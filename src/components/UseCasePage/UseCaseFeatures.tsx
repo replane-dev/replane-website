@@ -3,9 +3,16 @@ import { accentColorClasses, type AccentColor, type Feature } from './types'
 interface UseCaseFeaturesProps {
   features: Feature[]
   accentColor: AccentColor
+  heading?: string
+  subheading?: string
 }
 
-export default function UseCaseFeatures({ features, accentColor }: UseCaseFeaturesProps) {
+export default function UseCaseFeatures({
+  features,
+  accentColor,
+  heading = 'Built for modern teams',
+  subheading = 'Everything you need to manage configuration at scale'
+}: UseCaseFeaturesProps) {
   const colors = accentColorClasses[accentColor]
 
   return (
@@ -20,10 +27,10 @@ export default function UseCaseFeatures({ features, accentColor }: UseCaseFeatur
             Key Features
           </div>
           <h2 className='mb-4 text-3xl font-bold tracking-tight text-stone-100 sm:text-4xl lg:text-5xl'>
-            Built for modern teams
+            {heading}
           </h2>
           <p className='mx-auto max-w-2xl text-lg text-stone-400'>
-            Everything you need to manage configuration at scale
+            {subheading}
           </p>
         </div>
 

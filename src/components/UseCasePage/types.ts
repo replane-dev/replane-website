@@ -73,6 +73,8 @@ export interface UseCaseContent {
   painPoints?: PainPoint[]
   solutions?: Solution[]
   features?: Feature[]
+  featuresHeading?: string
+  featuresSubheading?: string
   faq?: FAQItem[]
   relatedUseCases?: RelatedUseCase[]
 }

@@ -52,6 +52,8 @@ const content: UseCaseContent = {
     { title: 'No Deploys', description: 'Respond to threats without code changes', icon: <Layers className='h-6 w-6' /> },
     { title: 'One-Click Lockdown', description: 'Activate security mode instantly', icon: <Clock className='h-6 w-6' /> }
   ],
+  featuresHeading: 'When seconds matter',
+  featuresSubheading: 'Respond to threats at the speed of attackers',
 
   steps: [
     {

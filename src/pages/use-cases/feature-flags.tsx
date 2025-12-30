@@ -54,6 +54,8 @@ const content: UseCaseContent = {
     { title: 'No Deploys Needed', description: 'Toggle features from the dashboard without code changes', icon: <Gauge className='h-6 w-6' /> },
     { title: 'All Major SDKs', description: 'JavaScript, React, Next.js, Svelte, Python, .NET', icon: <Layers className='h-6 w-6' /> }
   ],
+  featuresHeading: 'Ship without stress',
+  featuresSubheading: 'Deploy confidently with fine-grained control over every feature',
 
   steps: [
     {
