@@ -189,7 +189,7 @@ export default function UseCasesPage() {
                   Use Cases
                 </div>
                 <h1 className='mb-6 text-4xl font-bold tracking-tight text-stone-100 sm:text-5xl lg:text-6xl'>
-                  Built for real teams
+                  How Teams Use Replane
                 </h1>
                 <p className='mx-auto max-w-3xl text-xl leading-relaxed text-stone-400'>
                   From feature flags to security response, Replane helps teams ship faster, respond
