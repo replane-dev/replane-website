@@ -89,7 +89,7 @@ const config: Config = {
           sidebarId: 'docsSidebar',
           position: 'left',
           label: 'Docs',
-          to: '/docs'
+          to: '/docs/'
         },
         // {
         //   label: 'API',
@@ -99,17 +99,22 @@ const config: Config = {
         {
           label: 'Pricing',
           position: 'left',
-          to: '/pricing'
+          to: '/pricing/'
+        },
+        {
+          to: '/blog/',
+          label: 'Blog',
+          position: 'left'
+        },
+        {
+          label: 'Use Cases',
+          position: 'left',
+          to: '/use-cases/'
         },
         {
           label: 'Cloud',
           position: 'left',
           href: 'https://cloud.replane.dev/app'
-        },
-        {
-          to: '/blog',
-          label: 'Blog',
-          position: 'left'
         },
         {
           href: 'https://cloud.replane.dev/auth/signin',
@@ -143,19 +148,19 @@ const config: Config = {
           items: [
             {
               label: 'Getting Started',
-              to: '/docs/getting-started/quickstart'
+              to: '/docs/getting-started/quickstart/'
             },
             {
               label: 'Concepts',
-              to: '/docs/concepts/overview'
+              to: '/docs/concepts/overview/'
             },
             {
               label: 'Self-Hosting',
-              to: '/docs/self-hosting/docker'
+              to: '/docs/self-hosting/docker/'
             },
             {
               label: 'API Reference',
-              to: '/docs/api'
+              to: '/docs/api/'
             }
           ]
         },
@@ -164,27 +169,27 @@ const config: Config = {
           items: [
             {
               label: 'JavaScript',
-              to: '/docs/sdk/javascript'
+              to: '/docs/sdk/javascript/'
             },
             {
               label: 'React',
-              to: '/docs/sdk/react'
+              to: '/docs/sdk/react/'
             },
             {
               label: 'Next.js',
-              to: '/docs/sdk/nextjs'
+              to: '/docs/sdk/nextjs/'
             },
             {
               label: 'Svelte',
-              to: '/docs/sdk/svelte'
+              to: '/docs/sdk/svelte/'
             },
             {
               label: 'Python',
-              to: '/docs/sdk/python'
+              to: '/docs/sdk/python/'
             },
             {
               label: '.NET',
-              to: '/docs/sdk/dotnet'
+              to: '/docs/sdk/dotnet/'
             }
           ]
         },
@@ -193,47 +198,47 @@ const config: Config = {
           items: [
             {
               label: 'Feature Flags',
-              to: '/use-cases/feature-flags'
+              to: '/use-cases/feature-flags/'
             },
             {
               label: 'A/B Testing',
-              to: '/use-cases/ab-testing'
+              to: '/use-cases/ab-testing/'
             },
             {
               label: 'Kill Switch',
-              to: '/use-cases/kill-switch'
+              to: '/use-cases/kill-switch/'
             },
             {
               label: 'Instant Rollback',
-              to: '/use-cases/instant-rollback'
+              to: '/use-cases/instant-rollback/'
             },
             {
               label: 'Multi-Tenant',
-              to: '/use-cases/multi-tenant'
+              to: '/use-cases/multi-tenant/'
             },
             {
               label: 'Operational Tuning',
-              to: '/use-cases/operational-tuning'
+              to: '/use-cases/operational-tuning/'
             },
             {
               label: 'Performance Tuning',
-              to: '/use-cases/performance-tuning'
+              to: '/use-cases/performance-tuning/'
             },
             {
               label: 'Content Management',
-              to: '/use-cases/content-management'
+              to: '/use-cases/content-management/'
             },
             {
               label: 'Environment Config',
-              to: '/use-cases/environment-config'
+              to: '/use-cases/environment-config/'
             },
             {
               label: 'Product Config',
-              to: '/use-cases/product-config'
+              to: '/use-cases/product-config/'
             },
             {
               label: 'Security Response',
-              to: '/use-cases/security-response'
+              to: '/use-cases/security-response/'
             }
           ]
         },
@@ -254,7 +259,7 @@ const config: Config = {
             },
             {
               label: 'Blog',
-              to: '/blog'
+              to: '/blog/'
             }
           ]
         },
@@ -263,7 +268,7 @@ const config: Config = {
           items: [
             {
               label: 'Pricing',
-              to: '/pricing'
+              to: '/pricing/'
             },
             {
               label: 'Changelog',
