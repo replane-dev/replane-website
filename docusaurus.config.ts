@@ -209,8 +209,8 @@ const config: Config = {
               to: '/use-cases/kill-switch/'
             },
             {
-              label: 'Instant Rollback',
-              to: '/use-cases/instant-rollback/'
+              label: 'Incident Response',
+              to: '/use-cases/incident-response/'
             },
             {
               label: 'Multi-Tenant',

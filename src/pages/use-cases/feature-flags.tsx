@@ -140,9 +140,9 @@ const content: UseCaseContent = {
       accentColor: 'amber'
     },
     {
-      title: 'Gradual Rollouts',
-      description: 'Release features to a percentage of users and increase over time.',
-      href: '/use-cases/instant-rollback',
+      title: 'Incident Response',
+      description: 'Respond to incidents and revert changes instantly.',
+      href: '/use-cases/incident-response',
       accentColor: 'emerald'
     }
   ],

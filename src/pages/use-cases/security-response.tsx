@@ -136,9 +136,9 @@ const content: UseCaseContent = {
       accentColor: 'sky'
     },
     {
-      title: 'Instant Rollback',
-      description: 'Revert security configs if needed.',
-      href: '/use-cases/instant-rollback',
+      title: 'Incident Response',
+      description: 'Respond to incidents and revert changes instantly.',
+      href: '/use-cases/incident-response',
       accentColor: 'emerald'
     }
   ],

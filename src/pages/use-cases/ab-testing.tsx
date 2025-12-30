@@ -1,4 +1,14 @@
-import { BarChart3, Percent, Target, TrendingUp, Shuffle, LineChart, Zap, Rocket, Layers } from 'lucide-react'
+import {
+  BarChart3,
+  Percent,
+  Target,
+  TrendingUp,
+  Shuffle,
+  LineChart,
+  Zap,
+  Rocket,
+  Layers
+} from 'lucide-react'
 import { UseCaseLayout, type UseCaseContent } from '@/components/UseCasePage'
 
 const content: UseCaseContent = {
@@ -51,10 +61,26 @@ const content: UseCaseContent = {
   ],
 
   features: [
-    { title: 'Consistent Assignment', description: 'Same variant across sessions for each user', icon: <Target className='h-6 w-6' /> },
-    { title: 'Instant Traffic Shifts', description: 'Changes propagate in under a second', icon: <Zap className='h-6 w-6' /> },
-    { title: 'No Deploys', description: 'Adjust experiment splits without code', icon: <Rocket className='h-6 w-6' /> },
-    { title: 'Unlimited Variants', description: 'No limit on experiment variants', icon: <Layers className='h-6 w-6' /> }
+    {
+      title: 'Consistent Assignment',
+      description: 'Same variant across sessions for each user',
+      icon: <Target className='h-6 w-6' />
+    },
+    {
+      title: 'Instant Traffic Shifts',
+      description: 'Changes propagate in under a second',
+      icon: <Zap className='h-6 w-6' />
+    },
+    {
+      title: 'No Deploys',
+      description: 'Adjust experiment splits without code',
+      icon: <Rocket className='h-6 w-6' />
+    },
+    {
+      title: 'Unlimited Variants',
+      description: 'No limit on experiment variants',
+      icon: <Layers className='h-6 w-6' />
+    }
   ],
 
   steps: [
@@ -133,9 +159,9 @@ const content: UseCaseContent = {
       accentColor: 'blue'
     },
     {
-      title: 'Instant Rollback',
-      description: 'Revert experiment config to any previous state.',
-      href: '/use-cases/instant-rollback',
+      title: 'Incident Response',
+      description: 'Respond to incidents and revert changes instantly.',
+      href: '/use-cases/incident-response',
       accentColor: 'emerald'
     },
     {

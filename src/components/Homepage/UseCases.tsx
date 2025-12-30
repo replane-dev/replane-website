@@ -25,11 +25,11 @@ const useCases: UseCase[] = [
     link: '/use-cases/operational-tuning'
   },
   {
-    title: 'Instant Rollback',
+    title: 'Incident Response',
     description:
-      'Version history tracks every change. When production breaks, revert to safety in seconds.',
+      'Respond to production incidents in seconds. Toggle kill switches, adjust configs, and rollback—no deploy needed.',
     icon: <RotateCcw className='h-6 w-6 text-emerald-400' />,
-    link: '/use-cases/instant-rollback'
+    link: '/use-cases/incident-response'
   },
   {
     title: 'A/B Testing',
