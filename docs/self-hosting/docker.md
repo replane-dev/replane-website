@@ -219,7 +219,6 @@ Default Node.js metrics are collected automatically:
 - `process_heap_bytes` — Process heap size
 - `nodejs_eventloop_lag_seconds` — Event loop lag
 - `nodejs_active_handles_total` — Active handles
-- `nodejs_active_requests_total` — Active requests
 - `nodejs_gc_duration_seconds` — Garbage collection duration
 
 ### Prometheus configuration
