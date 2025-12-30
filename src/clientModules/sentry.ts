@@ -27,7 +27,7 @@ Sentry.init({
       emailLabel: 'Email (optional)',
       emailPlaceholder: 'your@email.com',
       messageLabel: 'Message',
-      messagePlaceholder: 'What\'s on your mind?',
+      messagePlaceholder: "What's on your mind?",
       successMessageText: 'Thank you for your feedback!',
       triggerLabel: '',
 
@@ -41,7 +41,7 @@ Sentry.init({
     })
   ],
 
-  enabled: true,
+  enabled: process.env.NODE_ENV === 'production',
 
   // Set environment
   environment: process.env.NODE_ENV || 'development'
@@ -51,7 +51,13 @@ interface RouteLocation {
   pathname: string
 }
 
-export function onRouteDidUpdate({ location, previousLocation }: { location: RouteLocation; previousLocation?: RouteLocation }) {
+export function onRouteDidUpdate({
+  location,
+  previousLocation
+}: {
+  location: RouteLocation
+  previousLocation?: RouteLocation
+}) {
   if (location.pathname !== previousLocation?.pathname) {
     Sentry.addBreadcrumb({
       category: 'navigation',
