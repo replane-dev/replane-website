@@ -182,7 +182,7 @@ export default function UseCasesPage() {
       >
         <main className='background-grid background-grid--fade-out'>
           {/* Hero Section */}
-          <section className='relative overflow-hidden pb-16 pt-24'>
+          <section className='relative overflow-hidden pt-24 pb-16'>
             <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
               <div className='text-center'>
                 <div className='mb-6 inline-flex items-center gap-2 rounded-full border border-stone-700 bg-stone-800/50 px-4 py-1.5 text-sm font-medium text-stone-300'>
@@ -204,16 +204,19 @@ export default function UseCasesPage() {
             <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
               <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
                 {useCases.map((useCase, idx) => {
-                  const colors = accentColorClasses[useCase.accentColor]
+                  const colors =
+                    accentColorClasses[useCase.accentColor as keyof typeof accentColorClasses]
                   return (
                     <Link
                       key={idx}
                       to={useCase.link}
-                      className={`group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900/50 p-8 transition-all duration-300 hover:bg-stone-900 hover:shadow-xl hover:no-underline ${colors.border}`}
+                      className={`group relative overflow-hidden rounded-2xl border border-stone-800 bg-stone-900/50 p-8 transition-all duration-300 hover:bg-stone-900 hover:no-underline hover:shadow-xl ${colors.border}`}
                     >
                       {/* Icon */}
-                      <div className={`mb-5 inline-flex rounded-xl p-3 ${colors.iconBg}`}>
-                        <div className={colors.iconText}>{useCase.icon}</div>
+                      <div
+                        className={`mb-5 inline-flex items-center justify-center rounded-xl p-3 ${colors.iconBg} ${colors.iconText}`}
+                      >
+                        {useCase.icon}
                       </div>
 
                       {/* Content */}
@@ -265,4 +268,3 @@ export default function UseCasesPage() {
     </div>
   )
 }
-
