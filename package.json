@@ -28,9 +28,9 @@
     "clean-api-docs:version": "docusaurus clean-api-docs:version"
   },
   "dependencies": {
-    "@sentry/react": "^9.1.0",
     "@docusaurus/core": "^3.9.2",
     "@docusaurus/faster": "^3.9.2",
+    "@docusaurus/plugin-content-blog": "^3.9.2",
     "@docusaurus/plugin-ideal-image": "^3.9.2",
     "@docusaurus/preset-classic": "^3.9.2",
     "@docusaurus/remark-plugin-npm2yarn": "^3.9.2",
@@ -38,6 +38,7 @@
     "@mdx-js/react": "^3.1.1",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-slot": "^1.2.3",
+    "@sentry/react": "^9.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "docusaurus-plugin-openapi-docs": "^4.5.1",

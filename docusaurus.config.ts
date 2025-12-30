@@ -106,11 +106,11 @@ const config: Config = {
           position: 'left',
           href: 'https://cloud.replane.dev/app'
         },
-        // {
-        //   to: '/blog',
-        //   label: 'Blog',
-        //   position: 'left'
-        // },
+        {
+          to: '/blog',
+          label: 'Blog',
+          position: 'left'
+        },
         {
           href: 'https://cloud.replane.dev/auth/signin',
           label: 'Log in',
@@ -251,11 +251,11 @@ const config: Config = {
             {
               label: 'Issues',
               href: 'https://github.com/replane-dev/replane/issues'
+            },
+            {
+              label: 'Blog',
+              to: '/blog'
             }
-            // {
-            //   label: 'Blog',
-            //   to: '/blog'
-            // }
           ]
         },
         {
@@ -454,41 +454,41 @@ const config: Config = {
         // Use false to debug, but it incurs huge perf costs
         disableInDev: true
       } satisfies IdealImagePluginOptions
+    ],
+    [
+      './src/plugins/blog-plugin.ts',
+      {
+        path: 'blog',
+        editLocalizedFiles: false,
+        blogTitle: 'Blog',
+        blogDescription:
+          'Technical insights, tutorials, and updates on self-hosted configuration management with Replane',
+        blogSidebarCount: 'ALL',
+        blogSidebarTitle: 'List blog',
+        routeBasePath: 'blog',
+        include: ['**/*.md', '**/*.mdx'],
+        exclude: [
+          '**/_*.{js,jsx,ts,tsx,md,mdx}',
+          '**/_*/**',
+          '**/*.test.{js,jsx,ts,tsx}',
+          '**/__tests__/**'
+        ],
+        postsPerPage: 6,
+        truncateMarker: /<!--\s*(truncate)\s*-->/,
+        showReadingTime: true,
+        onUntruncatedBlogPosts: 'ignore',
+        // Remove this to remove the "edit this page" links.
+        editUrl: 'https://github.com/replane-dev/replane-website/tree/main/',
+        remarkPlugins: [
+          [
+            require('@docusaurus/remark-plugin-npm2yarn'),
+            {
+              sync: true
+            }
+          ]
+        ]
+      }
     ]
-    // [
-    //   './src/plugins/blog-plugin',
-    //   {
-    //     path: 'blog',
-    //     editLocalizedFiles: false,
-    //     blogTitle: 'Blog',
-    //     blogDescription:
-    //       'Technical insights, tutorials, and updates on self-hosted configuration management with Replane',
-    //     blogSidebarCount: 'ALL',
-    //     blogSidebarTitle: 'List blog',
-    //     routeBasePath: 'blog',
-    //     include: ['**/*.md', '**/*.mdx'],
-    //     exclude: [
-    //       '**/_*.{js,jsx,ts,tsx,md,mdx}',
-    //       '**/_*/**',
-    //       '**/*.test.{js,jsx,ts,tsx}',
-    //       '**/__tests__/**'
-    //     ],
-    //     postsPerPage: 6,
-    //     truncateMarker: /<!--\s*(truncate)\s*-->/,
-    //     showReadingTime: true,
-    //     onUntruncatedBlogPosts: 'ignore',
-    //     // Remove this to remove the "edit this page" links.
-    //     editUrl: 'https://github.com/replane-dev/replane-website/tree/main/',
-    //     remarkPlugins: [
-    //       [
-    //         require('@docusaurus/remark-plugin-npm2yarn'),
-    //         {
-    //           sync: true
-    //         }
-    //       ]
-    //     ]
-    //   }
-    // ]
   ]
 }
 
