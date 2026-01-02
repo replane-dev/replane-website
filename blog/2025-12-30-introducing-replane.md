@@ -1,7 +1,7 @@
 ---
 slug: introducing-replane
 title: 'Introducing Replane: Dynamic Configuration for Apps and Services'
-authors: replane
+authors: dmitry
 tags: [announcement, release, config-management, feature-flags]
 description: Self-hosted config management with version history, instant rollback, and realtime updates via SSE. MIT licensed, Docker deployment.
 ---

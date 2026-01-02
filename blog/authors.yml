@@ -6,3 +6,13 @@ replane:
   page: true
   socials:
     github: replane-dev
+
+dmitry:
+  name: Dmitry Tilyupo
+  title: Creator of Replane
+  url: https://github.com/tilyupo
+  image_url: /img/dmitry-avatar.jpg
+  page: true
+  socials:
+    github: tilyupo
+    linkedin: tilyupo
