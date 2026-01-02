@@ -26,24 +26,30 @@ Changing a rate limit, toggling a feature, or adjusting a timeout shouldn't requ
 
 Replane uses a unified architecture where one Docker image serves the dashboard and SDK API. PostgreSQL is the source of truth. Each instance maintains a local SQLite cache for fast reads.
 
-```
-                           ╭──────────────────╮
-                           │    PostgreSQL    │
-                           │  Source of Truth │
-                           ╰────────┬─────────╯
-                                    │
-          ┌─────────────────────────┼─────────────────────────┐
-          │                         │                         │
-          ▼                         ▼                         ▼
- ╭─────────────────╮       ╭─────────────────╮       ╭─────────────────╮
- │     Replane     │       │     Replane     │       │     Replane     │
- │    Instance 1   │       │    Instance 2   │       │    Instance 3   │
- │  ·············  │       │  ·············  │       │  ·············  │
- │  SQLite cache   │       │  SQLite cache   │       │  SQLite cache   │
- ╰────────┬────────╯       ╰────────┬────────╯       ╰────────┬────────╯
-          │ SSE                     │ SSE                     │ SSE
-          ▼                         ▼                         ▼
-     Your Apps                 Your Apps                 Your Apps
+```mermaid
+flowchart TB
+    subgraph db["PostgreSQL (Source of Truth)"]
+    end
+
+    db --> r1
+    db --> r2
+    db --> r3
+
+    subgraph r1["Replane Instance 1"]
+        r1cache["SQLite cache"]
+    end
+
+    subgraph r2["Replane Instance 2"]
+        r2cache["SQLite cache"]
+    end
+
+    subgraph r3["Replane Instance 3"]
+        r3cache["SQLite cache"]
+    end
+
+    r1 -->|SSE| a1["Your Apps"]
+    r2 -->|SSE| a2["Your Apps"]
+    r3 -->|SSE| a3["Your Apps"]
 ```
 
 SDKs connect via `POST /api/sdk/v1/replication/stream`, receive an initial payload with all configs, and then receive `config_change` events as they occur. The connection stays open; SDKs automatically reconnect on disconnect.
@@ -58,14 +64,14 @@ Override evaluation happens client-side in the SDK:
 
 ## SDKs
 
-| Technology | Package             | Install                         |
-| ---------- | ------------------- | ------------------------------- |
-| JavaScript | `@replanejs/sdk`    | `npm install @replanejs/sdk`    |
-| React      | `@replanejs/react`  | `npm install @replanejs/react`  |
-| Next.js    | `@replanejs/next`   | `npm install @replanejs/next`   |
-| Svelte     | `@replanejs/svelte` | `npm install @replanejs/svelte` |
-| Python     | `replane`           | `pip install replane`           |
-| .NET       | `Replane`           | `dotnet add package Replane`    |
+| Technology | Package                                                                | Install                         |
+| ---------- | ---------------------------------------------------------------------- | ------------------------------- |
+| JavaScript | [`@replanejs/sdk`](https://www.npmjs.com/package/@replanejs/sdk)       | `npm install @replanejs/sdk`    |
+| React      | [`@replanejs/react`](https://www.npmjs.com/package/@replanejs/react)   | `npm install @replanejs/react`  |
+| Next.js    | [`@replanejs/next`](https://www.npmjs.com/package/@replanejs/next)     | `npm install @replanejs/next`   |
+| Svelte     | [`@replanejs/svelte`](https://www.npmjs.com/package/@replanejs/svelte) | `npm install @replanejs/svelte` |
+| Python     | [`replane`](https://pypi.org/project/replane/)                         | `pip install replane`           |
+| .NET       | [`Replane`](https://www.nuget.org/packages/Replane)                    | `dotnet add package Replane`    |
 
 All SDKs provide: type safety, realtime updates via SSE, local caching, and automatic reconnection.
 
@@ -192,13 +198,6 @@ Scales horizontally—add more instances behind a load balancer.
 
 - **Built-in A/B test analytics**: Replane provides override rules and percentage-based rollouts, but doesn't include built-in analytics or statistical significance calculations. Integrate with your existing analytics stack.
 - **Complex experimentation workflows**: If you need multivariate testing with automatic winner selection, a dedicated experimentation platform may fit better.
-
-## What's next
-
-- Webhook notifications for change events
-- Config templates for common patterns
-- Advanced RBAC with custom roles
-- Approval workflows for production changes
 
 ## Get started
 
