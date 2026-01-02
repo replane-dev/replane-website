@@ -126,20 +126,12 @@ The development server runs at [http://localhost:3000](http://localhost:3000).
 
 ## System requirements
 
-### Production
-
-| Component  | Minimum | Recommended |
-| ---------- | ------- | ----------- |
-| CPU        | 1 core  | 2 cores     |
-| Memory     | 1 GB    | 4 GB        |
-| Storage    | 1 GB    | 10+ GB      |
-| PostgreSQL | 14+     | 16+         |
-
-### Development
-
-- Node.js 20+
-- pnpm 10+
-- PostgreSQL 14+ (or use Docker)
+| Component  | Minimum    | Recommended |
+| ---------- | ---------- | ----------- |
+| CPU        | 0.25 cores | 2 cores     |
+| Memory     | 512 MB     | 4 GB        |
+| Storage    | 1 GB       | 10+ GB      |
+| PostgreSQL | 14+        | 16+         |
 
 ## Health check
 
