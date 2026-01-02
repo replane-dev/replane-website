@@ -24,32 +24,19 @@ Changing a rate limit, toggling a feature, or adjusting a timeout shouldn't requ
 
 ## How it works
 
-Replane uses a unified architecture where one Docker image serves the dashboard and SDK API. PostgreSQL is the source of truth. Each instance maintains a local SQLite cache for fast reads.
+Replane uses a unified architecture where one Docker image serves the dashboard and SDK API. PostgreSQL is the source of truth. Each instance maintains a local SQLite cache with a full copy of all config values—if PostgreSQL goes down, instances continue serving clients from cache.
 
 ```mermaid
-flowchart TB
-    subgraph db["PostgreSQL (Source of Truth)"]
-    end
+flowchart TD
+    db[(PostgreSQL<br/>Source of Truth)]
 
-    db --> r1
-    db --> r2
-    db --> r3
+    db --> r1[Replane Instance<br/>SQLite cache]
+    db --> r2[Replane Instance<br/>SQLite cache]
 
-    subgraph r1["Replane Instance 1"]
-        r1cache["SQLite cache"]
-    end
-
-    subgraph r2["Replane Instance 2"]
-        r2cache["SQLite cache"]
-    end
-
-    subgraph r3["Replane Instance 3"]
-        r3cache["SQLite cache"]
-    end
-
-    r1 -->|SSE| a1["Your Apps"]
-    r2 -->|SSE| a2["Your Apps"]
-    r3 -->|SSE| a3["Your Apps"]
+    r1 -.->|SSE| a1[Backend]
+    r1 -.->|SSE| a2[Web App]
+    r2 -.->|SSE| a3[Mobile]
+    r2 -.->|SSE| a4[Workers]
 ```
 
 SDKs connect via `POST /api/sdk/v1/replication/stream`, receive an initial payload with all configs, and then receive `config_change` events as they occur. The connection stays open; SDKs automatically reconnect on disconnect.
@@ -76,6 +63,12 @@ Override evaluation happens client-side in the SDK:
 All SDKs provide: type safety, realtime updates via SSE, local caching, and automatic reconnection.
 
 ## Code example
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="sdk">
+  <TabItem value="typescript" label="TypeScript" default>
 
 ```typescript
 import { Replane } from '@replanejs/sdk'
@@ -112,6 +105,83 @@ replane.subscribe('api-rate-limit', (config) => {
   rateLimiter.setLimit(config.value)
 })
 ```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+import os
+from replane import Replane
+
+# Using context manager (recommended)
+with Replane(
+    base_url="https://replane.example.com",
+    sdk_key=os.environ["REPLANE_SDK_KEY"],
+    defaults={
+        "api-rate-limit": 100,
+        "feature-new-checkout": False,
+    },
+) as replane:
+    # Read a value
+    limit = replane.get("api-rate-limit")
+
+    # Read with context for override evaluation
+    user_limit = replane.get("api-rate-limit", context={
+        "user_id": user.id,
+        "plan": user.plan,
+    })
+
+    # Subscribe to changes
+    def on_change(config):
+        rate_limiter.set_limit(config.value)
+
+    replane.subscribe_config("api-rate-limit", on_change)
+```
+
+  </TabItem>
+  <TabItem value="csharp" label="C#">
+
+```csharp
+using Replane;
+
+// Create client with defaults
+await using var replane = new ReplaneClient(new ReplaneClientOptions
+{
+    Defaults = new Dictionary<string, object?>
+    {
+        ["api-rate-limit"] = 100,
+        ["feature-new-checkout"] = false
+    }
+});
+
+await replane.ConnectAsync(new ConnectOptions
+{
+    BaseUrl = "https://replane.example.com",
+    SdkKey = Environment.GetEnvironmentVariable("REPLANE_SDK_KEY")!
+});
+
+// Read a value
+var limit = replane.Get<int>("api-rate-limit");
+
+// Read with context for override evaluation
+var userLimit = replane.Get<int>("api-rate-limit", new ReplaneContext
+{
+    ["user_id"] = user.Id,
+    ["plan"] = user.Plan
+});
+
+// Subscribe to changes via event
+replane.ConfigChanged += (sender, e) =>
+{
+    if (e.ConfigName == "api-rate-limit")
+    {
+        rateLimiter.SetLimit(e.GetValue<int>());
+    }
+};
+```
+
+  </TabItem>
+</Tabs>
 
 ## Use cases
 
@@ -207,4 +277,4 @@ Scales horizontally—add more instances behind a load balancer.
 
 MIT licensed. Contributions welcome.
 
-→ **[Quickstart Guide](/docs/getting-started/quickstart)** | **[View on GitHub](https://github.com/replane-dev/replane)**
+**[Quickstart Guide](/docs/getting-started/quickstart)** | **[View on GitHub](https://github.com/replane-dev/replane)**

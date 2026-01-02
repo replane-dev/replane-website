@@ -78,6 +78,12 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
+    mermaid: {
+      theme: {
+        light: 'neutral',
+        dark: 'dark'
+      }
+    },
     navbar: {
       title: 'Replane',
       logo: {
