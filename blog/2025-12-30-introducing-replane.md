@@ -1,202 +1,211 @@
 ---
 slug: introducing-replane
-title: 'Introducing Replane: Stop Deploying Code to Change Settings'
+title: 'Introducing Replane: Dynamic Configuration for Apps and Services'
 authors: replane
 tags: [announcement, release, config-management, feature-flags]
-description: Self-hosted config management with version history, instant rollback, and realtime updates. Deploy once, change behavior forever.
+description: Self-hosted config management with version history, instant rollback, and realtime updates via SSE. MIT licensed, Docker deployment.
 ---
 
-**Every developer knows the pain**: you need to change a rate limit, toggle a feature, or adjust a timeout. But it's hardcoded. So you open a PR, wait for review, merge, wait for CI, deploy, and pray nothing breaks.
+Changing a rate limit, toggling a feature, or adjusting a timeout shouldn't require a deploy. Yet for most teams, it does: open a PR, wait for review, merge, wait for CI, deploy. For a one-line change.
 
-For a one-line change. That takes 2 hours. Or worse—until tomorrow.
-
-Today we're launching **Replane**, a self-hosted solution that eliminates this friction forever.
+**Replane** is a self-hosted configuration manager that decouples config changes from code deployments. Store feature flags, app settings, and operational parameters in one place—with version history, optional approvals, and realtime sync to your services via Server-Sent Events.
 
 <!-- truncate -->
 
-## The Problem We're Solving
+## What Replane does
 
-Modern applications need runtime flexibility. Feature flags, operational parameters, rate limits, A/B test configurations—these aren't truly "code." They're **decisions** that should change faster than your deploy cycle allows.
+- **Version history**: Every change creates an immutable snapshot. See who changed what, when, and why. Rollback to any previous state.
+- **Realtime updates**: Changes propagate to connected SDKs via SSE—typically under 1 second.
+- **JSON Schema validation**: Attach schemas to configs to prevent invalid values before they're saved.
+- **Override rules**: Return different values based on context (user ID, subscription plan, region). Evaluated client-side for low latency.
+- **Environments**: Different values for production, staging, development.
+- **Change proposals**: Optionally require review before changes go live.
+- **Role-based access**: Workspace admins, project maintainers, config editors.
 
-Yet most teams handle this one of two ways:
+## How it works
 
-1. **Environment variables**: Great until you need version history, validation, or permissions. Then you're managing secrets in spreadsheets and hoping nobody fat-fingers production.
+Replane uses a unified architecture where one Docker image serves the dashboard and SDK API. PostgreSQL is the source of truth. Each instance maintains a local SQLite cache for fast reads.
 
-2. **Full-featured platforms**: LaunchDarkly, Split, Optimizely. Powerful, but expensive, complex, and you're sending your config data to someone else's servers.
+```
+                           ╭──────────────────╮
+                           │    PostgreSQL    │
+                           │  Source of Truth │
+                           ╰────────┬─────────╯
+                                    │
+          ┌─────────────────────────┼─────────────────────────┐
+          │                         │                         │
+          ▼                         ▼                         ▼
+ ╭─────────────────╮       ╭─────────────────╮       ╭─────────────────╮
+ │     Replane     │       │     Replane     │       │     Replane     │
+ │    Instance 1   │       │    Instance 2   │       │    Instance 3   │
+ │  ·············  │       │  ·············  │       │  ·············  │
+ │  SQLite cache   │       │  SQLite cache   │       │  SQLite cache   │
+ ╰────────┬────────╯       ╰────────┬────────╯       ╰────────┬────────╯
+          │ SSE                     │ SSE                     │ SSE
+          ▼                         ▼                         ▼
+     Your Apps                 Your Apps                 Your Apps
+```
 
-Replane is the third way: **focused, auditable, and entirely yours**.
+SDKs connect via `POST /api/sdk/v1/replication/stream`, receive an initial payload with all configs, and then receive `config_change` events as they occur. The connection stays open; SDKs automatically reconnect on disconnect.
 
-## What Makes Replane Different
+Override evaluation happens client-side in the SDK:
 
-### Every Change is Versioned
+1. `replane.get('feature-flag', { context: { plan: 'premium' } })`
+2. Find config in local cache
+3. Iterate through overrides in order
+4. First matching override returns its value
+5. No match → return base value
 
-No more "who changed this?" or "what was the old value?" Every config modification creates an immutable snapshot. See the full history. Compare versions. Rollback with one click.
+## SDKs
 
-When production breaks at 3 AM, you don't debug—you revert.
+| Technology | Package             | Install                         |
+| ---------- | ------------------- | ------------------------------- |
+| JavaScript | `@replanejs/sdk`    | `npm install @replanejs/sdk`    |
+| React      | `@replanejs/react`  | `npm install @replanejs/react`  |
+| Next.js    | `@replanejs/next`   | `npm install @replanejs/next`   |
+| Svelte     | `@replanejs/svelte` | `npm install @replanejs/svelte` |
+| Python     | `replane`           | `pip install replane`           |
+| .NET       | `Replane`           | `dotnet add package Replane`    |
 
-### Realtime Updates via SSE
+All SDKs provide: type safety, realtime updates via SSE, local caching, and automatic reconnection.
 
-Changes propagate to your applications instantly via Server-Sent Events. No polling. No cache invalidation. No "did it update yet?"
+## Code example
 
 ```typescript
 import { Replane } from '@replanejs/sdk'
 
-const replane = new Replane()
-await replane.connect({
-  baseUrl: 'https://replane.example.com',
-  sdkKey: process.env.REPLANE_SDK_KEY
+interface Configs {
+  'api-rate-limit': number
+  'feature-new-checkout': boolean
+  'pricing': { free: { requests: number }; premium: { requests: number } }
+}
+
+const replane = new Replane<Configs>({
+  defaults: {
+    'api-rate-limit': 100,
+    'feature-new-checkout': false,
+    'pricing': { free: { requests: 100 }, premium: { requests: 10000 } }
+  }
 })
 
-// Get current value - always fresh
-const limit = replane.get('rate-limit')
+await replane.connect({
+  baseUrl: 'https://replane.example.com',
+  sdkKey: process.env.REPLANE_SDK_KEY!
+})
+
+// Read a value
+const limit = replane.get('api-rate-limit')
+
+// Read with context for override evaluation
+const userLimit = replane.get('api-rate-limit', {
+  context: { userId: user.id, plan: user.plan }
+})
 
 // Subscribe to changes
-replane.subscribe('rate-limit', (config) => {
-  console.log('Rate limit changed:', config.value)
+replane.subscribe('api-rate-limit', (config) => {
   rateLimiter.setLimit(config.value)
 })
 ```
 
-### Validate Before You Break
+## Use cases
 
-Attach JSON schemas to configs. Block invalid values before they're saved. No more "oops, I set the rate limit to -1."
+**Feature flags**: Toggle features without deploys. Enable for 1% of users, watch metrics, increase to 100%. Disable instantly if something breaks.
 
-```json
-{
-  "type": "integer",
-  "minimum": 1,
-  "maximum": 10000,
-  "description": "API requests per minute per user"
-}
-```
+**Operational tuning**: Adjust cache TTLs, batch sizes, rate limits—all from the dashboard, all propagated in under a second.
 
-### Override Rules for Targeting
+**Kill switches**: That new payment integration throwing errors? Disable it instantly while you debug.
 
-Different values for different contexts. Beta users get new features. Enterprise customers get higher limits. All without code changes.
+**Per-tenant configuration**: Enterprise customers get higher limits. Premium users get early access to features. Configure per-tenant without code branches.
 
-```typescript
-// Pass context for rule evaluation
-const limit = replane.get('rate-limit', {
-  context: { userId: user.id, plan: user.plan }
-})
-// Returns 1000 for premium users, 100 for free users
-```
+## Deployment
 
-### Self-Hosted, Full Ownership
+### Replane Cloud
 
-Your data stays on your infrastructure. Simple Docker deployment with PostgreSQL. MIT licensed. No vendor lock-in. No usage-based pricing surprises.
+The fastest option. Sign up at [cloud.replane.dev](https://cloud.replane.dev), create a config, get an SDK key, connect your app.
 
-## SDKs for Every Stack
-
-We've built official SDKs for the technologies you actually use:
-
-| SDK                   | Package             | Install                         |
-| --------------------- | ------------------- | ------------------------------- |
-| JavaScript/TypeScript | `@replanejs/sdk`    | `npm install @replanejs/sdk`    |
-| React                 | `@replanejs/react`  | `npm install @replanejs/react`  |
-| Next.js               | `@replanejs/next`   | `npm install @replanejs/next`   |
-| Svelte                | `@replanejs/svelte` | `npm install @replanejs/svelte` |
-| Python                | `replane`           | `pip install replane`           |
-| .NET                  | `Replane`           | `dotnet add package Replane`    |
-
-All SDKs share the same core features: type safety, realtime updates, local caching, and automatic reconnection.
-
-## Real Use Cases
-
-### Feature Flags Without the Complexity
-
-Ship code with features off. Enable for 1% of users. Watch metrics. Increase to 10%, then 100%. If something breaks, disable instantly—no rollback needed.
-
-```typescript
-const newCheckout = replane.get<boolean>('new-checkout-enabled')
-
-if (newCheckout) {
-  return <NewCheckout />
-}
-return <LegacyCheckout />
-```
-
-### Operational Tuning Without Deploys
-
-Database getting hammered? Increase cache TTL. Hitting rate limits on a third-party API? Lower your batch size. All from the dashboard, all in under a second.
-
-```python
-cache_ttl = replane.get("cache-ttl-seconds")
-batch_size = replane.get("batch-size")
-```
-
-### Kill Switch for Emergencies
-
-That new payment integration throwing 500s? Disable it instantly while you debug. Your users see the old flow. You fix the bug without panic.
-
-### Multi-Tenant Customization
-
-Enterprise customer needs higher limits? Premium users get early access to features? Configure per-tenant without code branches.
-
-## Get Started in 5 Minutes
-
-Deploy with Docker Compose:
+### Self-hosted with Docker
 
 ```yaml
 services:
-  db:
+  postgres:
     image: postgres:17
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: replane
     volumes:
-      - replane-db:/var/lib/postgresql/data
+      - replane-data:/var/lib/postgresql/data
 
-  app:
+  replane:
     image: replane/replane:latest
     depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/replane
-      BASE_URL: http://localhost:8080
-      SECRET_KEY: your-secret-key-here
-      GITHUB_CLIENT_ID: your-github-client-id
-      GITHUB_CLIENT_SECRET: your-github-client-secret
+      - postgres
     ports:
       - '8080:8080'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/replane
+      BASE_URL: http://localhost:8080
+      SECRET_KEY: change-me-to-a-long-random-string
+      PASSWORD_AUTH_ENABLED: true
 
 volumes:
-  replane-db:
+  replane-data:
 ```
-
-Then:
 
 ```bash
 docker compose up -d
 ```
 
-That's it. Open `http://localhost:8080`, sign in with GitHub, create your first config.
+Open `http://localhost:8080`. For production, generate a secure `SECRET_KEY` with `openssl rand -base64 48`.
 
-→ **[Full Quickstart Guide](/docs/getting-started/quickstart)**
+Replane can also run without an external database—it includes an integrated SQLite database. Mount `/data` to persist data.
 
-## What's Next
+### System requirements
 
-Replane is early but production-ready. We're using it ourselves. Here's what's coming:
+| Component  | Minimum    | Recommended |
+| ---------- | ---------- | ----------- |
+| CPU        | 0.25 cores | 2 cores     |
+| Memory     | 512 MB     | 4 GB        |
+| Storage    | 1 GB       | 10+ GB      |
+| PostgreSQL | 14+        | 16+         |
 
-- **Config templates** for common patterns
-- **Webhook notifications** for change events
-- **More auth providers** (Google, Azure AD, OIDC)
-- **Advanced RBAC** with custom roles
-- **Approval workflows** for production changes
+### Authentication options
 
-## Join Us
+- Password authentication (enabled by default)
+- Email magic links (requires SMTP configuration)
+- OAuth: GitHub, GitLab, Google, Okta
 
-Replane is open source under the MIT license. We'd love your feedback, contributions, and ideas.
+### Performance
 
-- **GitHub**: [github.com/replane-dev/replane](https://github.com/replane-dev/replane)
+Benchmarks on Apple M2 Pro (32 GB):
+
+| Metric                   | Result        |
+| ------------------------ | ------------- |
+| Concurrent SSE clients   | 5,000+        |
+| Config change throughput | ~4,500 msg/s  |
+| Node.js CPU usage        | ~1.5 cores    |
+| Node.js memory usage     | ~2.7 GB (RSS) |
+
+Scales horizontally—add more instances behind a load balancer.
+
+## When Replane isn't the right choice
+
+- **Built-in A/B test analytics**: Replane provides override rules and percentage-based rollouts, but doesn't include built-in analytics or statistical significance calculations. Integrate with your existing analytics stack.
+- **Complex experimentation workflows**: If you need multivariate testing with automatic winner selection, a dedicated experimentation platform may fit better.
+
+## What's next
+
+- Webhook notifications for change events
+- Config templates for common patterns
+- Advanced RBAC with custom roles
+- Approval workflows for production changes
+
+## Get started
+
+- **Replane Cloud**: [cloud.replane.dev](https://cloud.replane.dev)
 - **Documentation**: [replane.dev/docs](/docs)
-- **Discord**: Coming soon
+- **GitHub**: [github.com/replane-dev/replane](https://github.com/replane-dev/replane)
 
-Star the repo if you find this useful. Open an issue if you hit a bug. And let us know what features you need most.
+MIT licensed. Contributions welcome.
 
----
-
-**Ready to stop deploying code to change settings?**
-
-→ **[Start with the Quickstart](/docs/getting-started/quickstart)** | **[View on GitHub](https://github.com/replane-dev/replane)**
+→ **[Quickstart Guide](/docs/getting-started/quickstart)** | **[View on GitHub](https://github.com/replane-dev/replane)**
