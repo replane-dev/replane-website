@@ -546,6 +546,50 @@ div[class^='docItemContainer_'] article img {
   -o-border-radius: 7px;
 }
 
+/* Medium-like blog article styling */
+.blog-post-page main {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+#__blog-post-container.markdown {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 20px;
+  line-height: 1.7;
+}
+
+#__blog-post-container.markdown h2 {
+  margin-top: 2.5rem;
+  font-size: 1.6rem;
+}
+
+#__blog-post-container.markdown h3 {
+  margin-top: 2rem;
+  font-size: 1.35rem;
+}
+
+#__blog-post-container.markdown p {
+  margin-bottom: 1.5rem;
+}
+
+#__blog-post-container.markdown ul,
+#__blog-post-container.markdown ol {
+  margin-bottom: 1.5rem;
+}
+
+#__blog-post-container.markdown li {
+  margin-bottom: 0.5rem;
+}
+
+#__blog-post-container.markdown pre {
+  font-size: 0.85rem;
+}
+
+#__blog-post-container.markdown table {
+  font-size: 0.9rem;
+}
+
 /* Sidebar Method labels */
 .api-method > .menu__link {
   align-items: center;
