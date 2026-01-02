@@ -24,7 +24,7 @@ export default function FooterLayout({ style, links, logo, copyright }: FooterLa
 
         {/* Bottom section */}
         {(logo || copyright) && (
-          <div className='mt-10 border-t border-stone-800/50 pt-8 text-center'>
+          <div className='mt-10 pt-8 text-center'>
             {logo && <div className='mb-4'>{logo}</div>}
             {copyright && (
               <p
