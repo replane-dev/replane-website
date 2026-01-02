@@ -594,13 +594,40 @@ div[class^='docItemContainer_'] article img {
 #__blog-post-container.markdown {
   max-width: 700px;
   margin: 0 auto;
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 20px;
+  line-height: 32px;
+  font-family: source-serif-pro, Georgia, Cambria, 'Times New Roman', Times, serif;
 }
 
 #__blog-post-container.markdown .tabs {
-  font-size: 1em;
-  margin-bottom: 10px;
+  margin-top: -10px;
+  margin-bottom: 0;
+  font-family: var(--ifm-heading-font-family);
+}
+
+#__blog-post-container.markdown .tabs > li {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 0;
+  padding: 6px 12px;
+}
+
+/* tabs sibling next no margin top */
+#__blog-post-container.markdown .tabs + * {
+  margin-top: 0 !important;
+}
+
+#__blog-post-container.markdown li > *:last-child {
+  margin-bottom: 0;
+}
+
+#__blog-post-container.markdown li > *:first-child {
+  margin-top: 0;
+}
+
+#__blog-post-container.markdown ul li,
+#__blog-post-container.markdown ol li {
+  margin-bottom: 0;
 }
 
 #__blog-post-container.markdown h2 {
