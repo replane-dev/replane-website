@@ -16,7 +16,7 @@ const config: Config = {
     }
   ],
 
-  title: 'Replane',
+  title: 'Replane: Dynamic configuration for apps and services',
   tagline: 'Dynamic configuration for apps and services.',
   favicon: '/img/favicon.ico',
 
