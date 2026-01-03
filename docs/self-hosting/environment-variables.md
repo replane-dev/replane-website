@@ -1,6 +1,6 @@
 ---
 title: Environment Variables
-description: Complete reference for Replane configuration options
+description: Complete reference for Replane configuration options including database connection, authentication providers (GitHub, Google, Okta OAuth), email settings, and access control.
 ---
 
 # Environment variables

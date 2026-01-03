@@ -16,7 +16,7 @@ const content: UseCaseContent = {
   title: 'Resolve incidents in seconds',
   subtitle: 'When production breaks, respond instantly without deploying',
   description:
-    'React to production incidents immediately. Toggle kill switches, adjust rate limits, revert bad configs—all without a deploy. Every change is tracked for post-mortems.',
+    'React to production incidents immediately. Toggle kill switches, adjust rate limits, and revert configs without deploying.',
   accentColor: 'emerald',
 
   painPoints: [

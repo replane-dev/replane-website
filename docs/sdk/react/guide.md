@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: React SDK configuration, testing, and best practices
+title: React SDK Guide
+description: Learn how to configure the Replane React SDK with TypeScript support, context-based overrides, error boundaries, loading states, and best practices for React apps.
 sidebar_label: Guide
 ---
 
-# Guide
+# React SDK Guide
 
 Configuration, testing, and best practices for the React SDK.
 

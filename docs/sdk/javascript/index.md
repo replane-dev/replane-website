@@ -1,6 +1,6 @@
 ---
 title: JavaScript SDK
-description: Integrate Replane into Node.js, browsers, Deno, or Bun
+description: Integrate Replane into Node.js, browsers, Deno, or Bun. Features type-safe configuration access, realtime SSE updates, context-based overrides, and zero dependencies.
 sidebar_label: Overview
 slug: /sdk/javascript
 ---

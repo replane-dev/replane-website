@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: JavaScript SDK API documentation
+title: JavaScript SDK API Reference
+description: Complete API documentation for the Replane JavaScript/TypeScript SDK including Replane class, connect options, get method, subscriptions, and snapshot functionality.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# JavaScript SDK API Reference
 
 Complete API documentation for the JavaScript/TypeScript SDK.
 

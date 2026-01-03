@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: .NET SDK testing, ASP.NET Core integration, and best practices
+title: .NET SDK Guide
+description: Learn how to integrate the Replane .NET SDK with ASP.NET Core, dependency injection, testing patterns with InMemoryReplaneClient, and production best practices.
 sidebar_label: Guide
 ---
 
-# Guide
+# .NET SDK Guide
 
 Testing, ASP.NET Core integration, and best practices for the .NET SDK.
 

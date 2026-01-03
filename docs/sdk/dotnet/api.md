@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: .NET SDK API documentation
+title: .NET SDK API Reference
+description: Complete API documentation for the Replane .NET SDK including ReplaneClient, ConnectAsync, Get method with generics, ConfigChanged events, and exception types.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# .NET SDK API Reference
 
 Complete API documentation for the .NET SDK.
 

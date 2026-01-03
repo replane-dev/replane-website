@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: Svelte SDK API documentation
+title: Svelte SDK API Reference
+description: Complete API documentation for the Replane Svelte SDK including ReplaneContext, config stores, getReplane, and getReplaneSnapshot for SvelteKit SSR.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# Svelte SDK API Reference
 
 Complete API documentation for the Svelte SDK.
 

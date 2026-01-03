@@ -1,6 +1,6 @@
 ---
 title: Docker Deployment
-description: Deploy Replane with Docker and Docker Compose
+description: Deploy Replane with Docker and Docker Compose. Includes reverse proxy setup, health checks, Prometheus metrics, PostgreSQL backups, and production configuration.
 ---
 
 # Docker deployment

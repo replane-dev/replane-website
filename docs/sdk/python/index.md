@@ -1,6 +1,6 @@
 ---
 title: Python SDK
-description: Integrate Replane into Python applications with sync and async support
+description: Integrate Replane into Python applications with sync and async clients. Zero dependencies for sync, httpx for async. Includes FastAPI, Flask, and Django integration examples.
 sidebar_label: Overview
 slug: /sdk/python
 ---

@@ -16,7 +16,7 @@ const content: UseCaseContent = {
   title: 'Test variants at scale',
   subtitle: 'Store experiment splits in config, not code',
   description:
-    'Define experiment variants and traffic splits in Replane. Product teams adjust percentages without engineering involvement. Consistent assignment across sessions.',
+    'Define experiment variants and traffic splits in Replane. Product teams adjust percentages without engineering involvement.',
   accentColor: 'amber',
 
   painPoints: [

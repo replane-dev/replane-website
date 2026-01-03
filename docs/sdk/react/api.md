@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: React SDK API documentation
+title: React SDK API Reference
+description: Complete API documentation for the Replane React SDK including ReplaneProvider, useConfig hook, useReplane hook, and factory functions for typed hooks.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# React SDK API Reference
 
 Complete API documentation for the React SDK.
 

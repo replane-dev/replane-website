@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: How Replane works - system design, realtime updates, and data flow
+description: How Replane works internally - unified Docker image, PostgreSQL source of truth, SQLite edge caching, SSE realtime updates, client-side override evaluation, and horizontal scaling.
 ---
 
 # Architecture

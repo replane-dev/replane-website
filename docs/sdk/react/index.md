@@ -1,6 +1,6 @@
 ---
 title: React SDK
-description: Integrate Replane into React applications with hooks and context
+description: Integrate Replane into React applications with hooks and context. Features useConfig hook, ReplaneProvider, Suspense support, SSR hydration, and automatic re-renders.
 sidebar_label: Overview
 slug: /sdk/react
 ---

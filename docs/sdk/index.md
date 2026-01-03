@@ -1,6 +1,6 @@
 ---
 title: SDK Overview
-description: Official Replane SDKs for JavaScript, React, Next.js, Svelte, Python, and .NET
+description: Official Replane SDKs for JavaScript, React, Next.js, Svelte, Python, and .NET. All SDKs support realtime updates via SSE, type safety, local caching, and context-based overrides.
 slug: /sdk
 ---
 

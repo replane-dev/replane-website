@@ -1,6 +1,6 @@
 ---
 title: Svelte SDK
-description: Integrate Replane into Svelte applications with reactive stores
+description: Integrate Replane into Svelte 5+ and SvelteKit applications with reactive stores. Features config stores, ReplaneContext, SvelteKit SSR with snapshots, and typed stores.
 sidebar_label: Overview
 slug: /sdk/svelte
 ---

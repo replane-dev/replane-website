@@ -1,7 +1,10 @@
 ---
+title: REST API Reference
+description: The Replane REST API provides programmatic access to your configuration data. Learn about authentication, endpoints, response formats, and status codes.
+sidebar_label: API Reference
 ---
 
-# API Reference
+# REST API Reference
 
 The Replane API provides programmatic access to your configuration data.
 

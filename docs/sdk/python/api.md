@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: Python SDK API documentation
+title: Python SDK API Reference
+description: Complete API documentation for the Replane Python SDK including sync Replane class, async AsyncReplane, get method, subscriptions, and exception handling.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# Python SDK API Reference
 
 Complete API documentation for the Python SDK.
 

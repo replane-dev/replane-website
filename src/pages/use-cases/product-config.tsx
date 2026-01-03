@@ -6,7 +6,7 @@ const content: UseCaseContent = {
   title: 'Tune algorithms live',
   subtitle: 'Adjust ranking weights, thresholds, and parameters in real-time',
   description:
-    'Store ranking weights, similarity thresholds, and relevance parameters in Replane. Data scientists and product managers iterate on algorithms without waiting for deploys.',
+    'Store ranking weights and algorithm parameters in Replane. Data scientists iterate on algorithms without waiting for deploys.',
   accentColor: 'fuchsia',
 
   painPoints: [

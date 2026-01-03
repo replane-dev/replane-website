@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: Get started with Replane in under 5 minutes
+description: Get started with Replane in under 5 minutes. Deploy with Docker Compose or use Replane Cloud, create your first config, and read values from your application.
 ---
 
 # Quickstart

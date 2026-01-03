@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Different ways to install and deploy Replane
+description: Different ways to install and deploy Replane. Use Replane Cloud for instant setup, self-host with Docker Compose, or run from source for development.
 ---
 
 # Installation

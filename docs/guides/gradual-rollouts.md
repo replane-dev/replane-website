@@ -1,6 +1,6 @@
 ---
 title: Gradual Rollouts
-description: Release features to a percentage of users
+description: Release features to a percentage of users with deterministic bucketing. Increase exposure over time, combine with targeting conditions, and roll back instantly if issues arise.
 ---
 
 # Gradual rollouts

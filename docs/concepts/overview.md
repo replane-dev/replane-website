@@ -1,6 +1,6 @@
 ---
-title: Overview
-description: Core concepts in Replane - workspaces, projects, configs, and environments
+title: Core Concepts
+description: Understand Replane's key concepts including workspaces, projects, environments, configs with JSON values, overrides for conditional logic, SDK keys, and version history.
 ---
 
 # Core concepts

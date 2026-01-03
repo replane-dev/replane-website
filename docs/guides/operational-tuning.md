@@ -1,6 +1,6 @@
 ---
 title: Operational Tuning
-description: Adjust rate limits, timeouts, and other settings in realtime
+description: Adjust rate limits, timeouts, batch sizes, and cache TTLs in realtime without deploying. Use dynamic configuration for incident response and per-environment settings.
 ---
 
 # Operational tuning

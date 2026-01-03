@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: Next.js SDK configuration, testing, and best practices
+title: Next.js SDK Guide
+description: Learn how to configure the Replane Next.js SDK with App Router, Pages Router, typed hooks, SSR/SSG support, and production best practices.
 sidebar_label: Guide
 ---
 
-# Guide
+# Next.js SDK Guide
 
 Configuration, testing, and best practices for the Next.js SDK.
 

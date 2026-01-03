@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: JavaScript SDK configuration, testing, and best practices
+title: JavaScript SDK Guide
+description: Learn how to configure the Replane JavaScript SDK with TypeScript support, context-based overrides, realtime updates, error handling, testing patterns, and best practices.
 sidebar_label: Guide
 ---
 
-# Guide
+# JavaScript SDK Guide
 
 Configuration, testing, and best practices for the JavaScript/TypeScript SDK.
 

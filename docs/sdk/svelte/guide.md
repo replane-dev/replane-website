@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: Svelte SDK configuration, SvelteKit SSR, and best practices
+title: Svelte SDK Guide
+description: Learn how to configure the Replane Svelte SDK with typed stores, SvelteKit SSR, realtime updates, context-based overrides, and production best practices.
 sidebar_label: Guide
 ---
 
-# Guide
+# Svelte SDK Guide
 
 Configuration, SvelteKit SSR, and best practices for the Svelte SDK.
 

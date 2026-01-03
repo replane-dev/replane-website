@@ -1,10 +1,10 @@
 ---
-title: Guide
-description: Python SDK framework integration, testing, and best practices
+title: Python SDK Guide
+description: Learn how to integrate the Replane Python SDK with FastAPI, Flask, and Django. Includes testing patterns, context-based overrides, and best practices.
 sidebar_label: Guide
 ---
 
-# Guide
+# Python SDK Guide
 
 Framework integration, testing, and best practices for the Python SDK.
 

@@ -1,10 +1,10 @@
 ---
-title: API Reference
-description: Next.js SDK API documentation
+title: Next.js SDK API Reference
+description: Complete API documentation for the Replane Next.js SDK including ReplaneRoot, ReplaneProvider, useConfig hook, and getReplaneSnapshot for SSR.
 sidebar_label: API Reference
 ---
 
-# API Reference
+# Next.js SDK API Reference
 
 Complete API documentation for the Next.js SDK.
 

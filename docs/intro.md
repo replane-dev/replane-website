@@ -1,6 +1,7 @@
 ---
 slug: /
 title: Introduction
+description: Replane is a dynamic configuration platform for feature flags, A/B testing, operational tuning, and cross-service config. Change settings in realtime without deploys.
 ---
 
 # Replane Documentation

@@ -1,6 +1,6 @@
 ---
 title: .NET SDK
-description: Integrate Replane into .NET applications with async support
+description: Integrate Replane into .NET 8+ applications with async support. Features ReplaneClient, typed Get method, ConfigChanged events, ASP.NET Core DI, and in-memory test client.
 sidebar_label: Overview
 slug: /sdk/dotnet
 ---

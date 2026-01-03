@@ -1,6 +1,6 @@
 ---
 title: Next.js SDK
-description: Integrate Replane into Next.js with SSR/SSG support
+description: Integrate Replane into Next.js with App Router and Pages Router support. Features ReplaneRoot for server components, SSR hydration, and getReplaneSnapshot for SSG.
 sidebar_label: Overview
 slug: /sdk/nextjs
 ---

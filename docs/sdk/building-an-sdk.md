@@ -1,6 +1,6 @@
 ---
 title: Building an SDK
-description: How to build your own Replane SDK in any language
+description: Build your own Replane SDK in any language. Learn the replication stream API, client-side override evaluation with condition operators, FNV-1a hashing, and reconnection handling.
 ---
 
 # Building an SDK

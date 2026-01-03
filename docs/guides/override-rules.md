@@ -1,6 +1,6 @@
 ---
 title: Override Rules
-description: Return different config values based on user context
+description: Return different config values based on user context. Target specific users, segments, or regions with conditions like equals, in, numeric comparisons, and percentage-based bucketing.
 ---
 
 # Override rules

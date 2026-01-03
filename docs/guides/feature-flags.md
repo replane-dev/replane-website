@@ -1,6 +1,6 @@
 ---
 title: Feature Flags
-description: Toggle features on or off without deploying code
+description: Toggle features on or off without deploying code. Enable for specific users, percentage rollouts, realtime updates via SSE, and type-safe flag definitions.
 ---
 
 # Feature flags

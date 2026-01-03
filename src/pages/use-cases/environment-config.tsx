@@ -6,7 +6,7 @@ const content: UseCaseContent = {
   title: 'Dynamic runtime configuration',
   subtitle: 'Manage application settings that change across environments',
   description:
-    'Centralize runtime configuration like API endpoints, feature flags, rate limits, and operational parameters. Update settings instantly without deployments. For secrets, use a dedicated secrets manager.',
+    'Centralize runtime config like API endpoints, feature flags, and rate limits. Update settings instantly without deployments.',
   accentColor: 'indigo',
 
   painPoints: [
