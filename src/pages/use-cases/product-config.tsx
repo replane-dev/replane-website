@@ -320,9 +320,9 @@ replane = Replane(
 )
 
 def rank_search_results(query: str, items: list) -> list:
-    weights = replane.get("search-weights")
-    threshold = replane.get("similarity-threshold")
-    max_results = replane.get("max-results")
+    weights = replane.configs["search-weights"]
+    threshold = replane.configs["similarity-threshold"]
+    max_results = replane.configs["max-results"]
     
     results = []
     for item in items:

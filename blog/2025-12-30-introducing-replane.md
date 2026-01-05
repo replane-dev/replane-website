@@ -123,13 +123,14 @@ with Replane(
     },
 ) as replane:
     # Read a value
-    limit = replane.get("api-rate-limit")
+    limit = replane.configs["api-rate-limit"]
 
     # Read with context for override evaluation
-    user_limit = replane.get("api-rate-limit", context={
+    user_client = replane.with_context({
         "user_id": user.id,
         "plan": user.plan,
     })
+    user_limit = user_client.configs["api-rate-limit"]
 
     # Subscribe to changes
     def on_change(config):

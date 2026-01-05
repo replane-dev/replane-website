@@ -335,12 +335,12 @@ replane = Replane(
 )
 
 def get_tenant_config(tenant_id: str) -> dict:
-    context = {"tenant_id": tenant_id}
+    tenant_client = replane.with_context({"tenant_id": tenant_id})
     
     return {
-        "rate_limit": replane.get("api-rate-limit", context=context),
-        "storage_limit": replane.get("storage-limit-gb", context=context),
-        "upload_size_mb": replane.get("max-upload-size-mb", context=context),
+        "rate_limit": tenant_client.configs["api-rate-limit"],
+        "storage_limit": tenant_client.configs["storage-limit-gb"],
+        "upload_size_mb": tenant_client.configs["max-upload-size-mb"],
     }
 
 @app.middleware("http")

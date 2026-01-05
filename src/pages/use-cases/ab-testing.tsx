@@ -313,10 +313,8 @@ with Replane(
     sdk_key=os.environ["REPLANE_SDK_KEY"]
 ) as replane:
     # Get variant for user (consistent assignment)
-    variant = replane.get(
-        "checkout-experiment",
-        context={"user_id": user.id}
-    )
+    user_client = replane.with_context({"user_id": user.id})
+    variant = user_client.configs["checkout-experiment"]
 
     # Render appropriate experience
     match variant:

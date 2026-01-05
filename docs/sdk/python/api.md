@@ -1,6 +1,6 @@
 ---
 title: Python SDK API Reference
-description: Complete API documentation for the Replane Python SDK including sync Replane class, async AsyncReplane, get method, subscriptions, and exception handling.
+description: Complete API documentation for the Replane Python SDK including sync Replane class, async AsyncReplane, configs accessor, subscriptions, and exception handling.
 sidebar_label: API Reference
 ---
 
@@ -58,37 +58,8 @@ async with AsyncReplane(
     base_url="https://replane.example.com",
     sdk_key="rp_...",
 ) as replane:
-    # get() is synchronous - reads from local cache
-    value = replane.get("config-name")
-```
-
-## `replane.get(name, *, context=None, default=None)`
-
-Gets a config value. Returns the current value synchronously (reads from local cache).
-
-### Parameters
-
-| Parameter | Type   | Required | Description                                                  |
-| --------- | ------ | -------- | ------------------------------------------------------------ |
-| `name`    | `str`  | Yes      | Config name                                                  |
-| `context` | `dict` | No       | Context for override evaluation (merged with client context) |
-| `default` | `Any`  | No       | Default value if config not found                            |
-
-### Returns
-
-The config value, or `default` if not found.
-
-### Example
-
-```python
-# Simple get
-enabled = replane.get("feature-flag")
-
-# With context
-limit = replane.get("rate-limit", context={"plan": "premium"})
-
-# With default
-timeout = replane.get("request-timeout", default=30)
+    # Access configs from local cache
+    value = replane.configs["config-name"]
 ```
 
 ## `replane.subscribe(callback)`
@@ -143,7 +114,168 @@ Returns `True` if the client has completed initial config fetch.
 
 ```python
 if replane.is_initialized():
-    value = replane.get("config")
+    value = replane.configs["config"]
+```
+
+## `replane.configs`
+
+A dictionary-like accessor for configurations. Provides bracket notation access with override evaluation using the client's default context.
+
+When using generated TypedDict types, this property enables full type safety.
+
+### Methods
+
+| Method              | Description                                         |
+| ------------------- | --------------------------------------------------- |
+| `configs[name]`     | Get config value; raises `KeyError` if not found    |
+| `configs.get(name)` | Get config value; returns `None` or default if not found |
+| `name in configs`   | Check if config exists                              |
+| `configs.keys()`    | Return list of all config names                     |
+
+### Example
+
+```python
+from replane import Replane
+from replane_types import Configs  # Generated TypedDict
+
+with Replane[Configs](
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+    context={"plan": "premium"},  # Default context for override evaluation
+) as replane:
+    # Dictionary-style access with type safety
+    settings = replane.configs["app-settings"]
+    print(settings["maxUploadSizeMb"])  # IDE knows the type
+    
+    # Check if config exists
+    if "feature-flag" in replane.configs:
+        flag = replane.configs["feature-flag"]
+    
+    # Safe access with default
+    timeout = replane.configs.get("timeout", 30)
+    
+    # List all config names
+    for name in replane.configs.keys():
+        print(name)
+```
+
+## `replane.with_context(context)`
+
+Creates a scoped client wrapper with additional context merged with the client's default context.
+
+The returned wrapper has the same interface (`configs`, `subscribe()`, etc.) but uses the merged context for all operations. The original client is unaffected.
+
+### Parameters
+
+| Parameter | Type   | Required | Description               |
+| --------- | ------ | -------- | ------------------------- |
+| `context` | `dict` | Yes      | Additional context to merge |
+
+### Returns
+
+A `ContextualReplane` (or `ContextualAsyncReplane`) wrapper with the merged context.
+
+### Example
+
+```python
+with Replane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+    context={"environment": "production"},
+) as replane:
+    # Create a scoped client for a specific user
+    user_client = replane.with_context({
+        "user_id": user.id,
+        "plan": user.plan,
+    })
+    
+    # All operations use the merged context
+    rate_limit = user_client.configs["rate-limit"]
+    settings = user_client.configs["app-settings"]
+    
+    # Can be chained for additional context
+    request_client = user_client.with_context({"region": "eu"})
+    
+    # Original client is unaffected
+    assert replane.configs["rate-limit"] != user_client.configs["rate-limit"]
+```
+
+### Use cases
+
+**Per-request context in web frameworks:**
+
+```python
+@app.get("/items")
+async def get_items(request: Request):
+    user_client = replane.with_context({
+        "user_id": request.user.id,
+        "plan": request.user.plan,
+    })
+    max_items = user_client.configs["max-items"]
+    return {"max_items": max_items}
+```
+
+**Feature flags for specific users:**
+
+```python
+def check_feature_for_user(user):
+    user_client = replane.with_context({"user_id": user.id})
+    return user_client.configs["beta-features"]["new-ui"]
+```
+
+## `replane.with_defaults(defaults)`
+
+Creates a scoped client wrapper with additional default values.
+
+The returned wrapper has the same interface (`configs`, `subscribe()`, etc.) but uses the provided defaults when configs are not found. The original client is unaffected.
+
+### Parameters
+
+| Parameter  | Type   | Required | Description                                  |
+| ---------- | ------ | -------- | -------------------------------------------- |
+| `defaults` | `dict` | Yes      | Default values to use when configs not found |
+
+### Returns
+
+A `ContextualReplane` (or `ContextualAsyncReplane`) wrapper with the additional defaults.
+
+### Example
+
+```python
+with Replane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+) as replane:
+    # Create a client with fallback defaults
+    safe_client = replane.with_defaults({
+        "timeout": 30,
+        "max-retries": 3,
+    })
+    
+    # Returns the default if config doesn't exist
+    timeout = safe_client.configs["timeout"]  # 30 if not configured
+    
+    # Can be chained
+    safer_client = safe_client.with_defaults({"batch-size": 100})
+    
+    # Combine with with_context()
+    user_client = replane.with_context({"plan": "premium"}).with_defaults({
+        "rate-limit": 1000,
+    })
+```
+
+### Precedence
+
+1. Explicit `default` parameter in `configs.get()` - highest priority
+2. Scoped defaults from `with_defaults()`
+3. `KeyError` if neither provided - raised (for bracket access)
+4. `None` if using `configs.get()` without default
+
+```python
+safe_client = replane.with_defaults({"feature": "scoped-default"})
+
+# Explicit default in configs.get() takes precedence
+value = safe_client.configs.get("feature", "explicit")  # Returns "explicit"
 ```
 
 ## Exceptions
@@ -151,7 +283,7 @@ if replane.is_initialized():
 ```python
 from replane import (
     ReplaneError,          # Base exception
-    ConfigNotFoundError,   # Config doesn't exist
+    ConfigNotFoundError,   # Missing required configs at init
     TimeoutError,          # Operation timed out
     AuthenticationError,   # Invalid SDK key (401)
     NetworkError,          # Network failures
@@ -162,13 +294,15 @@ from replane import (
 )
 ```
 
+Note: Accessing a missing config via `replane.configs["name"]` raises a standard `KeyError`, not `ConfigNotFoundError`. Use `replane.configs.get("name", default)` to avoid exceptions.
+
 ### Error handling example
 
 ```python
 try:
-    value = replane.get("my-config")
-except ConfigNotFoundError as e:
-    print(f"Config not found: {e.config_name}")
+    value = replane.configs["my-config"]
+except KeyError as e:
+    print(f"Config not found: {e}")
 except TimeoutError as e:
     print(f"Timed out after {e.timeout_ms}ms")
 except AuthenticationError:

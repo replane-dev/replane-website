@@ -292,7 +292,7 @@ with Replane(
     sdk_key=os.environ["REPLANE_SDK_KEY"]
 ) as replane:
     # Check feature flag
-    new_checkout_enabled = replane.get("feature-new-checkout")
+    new_checkout_enabled = replane.configs["feature-new-checkout"]
 
     if new_checkout_enabled:
         return render_new_checkout()

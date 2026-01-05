@@ -8,13 +8,67 @@ sidebar_label: Guide
 
 Framework integration, testing, and best practices for the Python SDK.
 
+## Type-safe with TypedDict
+
+Generate TypedDict types from the Replane dashboard for full type safety with your configs.
+
+### Using generated types
+
+```python
+from replane import Replane
+from replane_types import Configs  # Generated from Replane dashboard
+
+# Pass the Configs TypedDict as a type parameter
+with Replane[Configs](
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+) as replane:
+    # Access configs with dictionary-style notation
+    settings = replane.configs["app-settings"]
+    
+    # Full type safety - IDE knows the structure
+    print(settings["maxUploadSizeMb"])
+    print(settings["allowedFileTypes"])
+```
+
+### The `.configs` accessor
+
+The `.configs` property provides a dictionary-like interface:
+
+```python
+# Bracket access (raises KeyError if missing)
+value = replane.configs["feature-flag"]
+
+# Safe access with default
+timeout = replane.configs.get("timeout", 30)
+
+# Check if config exists
+if "feature-flag" in replane.configs:
+    flag = replane.configs["feature-flag"]
+
+# List all config names
+for name in replane.configs.keys():
+    print(name)
+```
+
+### Accessing configs
+
+| Method | Description |
+| ------ | ----------- |
+| `replane.configs["name"]` | Returns config value; raises `KeyError` if not found |
+| `replane.configs.get("name")` | Returns config value or `None` if not found |
+| `replane.configs.get("name", default)` | Returns config value or `default` if not found |
+| `"name" in replane.configs` | Check if config exists |
+
+Use bracket notation when you want an error on missing configs. Use `.get()` for safe access with fallback values.
+
 ## Context and overrides
 
 Context is used to evaluate override rules. Context data stays in your application and is never sent to the server.
 
 ### Client-level context
 
-Applied to all `get()` calls:
+Applied to all config accesses:
 
 ```python
 replane = Replane(
@@ -24,7 +78,7 @@ replane = Replane(
 )
 
 # Uses client context
-value = replane.get("config-name")
+value = replane.configs["config-name"]
 ```
 
 ### Per-evaluation context
@@ -32,10 +86,80 @@ value = replane.get("config-name")
 Merged with client context (per-call values take precedence):
 
 ```python
-value = replane.get("feature-flag", context={
+value = replane.with_context({
     "user_id": user.id,
     "plan": user.plan,
+}).configs["feature-flag"]
+```
+
+### Scoped clients with `with_context()`
+
+Create lightweight scoped clients for specific users or requests:
+
+```python
+with Replane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+) as replane:
+    # Create a scoped client for a specific user
+    user_client = replane.with_context({
+        "user_id": user.id,
+        "plan": user.plan,
+    })
+    
+    # All operations use the merged context
+    rate_limit = user_client.configs["rate-limit"]
+    settings = user_client.configs["app-settings"]
+    
+    # Chaining for additional context
+    request_client = user_client.with_context({"region": request.region})
+```
+
+This is especially useful in web frameworks for per-request context:
+
+```python
+@app.get("/items")
+async def get_items(request: Request):
+    user_client = replane.with_context({
+        "user_id": request.user.id,
+        "plan": request.user.plan,
+    })
+    return {"max_items": user_client.configs["limits"]["max_items"]}
+```
+
+### Scoped defaults with `with_defaults()`
+
+Create scoped clients with fallback values for missing configs:
+
+```python
+with Replane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+) as replane:
+    # Create a client with fallback defaults
+    safe_client = replane.with_defaults({
+        "timeout": 30,
+        "max-retries": 3,
+    })
+    
+    # Returns the default if config doesn't exist
+    timeout = safe_client.configs["timeout"]  # 30 if not configured
+```
+
+Combine both methods for flexible scoping:
+
+```python
+# User-specific context with safe defaults
+user_client = replane.with_context({
+    "user_id": user.id,
+    "plan": user.plan,
+}).with_defaults({
+    "rate-limit": 100,
+    "max-upload-size": 10,
 })
+
+# Uses context for override evaluation, falls back to defaults
+rate_limit = user_client.configs["rate-limit"]
 ```
 
 ## Testing
@@ -53,8 +177,8 @@ client = create_test_client({
     "rate-limit": 100,
 })
 
-assert client.get("feature-enabled") is True
-assert client.get("rate-limit") == 100
+assert client.configs["feature-enabled"] is True
+assert client.configs["rate-limit"] == 100
 ```
 
 ### Testing with overrides
@@ -73,8 +197,8 @@ client.set_config(
     }],
 )
 
-assert client.get("feature", context={"plan": "free"}) is False
-assert client.get("feature", context={"plan": "pro"}) is True
+assert client.with_context({"plan": "free"}).configs["feature"] is False
+assert client.with_context({"plan": "pro"}).configs["feature"] is True
 ```
 
 ### Pytest fixture
@@ -91,7 +215,7 @@ def replane():
     })
 
 def test_feature_flag(replane):
-    flags = replane.get("feature-flags")
+    flags = replane.configs["feature-flags"]
     assert flags["dark-mode"] is True
 ```
 
@@ -125,7 +249,8 @@ def get_replane() -> AsyncReplane:
 
 @app.get("/items")
 async def get_items(rp: AsyncReplane = Depends(get_replane)):
-    max_items = rp.get("max-items", context={"plan": "free"})
+    free_client = rp.with_context({"plan": "free"})
+    max_items = free_client.configs["max-items"]
     return {"max_items": max_items}
 ```
 
@@ -151,7 +276,7 @@ def get_replane():
 @app.route("/items")
 def get_items():
     rp = get_replane()
-    max_items = rp.get("max-items")
+    max_items = rp.configs["max-items"]
     return {"max_items": max_items}
 
 @app.teardown_appcontext
@@ -176,10 +301,8 @@ REPLANE.connect()
 from django.conf import settings
 
 def my_view(request):
-    rate_limit = settings.REPLANE.get(
-        "rate-limit",
-        context={"user_id": request.user.id}
-    )
+    user_client = settings.REPLANE.with_context({"user_id": request.user.id})
+    rate_limit = user_client.configs["rate-limit"]
     # ...
 ```
 
@@ -203,7 +326,7 @@ replane.connect()
 # app.py
 from config import replane
 
-value = replane.get("feature-flag")
+value = replane.configs["feature-flag"]
 ```
 
 ### Use context managers
@@ -213,7 +336,7 @@ Context managers ensure proper cleanup:
 ```python
 with Replane(...) as replane:
     # Client is connected and ready
-    value = replane.get("config")
+    value = replane.configs["config"]
 # Client is automatically closed
 ```
 

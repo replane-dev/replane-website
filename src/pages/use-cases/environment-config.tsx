@@ -336,11 +336,11 @@ replane = Replane(
 )
 
 # Runtime config - tune without redeploying
-api_base_url = replane.get("api-base-url")
-request_timeout = replane.get("request-timeout-seconds")
-max_retries = replane.get("max-retries")
-rate_limit = replane.get("rate-limit-per-minute")
-log_level = replane.get("log-level")
+api_base_url = replane.configs["api-base-url"]
+request_timeout = replane.configs["request-timeout-seconds"]
+max_retries = replane.configs["max-retries"]
+rate_limit = replane.configs["rate-limit-per-minute"]
+log_level = replane.configs["log-level"]
 
 # Initialize with tunable config
 logging.basicConfig(level=getattr(logging, log_level.upper()))

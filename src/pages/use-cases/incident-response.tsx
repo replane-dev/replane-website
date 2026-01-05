@@ -351,14 +351,14 @@ async def shutdown():
 @app.post("/api/process")
 async def process_request():
     # Check circuit breaker during incidents
-    if replane.get("circuit-breaker-enabled"):
+    if replane.configs["circuit-breaker-enabled"]:
         raise HTTPException(
             status_code=503,
             detail="Service temporarily unavailable"
         )
     
     # Rate limit adjustable during traffic spikes
-    rate_limit = replane.get("rate-limit-requests-per-minute")
+    rate_limit = replane.configs["rate-limit-requests-per-minute"]
     
     # Process with current config...
     return {"success": True}

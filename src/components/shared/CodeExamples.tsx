@@ -104,13 +104,14 @@ with Replane(
     sdk_key=os.environ["REPLANE_SDK_KEY"],
 ) as replane:
     # Get a config value
-    feature_enabled = replane.get("new-feature")
+    feature_enabled = replane.configs["new-feature"]
 
     # With context for targeted overrides
-    limit = replane.get(
-        "rate-limit",
-        context={"user_id": user.id, "plan": user.plan}
-    )`
+    user_client = replane.with_context({
+        "user_id": user.id,
+        "plan": user.plan
+    })
+    limit = user_client.configs["rate-limit"]`
   },
   {
     sdk: 'csharp',

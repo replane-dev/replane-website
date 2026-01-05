@@ -342,7 +342,7 @@ replane = Replane(
 redis_client = redis.Redis()
 
 async def fetch_with_cache(key: str, fetcher):
-    ttl = replane.get("cache-ttl-seconds")
+    ttl = replane.configs["cache-ttl-seconds"]
     
     # Check cache
     cached = redis_client.get(key)
@@ -350,7 +350,7 @@ async def fetch_with_cache(key: str, fetcher):
         return json.loads(cached)
     
     # Fetch with configurable timeout
-    timeout = replane.get("api-timeout-seconds")
+    timeout = replane.configs["api-timeout-seconds"]
     data = await asyncio.wait_for(fetcher(), timeout=timeout)
     
     # Cache with configurable TTL
@@ -360,8 +360,8 @@ async def fetch_with_cache(key: str, fetcher):
 # Rate limiting with live config
 class DynamicRateLimiter:
     def is_limited(self, key: str) -> bool:
-        limit = replane.get("rate-limit-requests")
-        window = replane.get("rate-limit-window-seconds")
+        limit = replane.configs["rate-limit-requests"]
+        window = replane.configs["rate-limit-window-seconds"]
         
         count = redis_client.incr(f"ratelimit:{key}")
         if count == 1:

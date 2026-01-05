@@ -346,19 +346,19 @@ replane = Replane(
 @app.middleware("http")
 async def security_middleware(request: Request, call_next):
     # Check lockdown mode
-    if replane.get("security-lockdown-enabled"):
+    if replane.configs["security-lockdown-enabled"]:
         raise HTTPException(503, "System in maintenance mode")
     
     # Check IP blocklist
     client_ip = request.client.host
-    blocked_ips = replane.get("blocked-ips")
+    blocked_ips = replane.configs["blocked-ips"]
     if client_ip in blocked_ips:
         raise HTTPException(403, "Access denied")
     
     # Check API key revocation
     api_key = request.headers.get("x-api-key")
     if api_key:
-        revoked_keys = replane.get("revoked-api-keys")
+        revoked_keys = replane.configs["revoked-api-keys"]
         if api_key in revoked_keys:
             raise HTTPException(401, "API key revoked")
     

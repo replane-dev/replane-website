@@ -34,16 +34,14 @@ with Replane(
     sdk_key="rp_...",
 ) as replane:
     # Get a config value
-    rate_limit = replane.get("rate-limit")
+    rate_limit = replane.configs["rate-limit"]
 
     # Get with context for override evaluation
-    feature_enabled = replane.get(
-        "new-feature",
-        context={"user_id": user.id, "plan": user.plan},
-    )
+    user_client = replane.with_context({"user_id": user.id, "plan": user.plan})
+    feature_enabled = user_client.configs["new-feature"]
 
     # Get with fallback default
-    timeout = replane.get("request-timeout", default=30)
+    timeout = replane.configs.get("request-timeout", 30)
 ```
 
 ### Asynchronous client
@@ -58,10 +56,27 @@ async with AsyncReplane(
     sdk_key="rp_...",
 ) as replane:
     # get() is sync since it reads from local cache
-    rate_limit = replane.get("rate-limit")
+    rate_limit = replane.configs["rate-limit"]
 
     # With context
-    enabled = replane.get("feature", context={"plan": "premium"})
+    enabled = replane.with_context({"plan": "premium"}).configs["feature"]
+```
+
+### Type-safe with generated types
+
+Generate TypedDict types from the Replane dashboard for full type safety:
+
+```python
+from replane import Replane
+from replane_types import Configs  # Generated from dashboard
+
+with Replane[Configs](
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+) as replane:
+    # Dictionary-style access with full type safety
+    settings = replane.configs["app-settings"]
+    print(settings["maxUploadSizeMb"])  # IDE knows the type
 ```
 
 ## Features
@@ -70,6 +85,7 @@ async with AsyncReplane(
 - **Zero dependencies** — Sync client uses only stdlib
 - **Real-time updates** — SSE connection for instant changes
 - **Context-based overrides** — Target users, plans, regions
+- **Type-safe** — TypedDict support with `.configs` accessor
 - **Testing utilities** — In-memory client for unit tests
 
 ## Next steps

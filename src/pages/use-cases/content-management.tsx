@@ -319,10 +319,10 @@ replane = Replane(
 def home():
     # Get content from Replane
     content = {
-        "title": replane.get("hero-title"),
-        "subtitle": replane.get("hero-subtitle"),
-        "cta_text": replane.get("hero-cta-text"),
-        "announcement": replane.get("announcement-banner")
+        "title": replane.configs["hero-title"],
+        "subtitle": replane.configs["hero-subtitle"],
+        "cta_text": replane.configs["hero-cta-text"],
+        "announcement": replane.configs["announcement-banner"]
     }
     
     return render_template("home.html", **content)

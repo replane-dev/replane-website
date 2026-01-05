@@ -350,8 +350,8 @@ async def get_pool():
         pool = await asyncpg.create_pool(
             dsn=os.environ["DATABASE_URL"],
             min_size=2,
-            max_size=replane.get("db-pool-size"),
-            command_timeout=replane.get("db-timeout-ms") / 1000
+            max_size=replane.configs["db-pool-size"],
+            command_timeout=replane.configs["db-timeout-ms"] / 1000
         )
     
     return pool
@@ -367,7 +367,7 @@ replane.subscribe_config("db-pool-size", on_pool_size_change)
 
 # Retry logic with configurable retries
 async def fetch_with_retry(fn):
-    max_retries = replane.get("max-retries")
+    max_retries = replane.configs["max-retries"]
     
     for i in range(max_retries):
         try:

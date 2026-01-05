@@ -334,14 +334,14 @@ async def shutdown():
 @app.post("/api/payments")
 async def process_payment(payment: PaymentRequest):
     # Kill switch check
-    if not replane.get("kill-switch-payments"):
+    if not replane.configs["kill-switch-payments"]:
         raise HTTPException(
             status_code=503,
             detail="Payments temporarily disabled"
         )
     
     # Fallback to alternative provider
-    if not replane.get("kill-switch-stripe"):
+    if not replane.configs["kill-switch-stripe"]:
         return await process_with_paypal(payment)
     
     return await process_with_stripe(payment)
