@@ -62,6 +62,26 @@ async with AsyncReplane(
     enabled = replane.with_context({"plan": "premium"}).configs["feature"]
 ```
 
+### Without context manager
+
+```python
+from replane import Replane
+
+replane = Replane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+)
+replane.connect()
+
+# Use configs
+rate_limit = replane.configs["rate-limit"]
+user_client = replane.with_context({"user_id": "123"})
+feature = user_client.configs["feature-flag"]
+
+# Don't forget to close when done
+replane.close()
+```
+
 ### Type-safe with generated types
 
 Generate TypedDict types from the Replane dashboard for full type safety:
