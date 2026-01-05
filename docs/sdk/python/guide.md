@@ -20,7 +20,7 @@ from replane_types import Configs  # Generated from Replane dashboard
 
 # Pass the Configs TypedDict as a type parameter
 with Replane[Configs](
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Access configs with dictionary-style notation
@@ -72,7 +72,7 @@ Applied to all config accesses:
 
 ```python
 replane = Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     context={"environment": "production", "region": "us-east"},
 )
@@ -98,7 +98,7 @@ Create lightweight scoped clients for specific users or requests:
 
 ```python
 with Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Create a scoped client for a specific user
@@ -133,7 +133,7 @@ Create scoped clients with fallback values for missing configs:
 
 ```python
 with Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Create a client with fallback defaults
@@ -236,7 +236,7 @@ _replane: AsyncReplane | None = None
 async def lifespan(app: FastAPI):
     global _replane
     _replane = AsyncReplane(
-        base_url="https://replane.example.com",
+        base_url="https://cloud.replane.dev",
         sdk_key="rp_...",
     )
     await _replane.connect()
@@ -272,7 +272,7 @@ def get_replane():
     global replane
     if replane is None:
         replane = Replane(
-            base_url="https://replane.example.com",
+            base_url="https://cloud.replane.dev",
             sdk_key="rp_...",
         )
         replane.connect()
@@ -297,7 +297,7 @@ def close_replane(exception):
 from replane import Replane
 
 REPLANE = Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 )
 REPLANE.connect()
@@ -349,7 +349,7 @@ with Replane(...) as replane:
 
 ```python
 replane = Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     defaults={
         "feature-flag": False,

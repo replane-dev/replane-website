@@ -34,7 +34,7 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 
 ```python
 replane = Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     context={"environment": "production"},
     defaults={
@@ -57,7 +57,7 @@ Same options as `Replane`. Uses `httpx` for async HTTP operations.
 from replane import AsyncReplane
 
 async with AsyncReplane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Access configs from local cache
@@ -148,7 +148,7 @@ from replane import Replane
 from replane_types import Configs  # Generated TypedDict
 
 with Replane[Configs](
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     context={"plan": "premium"},  # Default context for override evaluation
 ) as replane:
@@ -188,7 +188,7 @@ A `ContextualReplane` (or `ContextualAsyncReplane`) wrapper with the merged cont
 
 ```python
 with Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     context={"environment": "production"},
 ) as replane:
@@ -252,7 +252,7 @@ A `ContextualReplane` (or `ContextualAsyncReplane`) wrapper with the additional 
 
 ```python
 with Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Create a client with fallback defaults

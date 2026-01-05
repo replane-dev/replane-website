@@ -30,7 +30,7 @@ from replane import Replane
 
 # Using context manager (recommended)
 with Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Get a config value
@@ -52,7 +52,7 @@ Requires `pip install replane[async]`:
 from replane import AsyncReplane
 
 async with AsyncReplane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # get() is sync since it reads from local cache
@@ -69,7 +69,7 @@ from replane import Replane
 
 # Option 1: Provide credentials in constructor
 replane = Replane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 )
 replane.connect()
@@ -77,7 +77,7 @@ replane.connect()
 # Option 2: Provide credentials in connect()
 replane = Replane()
 replane.connect(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 )
 
@@ -97,7 +97,7 @@ from replane import AsyncReplane
 
 # Option 1: Provide credentials in constructor
 replane = AsyncReplane(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 )
 await replane.connect()
@@ -105,7 +105,7 @@ await replane.connect()
 # Option 2: Provide credentials in connect()
 replane = AsyncReplane()
 await replane.connect(
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 )
 
@@ -127,7 +127,7 @@ from replane import Replane
 from replane_types import Configs  # Generated from dashboard
 
 with Replane[Configs](
-    base_url="https://replane.example.com",
+    base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
 ) as replane:
     # Dictionary-style access with full type safety
