@@ -62,7 +62,7 @@ async with AsyncReplane(
     enabled = replane.with_context({"plan": "premium"}).configs["feature"]
 ```
 
-### Without context manager
+### Without context manager (sync)
 
 ```python
 from replane import Replane
@@ -88,6 +88,34 @@ feature = user_client.configs["feature-flag"]
 
 # Don't forget to close when done
 replane.close()
+```
+
+### Without context manager (async)
+
+```python
+from replane import AsyncReplane
+
+# Option 1: Provide credentials in constructor
+replane = AsyncReplane(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+)
+await replane.connect()
+
+# Option 2: Provide credentials in connect()
+replane = AsyncReplane()
+await replane.connect(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+)
+
+# Use configs
+rate_limit = replane.configs["rate-limit"]
+user_client = replane.with_context({"user_id": "123"})
+feature = user_client.configs["feature-flag"]
+
+# Don't forget to close when done
+await replane.close()
 ```
 
 ### Type-safe with generated types
