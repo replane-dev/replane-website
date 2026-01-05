@@ -16,8 +16,8 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 
 | Option                      | Type        | Required | Description                                               |
 | --------------------------- | ----------- | -------- | --------------------------------------------------------- |
-| `base_url`                  | `str`       | Yes      | Replane server URL                                        |
-| `sdk_key`                   | `str`       | Yes      | SDK key for authentication                                |
+| `base_url`                  | `str`       | No*      | Replane server URL (can also be provided in `connect()`)  |
+| `sdk_key`                   | `str`       | No*      | SDK key for authentication (can also be provided in `connect()`) |
 | `context`                   | `dict`      | No       | Default context for all override evaluations              |
 | `defaults`                  | `dict`      | No       | Default values if server unavailable during init          |
 | `required`                  | `list[str]` | No       | Config names that must exist (raises if missing)          |
@@ -27,6 +27,8 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 | `inactivity_timeout_ms`     | `int`       | No       | Reconnect if no events for this duration (default: 30000) |
 | `agent`                     | `str`       | No       | Agent identifier for User-Agent header                    |
 | `debug`                     | `bool`      | No       | Enable debug logging (default: False)                     |
+
+*`base_url` and `sdk_key` must be provided either in the constructor or in `connect()`.
 
 ### Example
 
@@ -87,15 +89,22 @@ def on_feature_change(config):
 unsubscribe = replane.subscribe_config("my-feature", on_feature_change)
 ```
 
-## `replane.connect(*, wait=True)`
+## `replane.connect(base_url=None, sdk_key=None, *, wait=True)`
 
 Connects to the Replane server. Called automatically when using context manager.
 
-```python
-replane = Replane(...)
-replane.connect()  # Blocks until initialized
+Credentials (`base_url` and `sdk_key`) can be provided either in the constructor or in `connect()`. If provided in both, the `connect()` values take precedence.
 
-# Or non-blocking
+```python
+# Option 1: Credentials in constructor
+replane = Replane(base_url="...", sdk_key="...")
+replane.connect()
+
+# Option 2: Credentials in connect()
+replane = Replane()
+replane.connect(base_url="...", sdk_key="...")
+
+# Non-blocking connection
 replane.connect(wait=False)
 replane.wait_for_init()  # Wait when ready
 ```

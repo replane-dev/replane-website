@@ -67,11 +67,19 @@ async with AsyncReplane(
 ```python
 from replane import Replane
 
+# Option 1: Provide credentials in constructor
 replane = Replane(
     base_url="https://replane.example.com",
     sdk_key="rp_...",
 )
 replane.connect()
+
+# Option 2: Provide credentials in connect()
+replane = Replane()
+replane.connect(
+    base_url="https://replane.example.com",
+    sdk_key="rp_...",
+)
 
 # Use configs
 rate_limit = replane.configs["rate-limit"]
