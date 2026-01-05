@@ -172,20 +172,20 @@ Use `InMemoryReplaneClient` or `create_test_client` for tests:
 from replane.testing import create_test_client, InMemoryReplaneClient
 
 # Simple usage
-client = create_test_client({
+replane = create_test_client({
     "feature-enabled": True,
     "rate-limit": 100,
 })
 
-assert client.configs["feature-enabled"] is True
-assert client.configs["rate-limit"] == 100
+assert replane.configs["feature-enabled"] is True
+assert replane.configs["rate-limit"] == 100
 ```
 
 ### Testing with overrides
 
 ```python
-client = InMemoryReplaneClient()
-client.set_config(
+replane = InMemoryReplaneClient()
+replane.set_config(
     "feature",
     value=False,
     overrides=[{
@@ -197,8 +197,8 @@ client.set_config(
     }],
 )
 
-assert client.with_context({"plan": "free"}).configs["feature"] is False
-assert client.with_context({"plan": "pro"}).configs["feature"] is True
+assert replane.with_context({"plan": "free"}).configs["feature"] is False
+assert replane.with_context({"plan": "pro"}).configs["feature"] is True
 ```
 
 ### Pytest fixture
