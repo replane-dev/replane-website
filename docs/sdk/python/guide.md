@@ -25,7 +25,7 @@ with Replane[Configs](
 ) as replane:
     # Access configs with dictionary-style notation
     settings = replane.configs["app-settings"]
-    
+
     # Full type safety - IDE knows the structure
     print(settings["maxUploadSizeMb"])
     print(settings["allowedFileTypes"])
@@ -53,12 +53,12 @@ for name in replane.configs.keys():
 
 ### Accessing configs
 
-| Method | Description |
-| ------ | ----------- |
-| `replane.configs["name"]` | Returns config value; raises `KeyError` if not found |
-| `replane.configs.get("name")` | Returns config value or `None` if not found |
-| `replane.configs.get("name", default)` | Returns config value or `default` if not found |
-| `"name" in replane.configs` | Check if config exists |
+| Method                                 | Description                                          |
+| -------------------------------------- | ---------------------------------------------------- |
+| `replane.configs["name"]`              | Returns config value; raises `KeyError` if not found |
+| `replane.configs.get("name")`          | Returns config value or `None` if not found          |
+| `replane.configs.get("name", default)` | Returns config value or `default` if not found       |
+| `"name" in replane.configs`            | Check if config exists                               |
 
 Use bracket notation when you want an error on missing configs. Use `.get()` for safe access with fallback values.
 
@@ -106,11 +106,11 @@ with Replane(
         "user_id": user.id,
         "plan": user.plan,
     })
-    
+
     # All operations use the merged context
     rate_limit = user_client.configs["rate-limit"]
     settings = user_client.configs["app-settings"]
-    
+
     # Chaining for additional context
     request_client = user_client.with_context({"region": request.region})
 ```
@@ -141,7 +141,7 @@ with Replane(
         "timeout": 30,
         "max-retries": 3,
     })
-    
+
     # Returns the default if config doesn't exist
     timeout = safe_client.configs["timeout"]  # 30 if not configured
 ```
@@ -225,31 +225,36 @@ def test_feature_flag(replane):
 
 ```python
 from contextlib import asynccontextmanager
+from typing import Annotated
+
 from fastapi import FastAPI, Depends
 from replane import AsyncReplane
 
-replane: AsyncReplane | None = None
+_replane: AsyncReplane | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global replane
-    replane = AsyncReplane(
+    global _replane
+    _replane = AsyncReplane(
         base_url="https://replane.example.com",
         sdk_key="rp_...",
     )
-    await replane.connect()
+    await _replane.connect()
     yield
-    await replane.close()
+    await _replane.close()
 
 app = FastAPI(lifespan=lifespan)
 
 def get_replane() -> AsyncReplane:
-    assert replane is not None
-    return replane
+    assert _replane is not None
+    return _replane
+
+# Define reusable dependency type
+Replane = Annotated[AsyncReplane, Depends(get_replane)]
 
 @app.get("/items")
-async def get_items(rp: AsyncReplane = Depends(get_replane)):
-    free_client = rp.with_context({"plan": "free"})
+async def get_items(replane: Replane):
+    free_client = replane.with_context({"plan": "free"})
     max_items = free_client.configs["max-items"]
     return {"max_items": max_items}
 ```
@@ -363,4 +368,3 @@ replane.connect()
 
 atexit.register(replane.close)
 ```
-
