@@ -148,6 +148,6 @@ with Replane[Configs](
 
 - [API Reference](/docs/sdk/python/api) — Full API documentation
 - [Guide](/docs/sdk/python/guide) — Framework integration, testing, best practices
-- [Feature Flags](/docs/guides/feature_flags) — Toggle features
+- [Feature Flags](/docs/guides/feature-flags) — Toggle features
 - [Override Rules](/docs/guides/override-rules) — Target specific users
 
