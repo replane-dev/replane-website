@@ -132,7 +132,7 @@ with Replane[Configs](
 ) as replane:
     # Dictionary-style access with full type safety
     settings = replane.configs["app-settings"]
-    print(settings["maxUploadSizeMb"])  # IDE knows the type
+    print(settings["max_upload_size_mb"])  # IDE knows the type
 ```
 
 ## Features

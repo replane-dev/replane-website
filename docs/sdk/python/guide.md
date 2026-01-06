@@ -27,8 +27,8 @@ with Replane[Configs](
     settings = replane.configs["app-settings"]
 
     # Full type safety - IDE knows the structure
-    print(settings["maxUploadSizeMb"])
-    print(settings["allowedFileTypes"])
+    print(settings["max_upload_size_mb"])
+    print(settings["allowed_file_types"])
 ```
 
 ### The `.configs` accessor
