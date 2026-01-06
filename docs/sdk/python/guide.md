@@ -24,7 +24,7 @@ with Replane[Configs](
     sdk_key="rp_...",
 ) as replane:
     # Access configs with dictionary-style notation
-    settings = replane.configs["app-settings"]
+    settings = replane.configs["app_settings"]
 
     # Full type safety - IDE knows the structure
     print(settings["max_upload_size_mb"])
@@ -37,14 +37,14 @@ The `.configs` property provides a dictionary-like interface:
 
 ```python
 # Bracket access (raises KeyError if missing)
-value = replane.configs["feature-flag"]
+value = replane.configs["feature_flag"]
 
 # Safe access with default
 timeout = replane.configs.get("timeout", 30)
 
 # Check if config exists
-if "feature-flag" in replane.configs:
-    flag = replane.configs["feature-flag"]
+if "feature_flag" in replane.configs:
+    flag = replane.configs["feature_flag"]
 
 # List all config names
 for name in replane.configs.keys():
@@ -78,7 +78,7 @@ replane = Replane(
 )
 
 # Uses client context
-value = replane.configs["config-name"]
+value = replane.configs["config_name"]
 ```
 
 ### Per-evaluation context
@@ -89,7 +89,7 @@ Merged with client context (per-call values take precedence):
 value = replane.with_context({
     "user_id": user.id,
     "plan": user.plan,
-}).configs["feature-flag"]
+}).configs["feature_flag"]
 ```
 
 ### Scoped clients with `with_context()`
@@ -108,8 +108,8 @@ with Replane(
     })
 
     # All operations use the merged context
-    rate_limit = user_client.configs["rate-limit"]
-    settings = user_client.configs["app-settings"]
+    rate_limit = user_client.configs["rate_limit"]
+    settings = user_client.configs["app_settings"]
 
     # Chaining for additional context
     request_client = user_client.with_context({"region": request.region})
@@ -139,7 +139,7 @@ with Replane(
     # Create a client with fallback defaults
     safe_client = replane.with_defaults({
         "timeout": 30,
-        "max-retries": 3,
+        "max_retries": 3,
     })
 
     # Returns the default if config doesn't exist
@@ -154,12 +154,12 @@ user_client = replane.with_context({
     "user_id": user.id,
     "plan": user.plan,
 }).with_defaults({
-    "rate-limit": 100,
-    "max-upload-size": 10,
+    "rate_limit": 100,
+    "max_upload_size": 10,
 })
 
 # Uses context for override evaluation, falls back to defaults
-rate_limit = user_client.configs["rate-limit"]
+rate_limit = user_client.configs["rate_limit"]
 ```
 
 ## Testing
@@ -173,12 +173,12 @@ from replane.testing import create_test_client, InMemoryReplaneClient
 
 # Simple usage
 replane = create_test_client({
-    "feature-enabled": True,
-    "rate-limit": 100,
+    "feature_enabled": True,
+    "rate_limit": 100,
 })
 
-assert replane.configs["feature-enabled"] is True
-assert replane.configs["rate-limit"] == 100
+assert replane.configs["feature_enabled"] is True
+assert replane.configs["rate_limit"] == 100
 ```
 
 ### Testing with overrides
@@ -210,13 +210,13 @@ from replane.testing import create_test_client
 @pytest.fixture
 def replane():
     return create_test_client({
-        "feature-flags": {"dark-mode": True, "new-ui": False},
-        "rate-limits": {"default": 100, "premium": 1000},
+        "feature_flags": {"dark_mode": True, "new-ui": False},
+        "rate_limits": {"default": 100, "premium": 1000},
     })
 
 def test_feature_flag(replane):
-    flags = replane.configs["feature-flags"]
-    assert flags["dark-mode"] is True
+    flags = replane.configs["feature_flags"]
+    assert flags["dark_mode"] is True
 ```
 
 ## Framework integration
@@ -255,7 +255,7 @@ Replane = Annotated[AsyncReplane, Depends(get_replane)]
 @app.get("/items")
 async def get_items(replane: Replane):
     free_client = replane.with_context({"plan": "free"})
-    max_items = free_client.configs["max-items"]
+    max_items = free_client.configs["max_items"]
     return {"max_items": max_items}
 ```
 
@@ -281,7 +281,7 @@ def get_replane():
 @app.route("/items")
 def get_items():
     rp = get_replane()
-    max_items = rp.configs["max-items"]
+    max_items = rp.configs["max_items"]
     return {"max_items": max_items}
 
 @app.teardown_appcontext
@@ -307,7 +307,7 @@ from django.conf import settings
 
 def my_view(request):
     user_client = settings.REPLANE.with_context({"user_id": request.user.id})
-    rate_limit = user_client.configs["rate-limit"]
+    rate_limit = user_client.configs["rate_limit"]
     # ...
 ```
 
@@ -331,7 +331,7 @@ replane.connect()
 # app.py
 from config import replane
 
-value = replane.configs["feature-flag"]
+value = replane.configs["feature_flag"]
 ```
 
 ### Use context managers
@@ -352,8 +352,8 @@ replane = Replane(
     base_url="https://cloud.replane.dev",
     sdk_key="rp_...",
     defaults={
-        "feature-flag": False,
-        "rate-limit": 100,
+        "feature_flag": False,
+        "rate_limit": 100,
     },
 )
 ```

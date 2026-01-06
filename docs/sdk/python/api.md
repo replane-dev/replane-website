@@ -14,21 +14,21 @@ Creates a synchronous Replane client. Uses only Python standard library (zero de
 
 ### Options
 
-| Option                      | Type        | Required | Description                                               |
-| --------------------------- | ----------- | -------- | --------------------------------------------------------- |
-| `base_url`                  | `str`       | No*      | Replane server URL (can also be provided in `connect()`)  |
-| `sdk_key`                   | `str`       | No*      | SDK key for authentication (can also be provided in `connect()`) |
-| `context`                   | `dict`      | No       | Default context for all override evaluations              |
-| `defaults`                  | `dict`      | No       | Default values if server unavailable during init          |
-| `required`                  | `list[str]` | No       | Config names that must exist (raises if missing)          |
-| `request_timeout_ms`        | `int`       | No       | HTTP request timeout (default: 2000)                      |
-| `initialization_timeout_ms` | `int`       | No       | Initial connection timeout (default: 5000)                |
-| `retry_delay_ms`            | `int`       | No       | Base retry delay with exponential backoff (default: 200)  |
-| `inactivity_timeout_ms`     | `int`       | No       | Reconnect if no events for this duration (default: 30000) |
-| `agent`                     | `str`       | No       | Agent identifier for User-Agent header                    |
-| `debug`                     | `bool`      | No       | Enable debug logging (default: False)                     |
+| Option                      | Type        | Required | Description                                                      |
+| --------------------------- | ----------- | -------- | ---------------------------------------------------------------- |
+| `base_url`                  | `str`       | No\*     | Replane server URL (can also be provided in `connect()`)         |
+| `sdk_key`                   | `str`       | No\*     | SDK key for authentication (can also be provided in `connect()`) |
+| `context`                   | `dict`      | No       | Default context for all override evaluations                     |
+| `defaults`                  | `dict`      | No       | Default values if server unavailable during init                 |
+| `required`                  | `list[str]` | No       | Config names that must exist (raises if missing)                 |
+| `request_timeout_ms`        | `int`       | No       | HTTP request timeout (default: 2000)                             |
+| `initialization_timeout_ms` | `int`       | No       | Initial connection timeout (default: 5000)                       |
+| `retry_delay_ms`            | `int`       | No       | Base retry delay with exponential backoff (default: 200)         |
+| `inactivity_timeout_ms`     | `int`       | No       | Reconnect if no events for this duration (default: 30000)        |
+| `agent`                     | `str`       | No       | Agent identifier for User-Agent header                           |
+| `debug`                     | `bool`      | No       | Enable debug logging (default: False)                            |
 
-*`base_url` and `sdk_key` must be provided either in the constructor or in `connect()`.
+\*`base_url` and `sdk_key` must be provided either in the constructor or in `connect()`.
 
 ### Example
 
@@ -38,10 +38,10 @@ replane = Replane(
     sdk_key="rp_...",
     context={"environment": "production"},
     defaults={
-        "rate-limit": 100,
-        "feature-enabled": False,
+        "rate_limit": 100,
+        "feature_enabled": False,
     },
-    required=["rate-limit", "feature-enabled"],
+    required=["rate_limit", "feature_enabled"],
     request_timeout_ms=3000,
     debug=True,
 )
@@ -61,7 +61,7 @@ async with AsyncReplane(
     sdk_key="rp_...",
 ) as replane:
     # Access configs from local cache
-    value = replane.configs["config-name"]
+    value = replane.configs["config_name"]
 ```
 
 ## `replane.subscribe(callback)`
@@ -134,12 +134,12 @@ When using generated TypedDict types, this property enables full type safety.
 
 ### Methods
 
-| Method              | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `configs[name]`     | Get config value; raises `KeyError` if not found    |
+| Method              | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `configs[name]`     | Get config value; raises `KeyError` if not found         |
 | `configs.get(name)` | Get config value; returns `None` or default if not found |
-| `name in configs`   | Check if config exists                              |
-| `configs.keys()`    | Return list of all config names                     |
+| `name in configs`   | Check if config exists                                   |
+| `configs.keys()`    | Return list of all config names                          |
 
 ### Example
 
@@ -153,16 +153,16 @@ with Replane[Configs](
     context={"plan": "premium"},  # Default context for override evaluation
 ) as replane:
     # Dictionary-style access with type safety
-    settings = replane.configs["app-settings"]
+    settings = replane.configs["app_settings"]
     print(settings["max_upload_size_mb"])  # IDE knows the type
-    
+
     # Check if config exists
-    if "feature-flag" in replane.configs:
-        flag = replane.configs["feature-flag"]
-    
+    if "feature_flag" in replane.configs:
+        flag = replane.configs["feature_flag"]
+
     # Safe access with default
     timeout = replane.configs.get("timeout", 30)
-    
+
     # List all config names
     for name in replane.configs.keys():
         print(name)
@@ -176,8 +176,8 @@ The returned wrapper has the same interface (`configs`, `subscribe()`, etc.) but
 
 ### Parameters
 
-| Parameter | Type   | Required | Description               |
-| --------- | ------ | -------- | ------------------------- |
+| Parameter | Type   | Required | Description                 |
+| --------- | ------ | -------- | --------------------------- |
 | `context` | `dict` | Yes      | Additional context to merge |
 
 ### Returns
@@ -197,16 +197,16 @@ with Replane(
         "user_id": user.id,
         "plan": user.plan,
     })
-    
+
     # All operations use the merged context
-    rate_limit = user_client.configs["rate-limit"]
-    settings = user_client.configs["app-settings"]
-    
+    rate_limit = user_client.configs["rate_limit"]
+    settings = user_client.configs["app_settings"]
+
     # Can be chained for additional context
     request_client = user_client.with_context({"region": "eu"})
-    
+
     # Original client is unaffected
-    assert replane.configs["rate-limit"] != user_client.configs["rate-limit"]
+    assert replane.configs["rate_limit"] != user_client.configs["rate_limit"]
 ```
 
 ### Use cases
@@ -220,7 +220,7 @@ async def get_items(request: Request):
         "user_id": request.user.id,
         "plan": request.user.plan,
     })
-    max_items = user_client.configs["max-items"]
+    max_items = user_client.configs["max_items"]
     return {"max_items": max_items}
 ```
 
@@ -229,7 +229,7 @@ async def get_items(request: Request):
 ```python
 def check_feature_for_user(user):
     user_client = replane.with_context({"user_id": user.id})
-    return user_client.configs["beta-features"]["new-ui"]
+    return user_client.configs["beta_features"]["new_ui"]
 ```
 
 ## `replane.with_defaults(defaults)`
@@ -258,18 +258,18 @@ with Replane(
     # Create a client with fallback defaults
     safe_client = replane.with_defaults({
         "timeout": 30,
-        "max-retries": 3,
+        "max_retries": 3,
     })
-    
+
     # Returns the default if config doesn't exist
     timeout = safe_client.configs["timeout"]  # 30 if not configured
-    
+
     # Can be chained
-    safer_client = safe_client.with_defaults({"batch-size": 100})
-    
+    safer_client = safe_client.with_defaults({"batch_size": 100})
+
     # Combine with with_context()
     user_client = replane.with_context({"plan": "premium"}).with_defaults({
-        "rate-limit": 1000,
+        "rate_limit": 1000,
     })
 ```
 
@@ -309,7 +309,7 @@ Note: Accessing a missing config via `replane.configs["name"]` raises a standard
 
 ```python
 try:
-    value = replane.configs["my-config"]
+    value = replane.configs["my_config"]
 except KeyError as e:
     print(f"Config not found: {e}")
 except TimeoutError as e:
@@ -323,4 +323,3 @@ except ReplaneError as e:
     if e.__cause__:
         print(f"Caused by: {e.__cause__}")
 ```
-

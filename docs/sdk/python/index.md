@@ -34,14 +34,14 @@ with Replane(
     sdk_key="rp_...",
 ) as replane:
     # Get a config value
-    rate_limit = replane.configs["rate-limit"]
+    rate_limit = replane.configs["rate_limit"]
 
     # Get with context for override evaluation
     user_client = replane.with_context({"user_id": user.id, "plan": user.plan})
-    feature_enabled = user_client.configs["new-feature"]
+    feature_enabled = user_client.configs["new_feature"]
 
     # Get with fallback default
-    timeout = replane.configs.get("request-timeout", 30)
+    timeout = replane.configs.get("request_timeout", 30)
 ```
 
 ### Asynchronous client
@@ -56,7 +56,7 @@ async with AsyncReplane(
     sdk_key="rp_...",
 ) as replane:
     # get() is sync since it reads from local cache
-    rate_limit = replane.configs["rate-limit"]
+    rate_limit = replane.configs["rate_limit"]
 
     # With context
     enabled = replane.with_context({"plan": "premium"}).configs["feature"]
@@ -82,9 +82,9 @@ replane.connect(
 )
 
 # Use configs
-rate_limit = replane.configs["rate-limit"]
+rate_limit = replane.configs["rate_limit"]
 user_client = replane.with_context({"user_id": "123"})
-feature = user_client.configs["feature-flag"]
+feature = user_client.configs["feature_flag"]
 
 # Don't forget to close when done
 replane.close()
@@ -110,9 +110,9 @@ await replane.connect(
 )
 
 # Use configs
-rate_limit = replane.configs["rate-limit"]
+rate_limit = replane.configs["rate_limit"]
 user_client = replane.with_context({"user_id": "123"})
-feature = user_client.configs["feature-flag"]
+feature = user_client.configs["feature_flag"]
 
 # Don't forget to close when done
 await replane.close()
@@ -131,7 +131,7 @@ with Replane[Configs](
     sdk_key="rp_...",
 ) as replane:
     # Dictionary-style access with full type safety
-    settings = replane.configs["app-settings"]
+    settings = replane.configs["app_settings"]
     print(settings["max_upload_size_mb"])  # IDE knows the type
 ```
 
@@ -148,6 +148,6 @@ with Replane[Configs](
 
 - [API Reference](/docs/sdk/python/api) — Full API documentation
 - [Guide](/docs/sdk/python/guide) — Framework integration, testing, best practices
-- [Feature Flags](/docs/guides/feature-flags) — Toggle features
+- [Feature Flags](/docs/guides/feature_flags) — Toggle features
 - [Override Rules](/docs/guides/override-rules) — Target specific users
 
