@@ -47,7 +47,7 @@ export default function HeroBanner() {
               className='inline-flex items-center gap-2 rounded-lg border border-stone-700 bg-stone-800 px-8 py-3.5 text-base font-semibold text-stone-100 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 hover:text-stone-100 hover:no-underline'
             >
               <Github className='h-4 w-4' />
-              Self-Host
+              GitHub
             </Link>
           </div>
 
