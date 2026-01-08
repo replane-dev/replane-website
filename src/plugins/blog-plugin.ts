@@ -1,4 +1,6 @@
 import type { LoadContext, Plugin, PluginOptions } from '@docusaurus/types'
+import fs from 'fs'
+import path from 'path'
 
 const blogPluginExports = require('@docusaurus/plugin-content-blog')
 const defaultBlogPlugin = blogPluginExports.default
@@ -9,6 +11,11 @@ interface BlogPostMetadata {
   permalink: string
   date: string
   source: string
+  frontMatter: {
+    slug?: string
+    image?: string
+    [key: string]: unknown
+  }
 }
 
 interface BlogPost {
@@ -38,6 +45,14 @@ interface ContentLoadedParams {
   }
 }
 
+/**
+ * Get the slug from a blog post's permalink
+ */
+function getSlugFromPermalink(permalink: string): string {
+  // Remove leading/trailing slashes and 'blog/' prefix
+  return permalink.replace(/^\/blog\//, '').replace(/\/$/, '')
+}
+
 async function blogPluginExtended(
   context: LoadContext,
   options: BlogPluginOptions
@@ -52,6 +67,30 @@ async function blogPluginExtended(
      */
     contentLoaded: async function (params: ContentLoadedParams) {
       const { content, actions } = params
+
+      // Auto-inject social card images for blog posts that don't have one specified
+      const socialCardsDir = path.join(context.siteDir, 'static', 'img', 'social-cards')
+
+      for (const blogPost of content.blogPosts) {
+        // Skip if image is already specified in frontmatter
+        if (blogPost.metadata.frontMatter?.image) {
+          continue
+        }
+
+        // Get slug from frontmatter or derive from permalink
+        const slug =
+          blogPost.metadata.frontMatter?.slug || getSlugFromPermalink(blogPost.metadata.permalink)
+        const socialCardPath = path.join(socialCardsDir, `${slug}.png`)
+
+        // Check if a generated social card exists for this post
+        if (fs.existsSync(socialCardPath)) {
+          // Inject the social card image path
+          blogPost.metadata.frontMatter = {
+            ...blogPost.metadata.frontMatter,
+            image: `/img/social-cards/${slug}.png`
+          }
+        }
+      }
 
       // Get the 6 latest blog posts
       const recentPostsLimit = 6

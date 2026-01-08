@@ -15,6 +15,8 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "dev": "docusaurus start --port 4000",
+    "generate-social-cards": "tsx scripts/generate-social-cards.ts",
+    "prebuild": "npm run generate-social-cards",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -56,12 +58,15 @@
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "node-gyp": "^12.1.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
+    "sharp": "0.33.5",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.16",
     "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.2"
   },
   "engines": {
