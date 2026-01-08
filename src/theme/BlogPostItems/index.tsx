@@ -47,17 +47,6 @@ export default function BlogPostItems({ items, component: BlogPostItemComponent 
           key={blog.content.metadata.permalink}
           className='group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'
         >
-          {blog.content.metadata.frontMatter.image && (
-            <Link to={blog.content.metadata.permalink} className='block overflow-hidden'>
-              <img
-                className='h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105'
-                src={blog.content.metadata.frontMatter.image}
-                alt={blog.content.metadata.title}
-                loading='lazy'
-              />
-            </Link>
-          )}
-
           <div className='flex flex-1 flex-col p-6'>
             {blog.content.metadata.tags.length > 0 && (
               <div className='mb-3 flex flex-wrap gap-2'>

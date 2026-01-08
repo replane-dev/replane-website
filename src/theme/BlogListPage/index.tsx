@@ -94,21 +94,7 @@ function BlogHomepageBanner(props: BlogListPageProps) {
       {featuredPost && (
         <div className='mx-auto -mt-8 max-w-5xl px-4'>
           <div className='overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
-            <div className='grid gap-6 md:grid-cols-2'>
-              {featuredPost.content.metadata.frontMatter.image && (
-                <div className='relative h-64 md:h-auto'>
-                  <img
-                    src={featuredPost.content.metadata.frontMatter.image}
-                    alt={featuredPost.content.metadata.title}
-                    className='h-full w-full object-cover'
-                    loading='lazy'
-                  />
-                  <div className='absolute left-4 top-4 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white'>
-                    Featured
-                  </div>
-                </div>
-              )}
-              <div className='flex flex-col justify-center p-6'>
+            <div className='flex flex-col justify-center p-6'>
                 <div className='mb-2 flex flex-wrap gap-2'>
                   {featuredPost.content.metadata.tags.slice(0, 2).map((tag) => (
                     <Link
@@ -160,7 +146,6 @@ function BlogHomepageBanner(props: BlogListPageProps) {
               </div>
             </div>
           </div>
-        </div>
       )}
     </div>
   )
