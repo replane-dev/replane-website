@@ -6,6 +6,8 @@ tags: [nodejs, config-management, architecture, best-practices]
 description: Environment variables are static. Learn how to implement dynamic configuration in Node.js with realtime updates, type safety, and instant rollback.
 ---
 
+import TryReplaneCTA from '@site/src/components/TryReplaneCTA'
+
 Environment variables work—until they don't. You set `RATE_LIMIT=100` in your `.env`, deploy, and forget about it. Then Black Friday hits. Your API is hammered. You need to drop that limit to 50. Right now.
 
 The deploy pipeline takes 12 minutes.
@@ -262,12 +264,7 @@ If you're ready to move beyond environment variables, here's how to start:
 
 5. **Set up monitoring.** Track config change events. If something breaks after a config change, you want to know immediately.
 
-## Try Replane
-
-Replane is an open-source dynamic configuration platform with SDKs for Node.js, Python, and .NET. Changes propagate via SSE in under 100ms, with full version history and instant rollback.
-
-- **[Replane Cloud](https://cloud.replane.dev)** — Start immediately with our managed service
-- **[Self-hosted quickstart](/docs/getting-started/quickstart)** — Run on your own infrastructure
-- **[JavaScript SDK documentation](/docs/sdk/javascript)** — Full API reference
-
-MIT licensed. [View on GitHub](https://github.com/replane-dev/replane).
+<TryReplaneCTA
+description="Replane is an open-source dynamic configuration platform with SDKs for Node.js, Python, and .NET. Changes propagate via SSE in under 100ms, with full version history and instant rollback."
+links={['cloud', 'quickstart', 'sdk']}
+/>
