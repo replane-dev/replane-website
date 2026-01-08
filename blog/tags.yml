@@ -27,3 +27,18 @@ guides:
   label: Guides
   permalink: /guides
   description: How-to guides and tutorials
+
+nodejs:
+  label: Node.js
+  permalink: /nodejs
+  description: Node.js integrations and patterns
+
+architecture:
+  label: Architecture
+  permalink: /architecture
+  description: Technical architecture and system design
+
+best-practices:
+  label: Best Practices
+  permalink: /best-practices
+  description: Best practices and recommended patterns
