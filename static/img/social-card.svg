@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0c0a09"/>
+      <stop offset="100%" style="stop-color:#1c1917"/>
+    </linearGradient>
+    
+    <!-- Blue glow -->
+    <radialGradient id="blueGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2b7fff;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#2b7fff;stop-opacity:0"/>
+    </radialGradient>
+    
+    <!-- Grid pattern -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#292524" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Grid overlay -->
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.4"/>
+  
+  <!-- Blue glow effect -->
+  <ellipse cx="600" cy="280" rx="500" ry="300" fill="url(#blueGlow)"/>
+  
+  <!-- Decorative lines -->
+  <line x1="0" y1="1" x2="1200" y2="1" stroke="#2b7fff" stroke-width="3"/>
+  
+  <!-- Logo (scaled up) -->
+  <g transform="translate(520, 180) scale(5)">
+    <path fill="#2b7fff" d="M11.644 1.59a.75.75 0 0 1 .712 0l9.75 5.25a.75.75 0 0 1 0 1.32l-9.75 5.25a.75.75 0 0 1-.712 0l-9.75-5.25a.75.75 0 0 1 0-1.32l9.75-5.25Z"/>
+    <path fill="#2b7fff" d="m3.265 10.602 7.668 4.129a2.25 2.25 0 0 0 2.134 0l7.668-4.13 1.37.739a.75.75 0 0 1 0 1.32l-9.75 5.25a.75.75 0 0 1-.71 0l-9.75-5.25a.75.75 0 0 1 0-1.32l1.37-.738Z"/>
+    <path fill="#2b7fff" d="m10.933 19.231-7.668-4.13-1.37.739a.75.75 0 0 0 0 1.32l9.75 5.25c.221.12.489.12.71 0l9.75-5.25a.75.75 0 0 0 0-1.32l-1.37-.738-7.668 4.13a2.25 2.25 0 0 1-2.134-.001Z"/>
+  </g>
+  
+  <!-- Replane text -->
+  <text x="600" y="420" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="72" font-weight="700" fill="#ffffff" text-anchor="middle">Replane</text>
+  
+  <!-- Tagline -->
+  <text x="600" y="480" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="400" fill="#a8a29e" text-anchor="middle">Dynamic configuration for apps and services</text>
+  
+  <!-- Subtle bottom accent -->
+  <rect x="500" y="530" width="200" height="4" rx="2" fill="#2b7fff" opacity="0.6"/>
+  
+  <!-- Corner accents -->
+  <path d="M0 0 L80 0 L80 3 L3 3 L3 80 L0 80 Z" fill="#2b7fff" opacity="0.3"/>
+  <path d="M1200 0 L1120 0 L1120 3 L1197 3 L1197 80 L1200 80 Z" fill="#2b7fff" opacity="0.3"/>
+  <path d="M0 630 L80 630 L80 627 L3 627 L3 550 L0 550 Z" fill="#2b7fff" opacity="0.3"/>
+  <path d="M1200 630 L1120 630 L1120 627 L1197 627 L1197 550 L1200 550 Z" fill="#2b7fff" opacity="0.3"/>
+</svg>
