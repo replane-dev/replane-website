@@ -142,20 +142,20 @@ unsubFeature()
 For React applications, use the dedicated [`@replanejs/react`](/docs/sdk/react) package which provides optimized hooks and components:
 
 ```tsx
-import { ReplaneProvider, useConfig } from '@replanejs/react';
+import { ReplaneProvider, useConfig } from '@replanejs/react'
 
 function App() {
   return (
     <ReplaneProvider connection={connection}>
       <Dashboard />
     </ReplaneProvider>
-  );
+  )
 }
 
 function Dashboard() {
-  const darkMode = useConfig<boolean>('feature-dark-mode');
+  const darkMode = useConfig<boolean>('feature-dark-mode')
 
-  return <div className={darkMode ? 'dark' : 'light'}>...</div>;
+  return <div className={darkMode ? 'dark' : 'light'}>...</div>
 }
 ```
 
