@@ -139,28 +139,27 @@ unsubFeature()
 
 ### React integration
 
-```typescript
-import { useEffect, useState } from 'react';
+For React applications, use the dedicated [`@replanejs/react`](/docs/sdk/react) package which provides optimized hooks and components:
 
-function useConfig<K extends keyof Configs>(name: K) {
-  const [value, setValue] = useState(() => replane.get(name));
+```tsx
+import { ReplaneProvider, useConfig } from '@replanejs/react';
 
-  useEffect(() => {
-    return replane.subscribe(name, (config) => {
-      setValue(config.value as Configs[K]);
-    });
-  }, [name]);
-
-  return value;
+function App() {
+  return (
+    <ReplaneProvider connection={connection}>
+      <Dashboard />
+    </ReplaneProvider>
+  );
 }
 
-// Usage
-function App() {
-  const darkMode = useConfig('feature-dark-mode');
+function Dashboard() {
+  const darkMode = useConfig<boolean>('feature-dark-mode');
 
   return <div className={darkMode ? 'dark' : 'light'}>...</div>;
 }
 ```
+
+The React SDK handles subscriptions, re-renders, Suspense, and error boundaries automatically. See the [React SDK Guide](/docs/sdk/react/guide) for full documentation.
 
 ## Error handling
 
