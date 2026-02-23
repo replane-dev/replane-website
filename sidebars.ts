@@ -79,6 +79,12 @@ const sidebars: SidebarsConfig = {
           link: { type: 'doc', id: 'sdk/dotnet/index' },
           items: ['sdk/dotnet/guide', 'sdk/dotnet/api']
         },
+        {
+          type: 'category',
+          label: 'Admin',
+          link: { type: 'doc', id: 'sdk/admin/index' },
+          items: ['sdk/admin/guide', 'sdk/admin/api']
+        },
         'sdk/building-an-sdk'
       ]
     }
