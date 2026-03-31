@@ -228,6 +228,16 @@ HEALTHCHECK_PATH=/api/health  # Default: /api/health
 
 ## Monitoring
 
+### `PROMETHEUS_METRICS_ENABLED`
+
+Enables the Prometheus-compatible metrics endpoint at `/metrics`.
+
+```bash
+PROMETHEUS_METRICS_ENABLED=true
+```
+
+When enabled, Replane collects and exposes default Node.js metrics (CPU, memory, event loop, GC, etc.). Disabled by default.
+
 ### Sentry integration
 
 ```bash

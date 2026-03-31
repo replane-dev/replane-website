@@ -201,7 +201,11 @@ docker inspect --format='{{.State.Health.Status}}' replane
 
 ## Prometheus metrics
 
-Replane exposes Prometheus-compatible metrics at `/metrics`.
+Replane can expose Prometheus-compatible metrics at `/metrics`. To enable it, set:
+
+```bash
+PROMETHEUS_METRICS_ENABLED=true
+```
 
 ### Endpoint
 
@@ -211,7 +215,7 @@ curl http://localhost:8080/metrics
 
 ### Available metrics
 
-Default Node.js metrics are collected automatically:
+When enabled, default Node.js metrics are collected automatically:
 
 - `process_cpu_user_seconds_total` — CPU time spent in user mode
 - `process_cpu_system_seconds_total` — CPU time spent in system mode
@@ -243,6 +247,7 @@ services:
     ports:
       - '8080:8080'
     environment:
+      PROMETHEUS_METRICS_ENABLED: 'true'
       # ... your config
 
   prometheus:
