@@ -195,17 +195,24 @@ Updates a config's definition. Replaces the entire config — include all fields
 | `configName`  | `string`         | Yes      | Config name                            |
 | `description` | `string`         | Yes      | Config description                     |
 | `editors`     | `string[]`       | Yes      | List of editor email addresses         |
+| `baseVersion` | `number`         | No       | Expected current version for optimistic locking |
 | `base`        | `ConfigBase`     | Yes      | Base value, schema, and overrides      |
 | `variants`    | `ConfigVariant[]`| Yes      | Per-environment values                 |
 
 **Returns:** `Promise<{ id: string, version: number }>`
 
 ```typescript
+const config = await admin.configs.get({
+  projectId: 'proj-123',
+  configName: 'feature-new-ui',
+})
+
 const { version } = await admin.configs.update({
   projectId: 'proj-123',
   configName: 'feature-new-ui',
   description: 'Enable the new UI redesign',
   editors: ['alice@example.com'],
+  baseVersion: config.version,
   base: {
     value: true, // changed from false to true
     schema: null,
@@ -214,6 +221,8 @@ const { version } = await admin.configs.update({
   variants: [],
 })
 ```
+
+If `baseVersion` is provided and the config has been updated since that version, the request fails instead of overwriting newer changes.
 
 ### `admin.configs.delete(request)`
 
