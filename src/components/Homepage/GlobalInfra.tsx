@@ -40,8 +40,8 @@ export default function GlobalInfra() {
             Low latency, globally
           </h2>
           <p className='mx-auto max-w-2xl text-lg text-stone-400'>
-            Replane Cloud runs on edge infrastructure across 5 regions. Your configs are served from
-            the location closest to your users.
+            Replane can be deployed across regions to keep config reads close to your applications
+            and users.
           </p>
         </div>
 

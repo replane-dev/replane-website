@@ -24,7 +24,7 @@ const benefits: Benefit[] = [
   {
     title: 'Your Infrastructure',
     description:
-      'Use our managed cloud or self-host on your infrastructure. Same features, same API. No vendor lock-in.',
+      'Self-host on your infrastructure. Same API, same features, no vendor lock-in.',
     icon: <Server className='h-7 w-7 text-violet-400' />
   },
   {

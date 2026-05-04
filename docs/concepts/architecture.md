@@ -9,7 +9,7 @@ This page explains how Replane is designed and how data flows through the system
 
 ## System overview
 
-Replane uses a unified architecture where the same Docker image serves both the dashboard and SDK API. This enables flexible deployment — from a single instance for self-hosting to globally distributed edge servers for Replane Cloud.
+Replane uses a unified architecture where the same Docker image serves both the dashboard and SDK API. This enables flexible deployment, from a single self-hosted instance to a globally distributed multi-node deployment on your own infrastructure.
 
 ```
                                ╭──────────────────╮

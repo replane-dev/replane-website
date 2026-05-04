@@ -33,7 +33,7 @@ SDK keys are a different concept: they are used by the [runtime SDKs](/docs/sdk)
 import { ReplaneAdmin } from '@replanejs/admin'
 
 const admin = new ReplaneAdmin({
-  baseUrl: 'https://app.replane.dev',
+  baseUrl: 'https://replane.example.com',
   apiKey: process.env.REPLANE_ADMIN_API_KEY, // rpa_...
 })
 ```

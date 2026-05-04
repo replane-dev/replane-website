@@ -1,32 +1,31 @@
 import { useState } from 'react'
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
-import { Check, X, Github, ArrowRight, Building2, Rocket, Server, Plus, Minus } from 'lucide-react'
+import { Check, X, Github, ArrowRight, Building2, Server, Plus, Minus } from 'lucide-react'
 
 interface Feature {
   name: string
   selfHosted: boolean | string
-  startup: boolean | string
   enterprise: boolean | string
 }
 
 const features: Feature[] = [
-  { name: 'Unlimited configs', selfHosted: true, startup: true, enterprise: true },
-  { name: 'Unlimited workspaces', selfHosted: true, startup: true, enterprise: true },
-  { name: 'Version history & rollback', selfHosted: true, startup: true, enterprise: true },
-  { name: 'Realtime updates (SSE)', selfHosted: true, startup: true, enterprise: true },
-  { name: 'JSON Schema validation', selfHosted: true, startup: true, enterprise: true },
-  { name: 'REST API access', selfHosted: true, startup: true, enterprise: true },
-  { name: 'All SDKs included', selfHosted: true, startup: true, enterprise: true },
-  { name: 'Team members', selfHosted: 'Unlimited', startup: 'Unlimited', enterprise: 'Unlimited' },
-  { name: 'Audit logs', selfHosted: true, startup: true, enterprise: true },
-  { name: 'GitHub OAuth', selfHosted: true, startup: true, enterprise: true },
-  { name: 'Okta SSO', selfHosted: true, startup: false, enterprise: true },
-  { name: 'SAML/SCIM', selfHosted: false, startup: false, enterprise: true },
-  { name: 'Custom SSO integration', selfHosted: false, startup: false, enterprise: true },
-  { name: 'Priority support', selfHosted: false, startup: true, enterprise: true },
-  { name: 'SLA guarantee', selfHosted: false, startup: false, enterprise: true },
-  { name: 'Dedicated success manager', selfHosted: false, startup: false, enterprise: true }
+  { name: 'Unlimited configs', selfHosted: true, enterprise: true },
+  { name: 'Unlimited workspaces', selfHosted: true, enterprise: true },
+  { name: 'Version history & rollback', selfHosted: true, enterprise: true },
+  { name: 'Realtime updates (SSE)', selfHosted: true, enterprise: true },
+  { name: 'JSON Schema validation', selfHosted: true, enterprise: true },
+  { name: 'REST API access', selfHosted: true, enterprise: true },
+  { name: 'All SDKs included', selfHosted: true, enterprise: true },
+  { name: 'Team members', selfHosted: 'Unlimited', enterprise: 'Unlimited' },
+  { name: 'Audit logs', selfHosted: true, enterprise: true },
+  { name: 'GitHub OAuth', selfHosted: true, enterprise: true },
+  { name: 'Okta SSO', selfHosted: true, enterprise: true },
+  { name: 'SAML/SCIM', selfHosted: false, enterprise: true },
+  { name: 'Custom SSO integration', selfHosted: false, enterprise: true },
+  { name: 'Priority support', selfHosted: false, enterprise: true },
+  { name: 'SLA guarantee', selfHosted: false, enterprise: true },
+  { name: 'Dedicated success manager', selfHosted: false, enterprise: true }
 ]
 
 interface PricingTier {
@@ -66,35 +65,13 @@ const tiers: PricingTier[] = [
     }
   },
   {
-    name: 'Startup',
-    description: 'Managed cloud for growing teams. Zero maintenance.',
-    price: 'Free',
-    priceDetail: 'forever',
-    icon: <Rocket className='h-6 w-6 text-blue-400' />,
-    features: [
-      'Everything in Self-Hosted',
-      'Managed cloud hosting',
-      'Unlimited team members',
-      'Automatic backups',
-      'Priority email support',
-      '99.99% uptime',
-      'No infrastructure to manage'
-    ],
-    cta: {
-      text: 'Get Started Free',
-      href: 'https://cloud.replane.dev',
-      primary: true
-    },
-    popular: true
-  },
-  {
     name: 'Enterprise',
     description: 'For organizations with advanced security & compliance needs.',
     price: 'Custom',
     priceDetail: 'contact us',
     icon: <Building2 className='h-6 w-6 text-amber-400' />,
     features: [
-      'Everything in Startup',
+      'Everything in Self-Hosted',
       'Unlimited team members',
       'SAML/SCIM provisioning',
       'Custom SSO integration',
@@ -116,19 +93,19 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: 'What is the difference between Self-Hosted and Startup?',
+    question: 'What is the difference between Self-Hosted and Enterprise?',
     answer:
-      'Self-Hosted means you deploy Replane on your own infrastructure using Docker. You manage updates, backups, and scaling. Startup is our managed cloud—we handle everything for you. Both have the same features, unlimited configs, and unlimited team members.'
+      'Self-Hosted gives you the full open-source product to run on your own infrastructure. Enterprise adds commercial support, identity integrations such as SAML/SCIM, and assistance for organizations with stricter operational requirements.'
   },
   {
     question: 'Why is Replane free?',
     answer:
-      'We believe configuration management should be accessible to all teams. Self-Hosted is free forever under the MIT license. Startup (managed cloud) is also free forever. We monetize through Enterprise plans for organizations needing SAML/SCIM, custom SLAs, and dedicated support.'
+      'We believe configuration management should be accessible to all teams. The self-hosted product is MIT licensed and available without product-imposed limits. We monetize through Enterprise plans for organizations that need support, SSO integrations, and commercial guarantees.'
   },
   {
-    question: 'Can I migrate from Self-Hosted to Cloud (or vice versa)?',
+    question: 'Can I upgrade from Self-Hosted to Enterprise support later?',
     answer:
-      'Yes! You can export your configs and import them into either deployment. Your SDK keys will need to be updated to point to the new endpoint, but the configuration data format is identical between Self-Hosted and Cloud.'
+      'Yes. Enterprise builds on the same self-hosted deployment model, so you can start with the open-source version and add support or commercial features later.'
   },
   {
     question: 'Are there any usage limits?',
@@ -141,14 +118,14 @@ const faqs: FAQItem[] = [
       'Replane uses Server-Sent Events (SSE) to push config changes to your applications instantly. When you update a config in the dashboard, all connected SDK clients receive the update within milliseconds—no polling required.'
   },
   {
-    question: 'What happens if Replane Cloud goes down?',
+    question: 'What happens if my Replane deployment goes down?',
     answer:
       'Our SDKs cache the last known configuration locally. If the Replane server becomes unreachable, your application continues running with cached values. When connectivity is restored, updates resume automatically.'
   },
   {
     question: 'What authentication options are available?',
     answer:
-      'Self-Hosted and Startup include GitHub OAuth out of the box. Self-Hosted also supports Okta OAuth. Enterprise adds SAML 2.0 and SCIM for providers like Azure AD, Google Workspace, and OneLogin.'
+      'Self-Hosted includes GitHub OAuth and also supports Okta OAuth. Enterprise adds SAML 2.0 and SCIM for providers like Azure AD, Google Workspace, and OneLogin.'
   },
   {
     question: 'When should I consider Enterprise?',
@@ -227,7 +204,7 @@ export default function Pricing() {
     <div className='pricing-dark-only' data-theme='dark'>
       <Layout
         title='Pricing'
-        description='Simple, transparent pricing for Replane. Self-host for free or let us manage it for you.'
+        description='Simple, transparent pricing for Replane. Self-host for free or contact us for enterprise support.'
       >
         <main className='background-grid background-grid--fade-out'>
           {/* Hero Section */}
@@ -239,7 +216,7 @@ export default function Pricing() {
                 Simple, transparent pricing
               </h1>
               <p className='mx-auto max-w-2xl text-lg text-stone-400'>
-                Self-host for free, or let us manage everything. No hidden fees, no surprises.
+                Self-host for free, or contact us for enterprise support. No hidden fees, no surprises.
               </p>
             </div>
           </section>
@@ -249,39 +226,15 @@ export default function Pricing() {
             <div className='pointer-events-none absolute inset-0 bg-[#1c1917]' />
 
             <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-              <div className='grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8'>
+              <div className='grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8'>
                 {tiers.map((tier, index) => (
                   <div
                     key={tier.name}
-                    className={`group relative flex flex-col overflow-hidden rounded-3xl transition-all duration-300 ${
-                      tier.popular ? 'scale-[1.02] lg:scale-105' : 'hover:scale-[1.02]'
-                    }`}
+                    className='group relative flex flex-col overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02]'
                   >
-                    {/* Gradient border effect for popular */}
-                    {tier.popular && (
-                      <div className='absolute -inset-px rounded-3xl bg-linear-to-b from-blue-400 via-blue-600 to-blue-900' />
-                    )}
-
                     {/* Card content */}
-                    <div
-                      className={`relative flex h-full flex-col rounded-3xl ${
-                        tier.popular
-                          ? 'bg-stone-900'
-                          : 'border border-stone-800 bg-stone-900/50 transition-colors group-hover:border-stone-700 group-hover:bg-stone-900/80'
-                      }`}
-                    >
-                      {/* Popular badge */}
-                      {tier.popular && (
-                        <div className='absolute -top-px right-6 left-6'>
-                          <div className='flex justify-center'>
-                            <span className='rounded-b-lg bg-linear-to-r from-blue-400 to-blue-500 px-4 py-1 text-xs font-semibold tracking-wider text-white uppercase'>
-                              Most Popular
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className={`flex flex-1 flex-col p-8 ${tier.popular ? 'pt-12' : ''}`}>
+                    <div className='relative flex h-full flex-col rounded-3xl border border-stone-800 bg-stone-900/50 transition-colors group-hover:border-stone-700 group-hover:bg-stone-900/80'>
+                      <div className='flex flex-1 flex-col p-8'>
                         {/* Name */}
                         <h3 className='mb-2 text-2xl font-bold text-white'>{tier.name}</h3>
 
@@ -366,7 +319,7 @@ export default function Pricing() {
 
               <div className='overflow-hidden rounded-2xl border border-stone-800 bg-stone-900/30 backdrop-blur-sm'>
                 {/* Header with plan names */}
-                <div className='grid grid-cols-4 border-b border-stone-800 bg-stone-900'>
+                <div className='grid grid-cols-3 border-b border-stone-800 bg-stone-900'>
                   <div className='p-6'>
                     <span className='text-sm font-medium text-stone-500'>Features</span>
                   </div>
@@ -376,13 +329,6 @@ export default function Pricing() {
                       <span className='font-semibold text-white'>Self-Hosted</span>
                     </div>
                     <span className='text-sm text-stone-500'>Free forever</span>
-                  </div>
-                  <div className='border-l border-stone-800 bg-stone-800/50 p-6 text-center'>
-                    <div className='mb-1 flex items-center justify-center gap-2'>
-                      <Rocket className='h-4 w-4 text-stone-300' />
-                      <span className='font-semibold text-white'>Startup</span>
-                    </div>
-                    <span className='text-sm text-stone-400'>Free forever</span>
                   </div>
                   <div className='border-l border-stone-800 p-6 text-center'>
                     <div className='mb-1 flex items-center justify-center gap-2'>
@@ -398,16 +344,13 @@ export default function Pricing() {
                   {features.map((feature, idx) => (
                     <div
                       key={feature.name}
-                      className='grid grid-cols-4 transition-colors hover:bg-stone-800/20'
+                      className='grid grid-cols-3 transition-colors hover:bg-stone-800/20'
                     >
                       <div className='flex items-center p-5'>
                         <span className='text-sm text-stone-300'>{feature.name}</span>
                       </div>
                       <div className='flex items-center justify-center border-l border-stone-800/50 p-5'>
                         <FeatureValue value={feature.selfHosted} />
-                      </div>
-                      <div className='flex items-center justify-center border-l border-stone-800/50 bg-stone-800/20 p-5'>
-                        <FeatureValue value={feature.startup} />
                       </div>
                       <div className='flex items-center justify-center border-l border-stone-800/50 p-5'>
                         <FeatureValue value={feature.enterprise} />
@@ -417,7 +360,7 @@ export default function Pricing() {
                 </div>
 
                 {/* CTA row */}
-                <div className='grid grid-cols-4 border-t border-stone-800 bg-stone-900'>
+                <div className='grid grid-cols-3 border-t border-stone-800 bg-stone-900'>
                   <div className='p-6' />
                   <div className='flex items-center justify-center border-l border-stone-800 p-6'>
                     <Link
@@ -425,14 +368,6 @@ export default function Pricing() {
                       className='rounded-lg border border-stone-700 bg-stone-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-stone-600 hover:bg-stone-700 hover:text-white hover:no-underline'
                     >
                       Get Started
-                    </Link>
-                  </div>
-                  <div className='flex items-center justify-center border-l border-stone-800 bg-stone-800/50 p-6'>
-                    <Link
-                      href='https://cloud.replane.dev'
-                      className='rounded-lg bg-white px-4 py-2 text-sm font-medium text-stone-900 transition-colors hover:bg-stone-100 hover:text-stone-900 hover:no-underline'
-                    >
-                      Get Started Free
                     </Link>
                   </div>
                   <div className='flex items-center justify-center border-l border-stone-800 p-6'>

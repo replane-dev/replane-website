@@ -15,7 +15,7 @@ const faqs: FAQItem[] = [
   {
     question: 'Is Replane free?',
     answer:
-      'Yes! Replane is open source under the MIT license. You can self-host it for free on your own infrastructure. We also offer a managed cloud version with a generous free tier for teams who prefer not to manage infrastructure.'
+      'Yes. Replane is open source under the MIT license, and you can self-host it on your own infrastructure without product-imposed limits.'
   },
   {
     question: 'How is Replane different from environment variables?',

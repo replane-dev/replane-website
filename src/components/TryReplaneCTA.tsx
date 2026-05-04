@@ -2,7 +2,7 @@ import React from 'react'
 import Link from '@docusaurus/Link'
 import { Github } from 'lucide-react'
 
-type LinkKey = 'cloud' | 'self-hosting' | 'docs' | 'concepts' | 'quickstart' | 'sdk'
+type LinkKey = 'quickstart' | 'self-hosting' | 'docs' | 'concepts' | 'sdk'
 
 interface TryReplaneCTAProps {
   /** Custom title. Defaults to "Try Replane" */
@@ -14,10 +14,10 @@ interface TryReplaneCTAProps {
 }
 
 const linkConfigs = {
-  'cloud': {
-    href: 'https://cloud.replane.dev',
-    label: 'Replane Cloud',
-    description: 'Managed service with a free tier'
+  'quickstart': {
+    href: '/docs/getting-started/quickstart',
+    label: 'Quickstart',
+    description: 'Deploy Replane locally in minutes'
   },
   'self-hosting': {
     href: '/docs/self-hosting/docker',
@@ -34,11 +34,6 @@ const linkConfigs = {
     label: 'Core concepts',
     description: 'Learn about workspaces, projects, and configs'
   },
-  'quickstart': {
-    href: '/docs/getting-started/quickstart',
-    label: 'Quickstart',
-    description: 'Get started in under 5 minutes'
-  },
   'sdk': {
     href: '/docs/sdk/javascript',
     label: 'JavaScript SDK',
@@ -46,7 +41,7 @@ const linkConfigs = {
   }
 }
 
-const DEFAULT_LINKS: LinkKey[] = ['cloud', 'self-hosting', 'concepts']
+const DEFAULT_LINKS: LinkKey[] = ['quickstart', 'self-hosting', 'concepts']
 
 export default function TryReplaneCTA({
   title = 'Try Replane',

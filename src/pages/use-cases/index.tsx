@@ -244,7 +244,7 @@ export default function UseCasesPage() {
                 Ready to get started?
               </h2>
               <p className='mx-auto mb-10 max-w-2xl text-lg text-stone-400'>
-                Deploy Replane in minutes with Docker or sign up for our managed cloud.
+                Deploy Replane in minutes with Docker and wire it into your apps with the SDKs.
               </p>
               <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
                 <Link
@@ -255,10 +255,10 @@ export default function UseCasesPage() {
                   <ArrowRight className='ml-2 h-5 w-5' />
                 </Link>
                 <Link
-                  to='https://cloud.replane.dev/auth/signin'
+                  to='https://github.com/replane-dev/replane'
                   className='inline-flex items-center justify-center rounded-lg border border-stone-700 bg-stone-800/50 px-6 py-3 text-base font-semibold text-stone-200 transition-all hover:border-stone-600 hover:bg-stone-800 hover:no-underline'
                 >
-                  Try Replane Cloud
+                  View on GitHub
                 </Link>
               </div>
             </div>

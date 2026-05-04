@@ -31,16 +31,16 @@ export default function UseCaseCTA({ accentColor, badge }: UseCaseCTAProps) {
           </h2>
 
           <p className='mx-auto mb-8 max-w-2xl text-lg text-stone-400'>
-            Start using Replane in minutes. Free forever for self-hosted, or let us manage
-            everything for you.
+            Start using Replane in minutes. Deploy it yourself with Docker and keep your
+            configuration stack under your control.
           </p>
 
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <Link
-              href='https://cloud.replane.dev'
+              href='/docs/getting-started/quickstart#self-hosted'
               className={`group inline-flex items-center gap-2 rounded-lg bg-gradient-to-r ${colors.gradient} px-8 py-4 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:opacity-90 hover:text-white hover:no-underline`}
             >
-              Start Free on Cloud
+              Self-Host Replane
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
 
@@ -61,4 +61,3 @@ export default function UseCaseCTA({ accentColor, badge }: UseCaseCTAProps) {
     </section>
   )
 }
-

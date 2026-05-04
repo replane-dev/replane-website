@@ -23,7 +23,7 @@ npm install @replanejs/admin
 import { ReplaneAdmin } from '@replanejs/admin'
 
 const admin = new ReplaneAdmin({
-  baseUrl: 'https://app.replane.dev',
+  baseUrl: 'https://replane.example.com',
   apiKey: process.env.REPLANE_ADMIN_API_KEY, // starts with rpa_
 })
 

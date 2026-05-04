@@ -12,14 +12,14 @@ Replane is a dynamic configuration platform that lets you change application set
 
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 mb-8">
 
-<a href="https://cloud.replane.dev" className="block p-4 border-2 border-blue-500 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors no-underline">
-  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">☁️ Try Replane Cloud</h3>
-  <p className="text-gray-600 dark:text-gray-400 text-sm">Start instantly with our managed service. Free tier available.</p>
+<a href="/docs/getting-started/quickstart" className="block p-4 border-2 border-blue-500 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors no-underline">
+  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Quickstart</h3>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Deploy Replane locally in minutes with Docker.</p>
 </a>
 
-<a href="/docs/getting-started/quickstart" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
-  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Quickstart</h3>
-  <p className="text-gray-600 dark:text-gray-400 text-sm">Get started with cloud or self-hosted in under 5 minutes.</p>
+<a href="/docs/self-hosting/docker" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
+  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Self-Hosting</h3>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Run on your infrastructure with Docker or your own orchestration stack.</p>
 </a>
 
 <a href="/docs/concepts/overview" className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors no-underline">
@@ -79,8 +79,8 @@ Replane is a dynamic configuration platform that lets you change application set
 
 **High availability** — Each Replane node operates independently with its own cache. As long as at least one node is running, your clients will receive configs. If a node goes down, SDKs automatically reconnect to another.
 
-:::tip Replane Cloud
-Replane Cloud runs edge servers in multiple regions worldwide. Your SDK automatically connects to the nearest one for sub-50ms initial load, then all reads are instant from local cache.
+:::tip Deployment
+You can run multiple Replane nodes in your own infrastructure to keep config reads close to your applications and improve availability.
 :::
 
 ## Key features
@@ -91,7 +91,7 @@ Replane Cloud runs edge servers in multiple regions worldwide. Your SDK automati
 - **Instant rollback** — Revert to any previous version with one click
 - **JSON Schema validation** — Prevent invalid configurations before they're saved
 - **Type-safe SDK** — Full TypeScript support with automatic type inference
-- **Cloud or self-hosted** — Use our managed cloud or run on your own infrastructure
+- **Self-hosted deployment** — Run Replane on your own infrastructure
 
 ## Example
 
@@ -101,7 +101,7 @@ import { Replane } from '@replanejs/sdk';
 const replane = new Replane();
 await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://cloud.replane.dev', // or your self-hosted URL
+  baseUrl: 'https://replane.example.com',
 });
 
 // Get a feature flag

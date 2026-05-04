@@ -181,7 +181,7 @@ const replane = new Replane<Configs>({
 
 await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://cloud.replane.dev'
+  baseUrl: 'https://replane.example.com'
 })
 
 // Type-safe access—TypeScript knows this is a number

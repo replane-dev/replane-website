@@ -56,10 +56,10 @@ export default function UseCaseHero({
           {/* CTA buttons */}
           <div className='flex flex-col items-center gap-4 sm:flex-row'>
             <Link
-              href='https://cloud.replane.dev'
+              to='/docs/getting-started/quickstart'
               className={`group inline-flex items-center gap-2 rounded-lg ${colors.bg} px-8 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:opacity-90 hover:text-white hover:no-underline hover:shadow-lg`}
             >
-              Get Started Free
+              Quickstart
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
 
@@ -76,4 +76,3 @@ export default function UseCaseHero({
     </section>
   )
 }
-

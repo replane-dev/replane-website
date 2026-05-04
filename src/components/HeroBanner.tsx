@@ -35,15 +35,15 @@ export default function HeroBanner() {
           {/* CTA buttons */}
           <div className='flex flex-col items-center gap-4 sm:flex-row'>
             <Link
-              href='https://cloud.replane.dev'
+              to='/docs/getting-started/quickstart'
               className='group inline-flex items-center gap-2 rounded-lg bg-blue-500 px-8 py-3.5 text-base font-semibold text-white transition-all duration-200 hover:bg-blue-600 hover:text-white hover:no-underline hover:shadow-lg hover:shadow-blue-500/25'
             >
-              Get Started Free
+              Quickstart
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
 
             <Link
-              to='/docs/getting-started/quickstart#self-hosted'
+              to='https://github.com/replane-dev/replane'
               className='inline-flex items-center gap-2 rounded-lg border border-stone-700 bg-stone-800 px-8 py-3.5 text-base font-semibold text-stone-100 transition-all duration-200 hover:border-stone-600 hover:bg-stone-700 hover:text-stone-100 hover:no-underline'
             >
               <Github className='h-4 w-4' />

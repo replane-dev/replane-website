@@ -119,18 +119,13 @@ const config: Config = {
           to: '/use-cases/'
         },
         {
-          label: 'Cloud',
-          position: 'left',
-          href: 'https://cloud.replane.dev/app'
-        },
-        {
-          href: 'https://cloud.replane.dev/auth/signin',
-          label: 'Log in',
+          href: 'https://github.com/replane-dev/replane',
+          label: 'GitHub',
           position: 'right'
         },
         {
-          href: 'https://cloud.replane.dev/auth/signin',
-          label: 'Sign up',
+          to: '/docs/getting-started/quickstart/',
+          label: 'Quickstart',
           position: 'right'
         },
         {

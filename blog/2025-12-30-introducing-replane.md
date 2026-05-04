@@ -196,9 +196,9 @@ replane.ConfigChanged += (sender, e) =>
 
 ## Deployment
 
-### Replane Cloud
+### Self-hosted Replane
 
-The fastest option. Sign up at [cloud.replane.dev](https://cloud.replane.dev), create a config, get an SDK key, connect your app.
+Run Replane on your own infrastructure, create a config, generate an SDK key, and connect your app.
 
 ### Self-hosted with Docker
 
@@ -272,7 +272,7 @@ Scales horizontally—add more instances behind a load balancer.
 
 ## Get started
 
-- **Replane Cloud**: [cloud.replane.dev](https://cloud.replane.dev)
+- **Self-hosting guide**: [/docs/getting-started/quickstart](/docs/getting-started/quickstart)
 - **Documentation**: [replane.dev/docs](/docs)
 - **GitHub**: [github.com/replane-dev/replane](https://github.com/replane-dev/replane)
 

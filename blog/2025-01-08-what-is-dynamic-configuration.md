@@ -60,7 +60,7 @@ const replane = new Replane()
 // Connect to the config server and receive initial values
 await replane.connect({
   sdkKey: process.env.REPLANE_SDK_KEY!,
-  baseUrl: 'https://cloud.replane.dev'
+  baseUrl: 'https://replane.example.com'
 })
 
 // Read current value (from local cache, instant)

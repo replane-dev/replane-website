@@ -46,7 +46,7 @@ const features: Feature[] = [
   {
     title: 'Cloud or Self-Hosted',
     description:
-      "Start instantly with managed cloud, or deploy on your infrastructure with Docker. Same API, same features. Your choice, no lock-in.",
+      "Deploy on your infrastructure with Docker. Same API, same features, no lock-in.",
     icon: <Cloud className='h-6 w-6 text-sky-400' />,
     link: '/docs/getting-started/quickstart',
     size: 'small'

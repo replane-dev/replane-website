@@ -319,7 +319,7 @@ const mockFetch = vi.fn().mockResolvedValue({
 })
 
 const admin = new ReplaneAdmin({
-  baseUrl: 'https://test.replane.dev',
+  baseUrl: 'https://test.replane.example.com',
   apiKey: 'rpa_test',
   fetchFn: mockFetch,
 })
@@ -327,7 +327,7 @@ const admin = new ReplaneAdmin({
 const { projects } = await admin.projects.list()
 expect(projects).toHaveLength(1)
 expect(mockFetch).toHaveBeenCalledWith(
-  'https://test.replane.dev/api/admin/v1/projects',
+  'https://test.replane.example.com/api/admin/v1/projects',
   expect.objectContaining({
     method: 'GET',
     headers: expect.objectContaining({

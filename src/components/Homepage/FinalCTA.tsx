@@ -40,8 +40,8 @@ export default function FinalCTA() {
           </h2>
 
           <p className='mx-auto mb-12 max-w-xl text-lg leading-relaxed text-stone-400'>
-            Update configs without deploying code. Start with our managed cloud or self-host on your
-            own infrastructure.
+            Update configs without deploying code. Self-host Replane on your own infrastructure and
+            keep full control over deployment, auth, and data.
           </p>
 
           {/* Terminal preview */}
@@ -94,10 +94,10 @@ export default function FinalCTA() {
           {/* CTA buttons */}
           <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
             <Link
-              href='https://cloud.replane.dev'
+              to='/docs/getting-started/quickstart'
               className='group inline-flex items-center gap-2 rounded-xl bg-blue-500 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/20 transition-all duration-200 hover:bg-blue-600 hover:text-white hover:no-underline hover:shadow-blue-500/30'
             >
-              Try Replane Cloud — Free forever
+              Read the Quickstart
               <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
             </Link>
 
@@ -112,7 +112,7 @@ export default function FinalCTA() {
 
           {/* Trust line */}
           <p className='mt-12 text-sm text-stone-500'>
-            Open source • MIT Licensed • Self-hosted or Cloud
+            Open source • MIT Licensed • Self-hosted
           </p>
         </div>
       </div>

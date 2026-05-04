@@ -76,7 +76,7 @@ function App() {
   return (
     <ReplaneProvider
       connection={{
-        baseUrl: 'https://cloud.replane.dev',
+        baseUrl: 'https://replane.example.com',
         sdkKey: process.env.REACT_APP_REPLANE_KEY!
       }}
       defaults={{
@@ -398,7 +398,7 @@ function App() {
   return (
     <ReplaneProvider
       connection={{
-        baseUrl: 'https://cloud.replane.dev',
+        baseUrl: 'https://replane.example.com',
         sdkKey: 'your-sdk-key'
       }}
       defaults={{ 'feature-enabled': false }}
