@@ -86,6 +86,6 @@
     ]
   },
   "optionalDependencies": {
-    "postman-code-generators": "^1.14.1"
+    "postman-code-generators": "^2.1.0"
   }
 }
