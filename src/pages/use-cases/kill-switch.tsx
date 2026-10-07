@@ -390,6 +390,30 @@ public class PaymentController : ControllerBase
         return await ProcessWithStripe(request);
     }
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use axum::{extract::State, http::StatusCode, Json};
+use replane::Replane;
+
+pub async fn process_payment(
+    State(replane): State<Replane>,
+    Json(request): Json<PaymentRequest>,
+) -> Result<Json<PaymentResult>, (StatusCode, &'static str)> {
+    // Kill switch check
+    if !replane.get_or("kill-switch-payments", true) {
+        return Err((StatusCode::SERVICE_UNAVAILABLE, "Payments temporarily disabled"));
+    }
+
+    // Fallback to alternative provider
+    if !replane.get_or("kill-switch-stripe", true) {
+        return Ok(Json(process_with_paypal(request).await));
+    }
+
+    Ok(Json(process_with_stripe(request).await))
+}`
     }
   ]
 }

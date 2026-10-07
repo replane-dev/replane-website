@@ -52,7 +52,7 @@ const content: UseCaseContent = {
     { title: 'Instant Updates', description: 'Changes propagate in under a second via SSE', icon: <Zap className='h-6 w-6' /> },
     { title: 'High Availability', description: 'Enterprise-grade reliability with 99.99% uptime', icon: <Server className='h-6 w-6' /> },
     { title: 'No Deploys Needed', description: 'Toggle features from the dashboard without code changes', icon: <Gauge className='h-6 w-6' /> },
-    { title: 'All Major SDKs', description: 'JavaScript, React, Next.js, Svelte, Python, .NET', icon: <Layers className='h-6 w-6' /> }
+    { title: 'All Major SDKs', description: 'JavaScript, React, Next.js, Svelte, Python, .NET, Rust', icon: <Layers className='h-6 w-6' /> }
   ],
   featuresHeading: 'Ship without stress',
   featuresSubheading: 'Deploy confidently with fine-grained control over every feature',
@@ -339,6 +339,34 @@ replane.ConfigChanged += (sender, e) =>
         Console.WriteLine($"Feature flag changed: {e.GetValue<bool>()}");
     }
 };`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use replane::{ConnectOptions, Replane};
+
+let replane = Replane::builder()
+    .default_value("feature-new-checkout", false)
+    .connect(ConnectOptions::new(
+        "https://replane.example.com",
+        std::env::var("REPLANE_SDK_KEY")?,
+    ))
+    .await?;
+
+// Check feature flag
+let page = if replane.get_or("feature-new-checkout", false) {
+    render_new_checkout()
+} else {
+    render_legacy_checkout()
+};
+
+// Subscribe to updates
+replane
+    .subscribe("feature-new-checkout", |change| {
+        println!("Feature flag changed: {}", change.value);
+    })
+    .detach();`
     }
   ]
 }

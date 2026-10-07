@@ -422,6 +422,47 @@ public class CacheService
         return data;
     }
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use std::future::Future;
+use std::time::Duration;
+use redis::{aio::MultiplexedConnection, AsyncCommands};
+use replane::Replane;
+use serde::{de::DeserializeOwned, Serialize};
+
+pub struct CacheService {
+    replane: Replane,
+    redis: MultiplexedConnection,
+}
+
+impl CacheService {
+    pub async fn fetch_with_cache<T, F, Fut>(&self, key: &str, fetcher: F) -> anyhow::Result<T>
+    where
+        T: Serialize + DeserializeOwned,
+        F: FnOnce() -> Fut,
+        Fut: Future<Output = anyhow::Result<T>>,
+    {
+        let mut redis = self.redis.clone();
+        let ttl: u64 = self.replane.get_or("cache-ttl-seconds", 300);
+
+        // Check cache
+        if let Some(cached) = redis.get::<_, Option<String>>(key).await? {
+            return Ok(serde_json::from_str(&cached)?);
+        }
+
+        // Fetch with configurable timeout
+        let timeout = Duration::from_millis(self.replane.get_or("api-timeout-ms", 5000));
+        let data = tokio::time::timeout(timeout, fetcher()).await??;
+
+        // Cache with configurable TTL
+        let _: () = redis.set_ex(key, serde_json::to_string(&data)?, ttl).await?;
+
+        Ok(data)
+    }
+}`
     }
   ]
 }

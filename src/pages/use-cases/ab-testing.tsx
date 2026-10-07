@@ -360,6 +360,31 @@ return variant switch
     "variant_b" => RenderOneClickCheckout(),
     _ => RenderClassicCheckout()
 };`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use replane::{ConnectOptions, Context, Replane};
+
+let replane = Replane::builder()
+    .default_value("checkout-experiment", "control")
+    .connect(ConnectOptions::new(
+        "https://replane.example.com",
+        std::env::var("REPLANE_SDK_KEY")?,
+    ))
+    .await?;
+
+// Get variant for user with context
+let context = Context::new().with("userId", &user.id);
+let variant: String = replane.get_with("checkout-experiment", &context)?;
+
+// Render appropriate experience
+let page = match variant.as_str() {
+    "variant_a" => render_streamlined_checkout(),
+    "variant_b" => render_one_click_checkout(),
+    _ => render_classic_checkout(),
+};`
     }
   ]
 }

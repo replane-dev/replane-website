@@ -4,7 +4,7 @@ import { Highlight, themes } from 'prism-react-renderer'
 import { ExternalLink, Code2 } from 'lucide-react'
 
 export interface CodeExample {
-  sdk: 'typescript' | 'react' | 'nextjs' | 'svelte' | 'python' | 'csharp'
+  sdk: 'typescript' | 'react' | 'nextjs' | 'svelte' | 'python' | 'csharp' | 'rust'
   label: string
   code: string
   docsLink: string
@@ -13,7 +13,7 @@ export interface CodeExample {
 interface Technology {
   name: string
   logo: string
-  category: 'javascript' | 'python' | 'dotnet'
+  category: 'javascript' | 'python' | 'dotnet' | 'rust'
 }
 
 interface CodeExamplesProps {
@@ -134,6 +134,30 @@ replane.ConfigChanged += (sender, e) =>
 {
     Console.WriteLine($"Config changed: {e.ConfigName}");
 };`
+  },
+  {
+    sdk: 'rust',
+    label: 'Rust',
+    docsLink: '/docs/sdk/rust',
+    code: `use replane::{ConnectOptions, Replane};
+
+let replane = Replane::builder()
+    .default_value("new-feature", false)
+    .connect(ConnectOptions::new(
+        "https://replane.example.com",
+        std::env::var("REPLANE_SDK_KEY")?,
+    ))
+    .await?;
+
+// Get a typed config value
+let feature_enabled: bool = replane.get("new-feature")?;
+
+// Subscribe to changes
+replane
+    .subscribe("new-feature", |change| {
+        println!("Feature changed: {}", change.value);
+    })
+    .detach();`
   }
 ]
 
@@ -150,7 +174,8 @@ const technologies: Technology[] = [
   { name: 'Django', logo: '/img/tech-logos/django.svg', category: 'python' },
   { name: 'FastAPI', logo: '/img/tech-logos/fastapi.svg', category: 'python' },
   { name: 'Flask', logo: '/img/tech-logos/flask.svg', category: 'python' },
-  { name: '.NET', logo: '/img/tech-logos/dotnet.svg', category: 'dotnet' }
+  { name: '.NET', logo: '/img/tech-logos/dotnet.svg', category: 'dotnet' },
+  { name: 'Rust', logo: '/img/tech-logos/rust.svg', category: 'rust' }
 ]
 
 const sdkIcons: Record<CodeExample['sdk'], string> = {
@@ -159,7 +184,8 @@ const sdkIcons: Record<CodeExample['sdk'], string> = {
   nextjs: 'Nx',
   svelte: 'Sv',
   python: 'Py',
-  csharp: 'C#'
+  csharp: 'C#',
+  rust: 'Rs'
 }
 
 const languageMap: Record<CodeExample['sdk'], string> = {
@@ -168,13 +194,15 @@ const languageMap: Record<CodeExample['sdk'], string> = {
   nextjs: 'tsx',
   svelte: 'markup',
   python: 'python',
-  csharp: 'csharp'
+  csharp: 'csharp',
+  rust: 'rust'
 }
 
 const sdkLinks = {
   javascript: '/docs/sdk/javascript',
   python: '/docs/sdk/python',
-  dotnet: '/docs/sdk/dotnet'
+  dotnet: '/docs/sdk/dotnet',
+  rust: '/docs/sdk/rust'
 }
 
 export default function CodeExamples({
@@ -183,7 +211,7 @@ export default function CodeExamples({
   showTechLogos = false,
   badge = 'SDKs & Integrations',
   title = 'Works with your stack',
-  subtitle = 'Official SDKs for JavaScript, Python, and .NET. Zero dependencies, real-time updates out of the box.'
+  subtitle = 'Official SDKs for JavaScript, Python, .NET, and Rust. Real-time updates out of the box.'
 }: CodeExamplesProps) {
   const [activeTab, setActiveTab] = useState(0)
   const activeExample = codeExamples[activeTab]

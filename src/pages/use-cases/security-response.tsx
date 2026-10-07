@@ -424,6 +424,50 @@ public class SecurityMiddleware
         await _next(context);
     }
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use std::net::SocketAddr;
+use axum::{
+    extract::{ConnectInfo, Request, State},
+    http::StatusCode,
+    middleware::Next,
+    response::{IntoResponse, Response},
+};
+use replane::Replane;
+
+pub async fn security(
+    State(replane): State<Replane>,
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    request: Request,
+    next: Next,
+) -> Response {
+    // Check lockdown mode
+    if replane.get_or("security-lockdown-enabled", false) {
+        return (StatusCode::SERVICE_UNAVAILABLE, "System in maintenance").into_response();
+    }
+
+    // Check IP blocklist
+    let blocked_ips: Vec<String> = replane.get_or("blocked-ips", Vec::new());
+    if blocked_ips.contains(&addr.ip().to_string()) {
+        return (StatusCode::FORBIDDEN, "Access denied").into_response();
+    }
+
+    // Check API key revocation
+    let api_key = request
+        .headers()
+        .get("x-api-key")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+    let revoked_keys: Vec<String> = replane.get_or("revoked-api-keys", Vec::new());
+    if revoked_keys.iter().any(|key| key == api_key) {
+        return (StatusCode::UNAUTHORIZED, "API key revoked").into_response();
+    }
+
+    next.run(request).await
+}`
     }
   ]
 }

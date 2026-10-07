@@ -413,6 +413,38 @@ public class ProcessController : ControllerBase
 // 3. Investigate and fix the issue
 // 4. Disable circuit-breaker when ready
 // 5. Review version history for post-mortem`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use axum::{extract::State, http::StatusCode, Json};
+use replane::Replane;
+use serde_json::{json, Value};
+
+pub async fn process(State(replane): State<Replane>) -> (StatusCode, Json<Value>) {
+    // Circuit breaker—toggle during incidents
+    if replane.get_or("circuit-breaker-enabled", false) {
+        let message: String = replane.get_or("status-message", String::new());
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            Json(json!({ "status": "degraded", "message": message })),
+        );
+    }
+
+    // Rate limit—adjust during traffic spikes
+    let rate_limit: u32 = replane.get_or("rate-limit-requests-per-minute", 1000);
+
+    // Process request with current config...
+    (StatusCode::OK, Json(json!({ "success": true })))
+}
+
+// Incident response flow:
+// 1. Enable circuit-breaker in dashboard
+// 2. All requests return 503 immediately
+// 3. Investigate and fix the issue
+// 4. Disable circuit-breaker when ready
+// 5. Review version history for post-mortem`
     }
   ]
 }

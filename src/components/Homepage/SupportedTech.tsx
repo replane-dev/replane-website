@@ -6,7 +6,7 @@ export default function SupportedTech() {
       showTechLogos
       badge='SDKs & Integrations'
       title='Works with your stack'
-      subtitle='Official SDKs for JavaScript, Python, and .NET. Zero dependencies, real-time updates out of the box.'
+      subtitle='Official SDKs for JavaScript, Python, .NET, and Rust. Real-time updates out of the box.'
     />
   )
 }

@@ -14,7 +14,7 @@ export type AccentColor =
   | 'fuchsia'
 
 export interface CodeExample {
-  sdk: 'typescript' | 'react' | 'nextjs' | 'svelte' | 'python' | 'csharp'
+  sdk: 'typescript' | 'react' | 'nextjs' | 'svelte' | 'python' | 'csharp' | 'rust'
   label: string
   code: string
   docsLink: string

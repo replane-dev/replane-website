@@ -1,6 +1,6 @@
 ---
 title: SDK Overview
-description: Official Replane SDKs for JavaScript, React, Next.js, Svelte, Python, and .NET. All SDKs support realtime updates via SSE, type safety, local caching, and context-based overrides.
+description: Official Replane SDKs for JavaScript, React, Next.js, Svelte, Python, .NET, and Rust. All SDKs support realtime updates via SSE, type safety, local caching, and context-based overrides.
 slug: /sdk
 ---
 
@@ -18,6 +18,7 @@ Replane provides official SDKs for all major languages and frameworks. Each SDK 
 | [Svelte](/docs/sdk/svelte) | `@replanejs/svelte` | Svelte 5+, SvelteKit |
 | [Python](/docs/sdk/python) | `replane` | Python 3.9+ |
 | [.NET](/docs/sdk/dotnet) | `Replane` | .NET 8+ |
+| [Rust](/docs/sdk/rust) | `replane` | Rust stable, Tokio |
 
 ## Core Concepts
 
@@ -64,7 +65,7 @@ const value = replane.get('config-name', {
 
 ## Choosing an SDK
 
-- **Backend services**: Use the [JavaScript](/docs/sdk/javascript), [Python](/docs/sdk/python), or [.NET](/docs/sdk/dotnet) SDK
+- **Backend services**: Use the [JavaScript](/docs/sdk/javascript), [Python](/docs/sdk/python), [.NET](/docs/sdk/dotnet), or [Rust](/docs/sdk/rust) SDK
 - **React apps**: Use the [React SDK](/docs/sdk/react) for hooks and provider
 - **Next.js apps**: Use the [Next.js SDK](/docs/sdk/nextjs) for server components and App Router support
 - **Svelte/SvelteKit**: Use the [Svelte SDK](/docs/sdk/svelte) for stores and context

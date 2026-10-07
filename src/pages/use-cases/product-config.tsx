@@ -393,6 +393,47 @@ public class SearchWeights
     public double Tags { get; set; }
     public double Recency { get; set; }
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use replane::Replane;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+pub struct SearchWeights {
+    pub title: f64,
+    pub description: f64,
+    pub tags: f64,
+    pub recency: f64,
+}
+
+pub fn rank_results(
+    replane: &Replane,
+    query: &str,
+    items: Vec<Item>,
+) -> replane::Result<Vec<SearchResult>> {
+    let weights: SearchWeights = replane.get("search-weights")?;
+    let threshold: f64 = replane.get("similarity-threshold")?;
+    let max_results: usize = replane.get("max-results")?;
+
+    let mut results: Vec<SearchResult> = items
+        .into_iter()
+        .map(|item| {
+            let score = weights.title * score_title(query, &item.title)
+                + weights.description * score_description(query, &item.description)
+                + weights.tags * score_tags(query, &item.tags)
+                + weights.recency * score_recency(item.created_at);
+            SearchResult { item, score }
+        })
+        .filter(|result| result.score >= threshold)
+        .collect();
+
+    results.sort_by(|a, b| b.score.total_cmp(&a.score));
+    results.truncate(max_results);
+    Ok(results)
+}`
     }
   ]
 }
