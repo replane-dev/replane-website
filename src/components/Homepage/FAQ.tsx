@@ -30,7 +30,7 @@ const faqs: FAQItem[] = [
   {
     question: 'What SDKs are available?',
     answer:
-      'We currently offer official SDKs for JavaScript/TypeScript (works in Node.js, browsers, and edge runtimes), Python, and .NET. All SDKs support real-time updates via SSE and have zero external dependencies.'
+      'We currently offer official SDKs for JavaScript/TypeScript (works in Node.js, browsers, and edge runtimes), Python, .NET, and Rust. All SDKs support real-time updates via SSE.'
   },
   {
     question: 'How do real-time updates work?',

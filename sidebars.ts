@@ -81,6 +81,12 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
+          label: 'Rust',
+          link: { type: 'doc', id: 'sdk/rust/index' },
+          items: ['sdk/rust/guide', 'sdk/rust/api']
+        },
+        {
+          type: 'category',
           label: 'Admin',
           link: { type: 'doc', id: 'sdk/admin/index' },
           items: ['sdk/admin/guide', 'sdk/admin/api']

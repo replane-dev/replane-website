@@ -397,6 +397,57 @@ builder.Services.AddSingleton(new RuntimeConfig(replane));
 
 // Tune rate limits, timeouts etc. from the dashboard
 // No code changes or deploys needed`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use std::time::Duration;
+use replane::{ConnectOptions, Replane};
+
+#[derive(Clone)]
+pub struct RuntimeConfig {
+    replane: Replane,
+}
+
+impl RuntimeConfig {
+    // Tunable config - change from dashboard
+    pub fn api_base_url(&self) -> String {
+        self.replane.get_or("api-base-url", "https://api.example.com".into())
+    }
+
+    pub fn request_timeout(&self) -> Duration {
+        Duration::from_millis(self.replane.get_or("request-timeout-ms", 5000))
+    }
+
+    pub fn max_retries(&self) -> u32 {
+        self.replane.get_or("max-retries", 3)
+    }
+
+    pub fn rate_limit_per_minute(&self) -> u32 {
+        self.replane.get_or("rate-limit-per-minute", 600)
+    }
+
+    pub fn maintenance_mode(&self) -> bool {
+        self.replane.get_or("maintenance-mode", false)
+    }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let replane = Replane::builder()
+        .connect(ConnectOptions::new(
+            std::env::var("REPLANE_BASE_URL")?,
+            std::env::var("REPLANE_SDK_KEY")?,
+        ))
+        .await?;
+
+    let config = RuntimeConfig { replane };
+
+    // Tune rate limits, timeouts etc. from the dashboard
+    // No code changes or deploys needed
+    run_server(config).await
+}`
     }
   ]
 }

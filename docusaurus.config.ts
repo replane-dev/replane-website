@@ -192,6 +192,10 @@ const config: Config = {
             {
               label: '.NET',
               to: '/docs/sdk/dotnet/'
+            },
+            {
+              label: 'Rust',
+              to: '/docs/sdk/rust/'
             }
           ]
         },
@@ -291,6 +295,7 @@ const config: Config = {
       additionalLanguages: [
         'ruby',
         'csharp',
+        'rust',
         'php',
         'java',
         'powershell',

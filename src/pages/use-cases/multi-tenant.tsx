@@ -406,6 +406,50 @@ public async Task<IActionResult> Upload(
     
     return Ok();
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use axum::{body::Bytes, extract::State, http::{HeaderMap, StatusCode}};
+use replane::{Context, Replane};
+
+pub struct TenantConfig {
+    pub api_rate_limit: u32,
+    pub storage_limit_gb: u64,
+    pub advanced_analytics: bool,
+}
+
+pub fn tenant_config(replane: &Replane, tenant_id: &str) -> TenantConfig {
+    let tenant = replane.with_context(&Context::new().with("tenantId", tenant_id));
+
+    TenantConfig {
+        api_rate_limit: tenant.get_or("api-rate-limit", 100),
+        storage_limit_gb: tenant.get_or("storage-limit-gb", 10),
+        advanced_analytics: tenant.get_or("feature-advanced-analytics", false),
+    }
+}
+
+// Usage in an axum handler
+pub async fn upload(
+    State(replane): State<Replane>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> StatusCode {
+    let tenant_id = headers
+        .get("x-tenant-id")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default();
+
+    let config = tenant_config(&replane, tenant_id);
+    let max_size = config.storage_limit_gb * 1024 * 1024 * 1024;
+
+    if body.len() as u64 > max_size {
+        return StatusCode::PAYLOAD_TOO_LARGE;
+    }
+
+    StatusCode::OK
+}`
     }
   ]
 }

@@ -45,7 +45,7 @@ const DEFAULT_LINKS: LinkKey[] = ['quickstart', 'self-hosting', 'concepts']
 
 export default function TryReplaneCTA({
   title = 'Try Replane',
-  description = 'Replane is an open-source dynamic configuration platform with real-time updates via SSE, version history, instant rollback, and SDKs for JavaScript, Python, and .NET.',
+  description = 'Replane is an open-source dynamic configuration platform with real-time updates via SSE, version history, instant rollback, and SDKs for JavaScript, Python, .NET, and Rust.',
   links
 }: TryReplaneCTAProps) {
   const resolvedLinks = links ?? DEFAULT_LINKS

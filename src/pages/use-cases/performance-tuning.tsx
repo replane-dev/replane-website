@@ -436,6 +436,65 @@ public class DatabaseService
         throw new Exception("Max retries exceeded");
     }
 }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use std::future::Future;
+use std::sync::{Arc, RwLock};
+use std::time::Duration;
+use replane::Replane;
+use sqlx::postgres::{PgPool, PgPoolOptions};
+
+pub struct DatabaseService {
+    replane: Replane,
+    pool: Arc<RwLock<PgPool>>,
+}
+
+fn build_pool(replane: &Replane) -> PgPool {
+    PgPoolOptions::new()
+        .max_connections(replane.get_or("db-pool-size", 10))
+        .acquire_timeout(Duration::from_millis(replane.get_or("db-timeout-ms", 5000)))
+        .connect_lazy(&std::env::var("DATABASE_URL").expect("DATABASE_URL"))
+        .expect("valid DATABASE_URL")
+}
+
+impl DatabaseService {
+    pub fn new(replane: Replane) -> Self {
+        let pool = Arc::new(RwLock::new(build_pool(&replane)));
+
+        // React to pool size changes
+        let (client, current) = (replane.clone(), pool.clone());
+        replane
+            .subscribe("db-pool-size", move |_| {
+                *current.write().unwrap() = build_pool(&client);
+            })
+            .detach();
+
+        Self { replane, pool }
+    }
+
+    pub async fn fetch_with_retry<T, F, Fut>(&self, query: F) -> Result<T, sqlx::Error>
+    where
+        F: Fn(PgPool) -> Fut,
+        Fut: Future<Output = Result<T, sqlx::Error>>,
+    {
+        let max_retries: u32 = self.replane.get_or("max-retries", 3);
+        let mut attempt = 1;
+
+        loop {
+            let pool = self.pool.read().unwrap().clone();
+            match query(pool).await {
+                Err(_) if attempt < max_retries => {
+                    tokio::time::sleep(Duration::from_millis(100 * attempt as u64)).await;
+                    attempt += 1;
+                }
+                result => return result,
+            }
+        }
+    }
+}`
     }
   ]
 }

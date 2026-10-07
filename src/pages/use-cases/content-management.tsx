@@ -381,6 +381,42 @@ public class Announcement
 // {
 //     <div class="banner">@Model.Announcement.Message</div>
 // }`
+    },
+    {
+      sdk: 'rust',
+      label: 'Rust',
+      docsLink: '/docs/sdk/rust',
+      code: `use axum::{extract::State, Json};
+use replane::Replane;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Default)]
+pub struct Announcement {
+    enabled: bool,
+    message: String,
+    #[serde(rename = "type")]
+    kind: String,
+}
+
+#[derive(Serialize)]
+pub struct HomePage {
+    title: String,
+    subtitle: String,
+    cta_text: String,
+    announcement: Announcement,
+}
+
+pub async fn home(State(replane): State<Replane>) -> Json<HomePage> {
+    Json(HomePage {
+        title: replane.get_or("hero-title", "Welcome".into()),
+        subtitle: replane.get_or("hero-subtitle", String::new()),
+        cta_text: replane.get_or("hero-cta-text", "Get started".into()),
+        announcement: replane.get_or("announcement-banner", Announcement::default()),
+    })
+}
+
+// Edit copy in the dashboard and the next
+// request renders it—no deploy needed`
     }
   ]
 }
