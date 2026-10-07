@@ -16,3 +16,13 @@ dmitry:
   socials:
     github: tilyupo
     linkedin: tilyupo
+
+anton:
+  name: Anton Mordzik
+  title: Author of the Replane Rust SDK
+  url: https://github.com/antonmordzik
+  image_url: https://github.com/antonmordzik.png
+  page: true
+  socials:
+    github: antonmordzik
+    linkedin: anton-mordzik
